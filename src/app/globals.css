@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Nenyere ECD Design Tokens
+   Source: docs/design-system.md §2
+   Every colour and size comes from a Variable (design review checklist §7).
+   ========================================================================== */
+
+@theme {
+  /* --- Brand colours --- */
+  --color-brand-sun: #f2a93b;
+  --color-brand-msasa: #4f8a5b;
+  --color-brand-clay: #c9704a;
+  --color-brand-jacaranda: #7e6bb5;
+  --color-brand-sky: #5fa8d3;
+
+  /* --- Ink (text) --- */
+  --color-ink-900: #1e1b16;
+  --color-ink-700: #4a443a;
+  --color-ink-500: #7a7267;
+
+  /* --- Surfaces (warm off-whites) --- */
+  --color-surface-0: #fffdf8;
+  --color-surface-1: #fbf5ea;
+  --color-surface-2: #f3eadb;
+
+  /* --- Feedback --- */
+  --color-feedback-correct: var(--color-brand-msasa);
+  --color-feedback-encourage: var(--color-brand-sun);
+  --color-danger: #b4453a;
+
+  /* --- Activity colour set (colour-learning stimuli) --- */
+  --color-activity-red: #d64545;
+  --color-activity-blue: #4a7fc1;
+  --color-activity-yellow: #f0c83b;
+  --color-activity-green: #5a9e57;
+  --color-activity-orange: #e88a3a;
+  --color-activity-purple: #8b6db5;
+  --color-activity-black: #2a2a2a;
+  --color-activity-white: #fafafa;
+  --color-activity-brown: #8b6240;
+  --color-activity-pink: #e091b0;
+
+  /* --- Typography (variables set by next/font in layout.tsx) --- */
+  --font-kids: var(--font-kids), "Andika", system-ui, sans-serif;
+  --font-adult: var(--font-adult), system-ui, -apple-system, sans-serif;
+
+  /* --- Spacing (4-pt base) --- */
+  --spacing-1: 0.25rem; /* 4 */
+  --spacing-2: 0.5rem; /* 8 */
+  --spacing-3: 0.75rem; /* 12 */
+  --spacing-4: 1rem; /* 16 */
+  --spacing-6: 1.5rem; /* 24 */
+  --spacing-8: 2rem; /* 32 */
+  --spacing-12: 3rem; /* 48 */
+  --spacing-16: 4rem; /* 64 */
+
+  /* --- Radii --- */
+  --radius-sm: 0.5rem; /* 8 */
+  --radius-md: 1rem; /* 16 */
+  --radius-lg: 1.5rem; /* 24 */
+  --radius-pill: 9999px;
+
+  /* --- Elevation (warm-tinted shadows) --- */
+  --shadow-1: 0 1px 3px 0 rgba(62, 50, 30, 0.08),
+    0 1px 2px 0 rgba(62, 50, 30, 0.06);
+  --shadow-2: 0 4px 12px -2px rgba(62, 50, 30, 0.1),
+    0 2px 6px -1px rgba(62, 50, 30, 0.06);
+  --shadow-3: 0 12px 32px -4px rgba(62, 50, 30, 0.14),
+    0 4px 12px -2px rgba(62, 50, 30, 0.08);
+
+  /* --- Motion --- */
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-slow: 320ms;
+  --ease-natural: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ==========================================================================
+   Base styles
+   ========================================================================== */
+
+* {
+  border-color: var(--color-surface-2);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-surface-0);
+  color: var(--color-ink-900);
+  font-family: var(--font-adult);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--color-brand-sun);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Child Mode typography
+   ========================================================================== */
+
+.font-kids {
+  font-family: var(--font-kids);
+}
+
+.font-adult {
+  font-family: var(--font-adult);
+}
