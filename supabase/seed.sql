@@ -49,14 +49,14 @@ on conflict do nothing;
 
 -- ── Skills (sample — full set in curriculum-map.md) ───────────────────────
 insert into public.skills (id, key, area_id, development_areas, name, mastery_window) values
-  ('00000000-0000-0000-0000-00000000s001', 'fine_motor_tracing', '00000000-0000-0000-0000-000000000060', '{"physical"}', '{"en": "Pre-writing: Tracing lines"}', 5),
-  ('00000000-0000-0000-0000-00000000s002', 'counting_1_5', '00000000-0000-0000-0000-000000000030', '{"cognitive"}', '{"en": "Counting 1-5"}', 5),
-  ('00000000-0000-0000-0000-00000000s003', 'counting_1_10', '00000000-0000-0000-0000-000000000030', '{"cognitive"}', '{"en": "Counting 1-10"}', 5),
-  ('00000000-0000-0000-0000-00000000s004', 'colour_identification', '00000000-0000-0000-0000-000000000040', '{"cognitive"}', '{"en": "Colour identification"}', 5),
-  ('00000000-0000-0000-0000-00000000s005', 'shape_recognition', '00000000-0000-0000-0000-000000000030', '{"cognitive"}', '{"en": "Shape recognition"}', 5),
-  ('00000000-0000-0000-0000-00000000s006', 'phonics_vowels', '00000000-0000-0000-0000-000000000010', '{"literacy"}', '{"en": "Phonics: Vowel sounds"}', 5),
-  ('00000000-0000-0000-0000-00000000s007', 'listening_comprehension', '00000000-0000-0000-0000-000000000010', '{"literacy"}', '{"en": "Listening comprehension"}', 5),
-  ('00000000-0000-0000-0000-00000000s008', 'animal_recognition', '00000000-0000-0000-0000-000000000040', '{"cognitive"}', '{"en": "Animal recognition"}', 5),
-  ('00000000-0000-0000-0000-00000000s009', 'pattern_recognition', '00000000-0000-0000-0000-000000000030', '{"cognitive"}', '{"en": "Pattern recognition (ABAB)"}', 5),
-  ('00000000-0000-0000-0000-00000000s010', 'social_sharing', '00000000-0000-0000-0000-000000000050', '{"social"}', '{"en": "Social: Sharing"}', 5)
+  ('00000000-0000-0000-0000-000000000a01', 'fine_motor_tracing', '00000000-0000-0000-0000-000000000060', '{"physical"}', '{"en": "Pre-writing: Tracing lines"}', 5),
+  ('00000000-0000-0000-0000-000000000a02', 'counting_1_5', '00000000-0000-0000-0000-000000000030', '{"cognitive"}', '{"en": "Counting 1-5"}', 5),
+  ('00000000-0000-0000-0000-000000000a03', 'counting_1_10', '00000000-0000-0000-0000-000000000030', '{"cognitive"}', '{"en": "Counting 1-10"}', 5),
+  ('00000000-0000-0000-0000-000000000a04', 'colour_identification', '00000000-0000-0000-0000-000000000040', '{"cognitive"}', '{"en": "Colour identification"}', 5),
+  ('00000000-0000-0000-0000-000000000a05', 'shape_recognition', '00000000-0000-0000-0000-000000000030', '{"cognitive"}', '{"en": "Shape recognition"}', 5),
+  ('00000000-0000-0000-0000-000000000a06', 'phonics_vowels', '00000000-0000-0000-0000-000000000010', '{"literacy"}', '{"en": "Phonics: Vowel sounds"}', 5),
+  ('00000000-0000-0000-0000-000000000a07', 'listening_comprehension', '00000000-0000-0000-0000-000000000010', '{"literacy"}', '{"en": "Listening comprehension"}', 5),
+  ('00000000-0000-0000-0000-000000000a08', 'animal_recognition', '00000000-0000-0000-0000-000000000040', '{"cognitive"}', '{"en": "Animal recognition"}', 5),
+  ('00000000-0000-0000-0000-000000000a09', 'pattern_recognition', '00000000-0000-0000-0000-000000000030', '{"cognitive"}', '{"en": "Pattern recognition (ABAB)"}', 5),
+  ('00000000-0000-0000-0000-000000000a10', 'social_sharing', '00000000-0000-0000-0000-000000000050', '{"social"}', '{"en": "Social: Sharing"}', 5)
 on conflict (key) do nothing;

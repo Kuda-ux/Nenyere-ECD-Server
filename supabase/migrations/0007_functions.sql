@@ -397,8 +397,8 @@ begin
       from public.learner_badges lb where lb.learner_id = p_learner_id
     ),
     'teacher_observations', (
-      select jsonb_agg(to_jsonb(to))
-      from public.teacher_observations to where to.learner_id = p_learner_id
+      select jsonb_agg(to_jsonb(tobs))
+      from public.teacher_observations tobs where tobs.learner_id = p_learner_id
     ),
     'exported_at', now()
   ) into v_result

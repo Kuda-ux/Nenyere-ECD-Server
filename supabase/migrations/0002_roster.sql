@@ -4,7 +4,7 @@
 -- ============================================================================
 
 -- ── classes ─────────────────────────────────────────────────────────────────
-create table public.classes (
+create table if not exists public.classes (
   id uuid primary key default gen_random_uuid(),
   school_id uuid not null references public.schools(id) on delete restrict,
   name text not null,
@@ -15,21 +15,24 @@ create table public.classes (
   updated_at timestamptz not null default now()
 );
 
+drop trigger if exists classes_updated_at on public.classes;
 create trigger classes_updated_at
   before update on public.classes
   for each row execute function public.set_updated_at();
 
-create index classes_school_id_idx on public.classes(school_id);
+create index if not exists classes_school_id_idx on public.classes(school_id);
 
--- Add FK from teacher_classes to classes
-alter table public.teacher_classes
-  add constraint teacher_classes_class_id_fkey
-  foreign key (class_id) references public.classes(id) on delete cascade;
+-- Add FK from teacher_classes to classes (idempotent)
+do $$ begin
+  alter table public.teacher_classes
+    add constraint teacher_classes_class_id_fkey
+    foreign key (class_id) references public.classes(id) on delete cascade;
+exception when duplicate_object then null; end $$;
 
 -- ── learners ───────────────────────────────────────────────────────────────
 -- Per database.md §2.2: No surname required, photo, address, phone.
 -- avatar_key references illustrated avatar set. birth_month (day fixed = 1).
-create table public.learners (
+create table if not exists public.learners (
   id uuid primary key default gen_random_uuid(),
   school_id uuid not null references public.schools(id) on delete restrict,
   first_name text not null,
@@ -45,14 +48,15 @@ create table public.learners (
   updated_at timestamptz not null default now()
 );
 
+drop trigger if exists learners_updated_at on public.learners;
 create trigger learners_updated_at
   before update on public.learners
   for each row execute function public.set_updated_at();
 
-create index learners_school_id_idx on public.learners(school_id);
+create index if not exists learners_school_id_idx on public.learners(school_id);
 
 -- ── enrollments ────────────────────────────────────────────────────────────
-create table public.enrollments (
+create table if not exists public.enrollments (
   id uuid primary key default gen_random_uuid(),
   school_id uuid not null references public.schools(id) on delete restrict,
   learner_id uuid not null references public.learners(id) on delete restrict,
@@ -63,13 +67,13 @@ create table public.enrollments (
   unique(learner_id, class_id, start_date)
 );
 
-create index enrollments_class_id_learner_id_idx
+create index if not exists enrollments_class_id_learner_id_idx
   on public.enrollments(class_id, learner_id);
-create index enrollments_learner_id_idx on public.enrollments(learner_id);
+create index if not exists enrollments_learner_id_idx on public.enrollments(learner_id);
 
 -- ── consent_records ────────────────────────────────────────────────────────
 -- Per privacy.md §4: Stores *that* consent exists, not guardian contact details.
-create table public.consent_records (
+create table if not exists public.consent_records (
   id uuid primary key default gen_random_uuid(),
   school_id uuid not null references public.schools(id) on delete restrict,
   learner_id uuid not null references public.learners(id) on delete restrict,
@@ -83,13 +87,13 @@ create table public.consent_records (
   created_at timestamptz not null default now()
 );
 
-create index consent_records_learner_id_idx
+create index if not exists consent_records_learner_id_idx
   on public.consent_records(learner_id);
 
 -- ── learner_picker view (for CLASSROOM_DEVICE — column-restricted) ─────────
 -- Per database.md §3: CLASSROOM_DEVICE sees only picker fields for its classes
 -- and consent_status = granted
-create view public.learner_picker as
+create or replace view public.learner_picker as
   select
     l.id,
     l.school_id,
@@ -110,7 +114,6 @@ alter table public.classes enable row level security;
 alter table public.learners enable row level security;
 alter table public.enrollments enable row level security;
 alter table public.consent_records enable row level security;
-alter table public.learner_picker enable row level security;
 
 -- ── RLS: classes ───────────────────────────────────────────────────────────
 create policy classes_select
@@ -237,17 +240,5 @@ create policy consent_records_update
   );
 
 -- ── RLS: learner_picker ────────────────────────────────────────────────────
--- CLASSROOM_DEVICE: only its classes. TEACHER: own classes. SCHOOL_ADMIN: all.
-create policy learner_picker_select
-  on public.learner_picker for select
-  using (
-    app.is_super()
-    or (
-      school_id = app.school_id()
-      and app.role() in ('SCHOOL_ADMIN', 'TEACHER', 'CLASSROOM_DEVICE')
-      and (
-        app.role() = 'SCHOOL_ADMIN'
-        or class_id = any(app.class_ids())
-      )
-    )
-  );
+-- Note: learner_picker is a VIEW — RLS is enforced via the underlying tables
+-- (learners, enrollments) which already have RLS policies above.

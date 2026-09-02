@@ -9,46 +9,51 @@
 create schema if not exists app;
 
 -- ── Enums ──────────────────────────────────────────────────────────────────
-create type public.app_role as enum (
-  'SUPER_ADMIN',
-  'SCHOOL_ADMIN',
-  'TEACHER',
-  'CONTENT_EDITOR',
-  'CLASSROOM_DEVICE'
-);
+do $$ begin
+  create type public.app_role as enum (
+    'SUPER_ADMIN', 'SCHOOL_ADMIN', 'TEACHER', 'CONTENT_EDITOR', 'CLASSROOM_DEVICE'
+  );
+exception when duplicate_object then null; end $$;
 
-create type public.ecd_level as enum ('ECD_A', 'ECD_B');
+do $$ begin
+  create type public.ecd_level as enum ('ECD_A', 'ECD_B');
+exception when duplicate_object then null; end $$;
 
-create type public.content_status as enum (
-  'draft',
-  'review',
-  'approved',
-  'published',
-  'archived'
-);
+do $$ begin
+  create type public.content_status as enum (
+    'draft', 'review', 'approved', 'published', 'archived'
+  );
+exception when duplicate_object then null; end $$;
 
-create type public.mastery_stage as enum (
-  'not_started',
-  'introduced',
-  'practising',
-  'developing',
-  'secure'
-);
+do $$ begin
+  create type public.mastery_stage as enum (
+    'not_started', 'introduced', 'practising', 'developing', 'secure'
+  );
+exception when duplicate_object then null; end $$;
 
-create type public.learner_status as enum ('active', 'inactive', 'withdrawn');
+do $$ begin
+  create type public.learner_status as enum ('active', 'inactive', 'withdrawn');
+exception when duplicate_object then null; end $$;
 
-create type public.consent_status as enum ('pending', 'granted', 'withdrawn');
+do $$ begin
+  create type public.consent_status as enum ('pending', 'granted', 'withdrawn');
+exception when duplicate_object then null; end $$;
 
-create type public.consent_method as enum ('paper_on_file', 'digital');
+do $$ begin
+  create type public.consent_method as enum ('paper_on_file', 'digital');
+exception when duplicate_object then null; end $$;
 
-create type public.attempt_status as enum ('completed', 'abandoned');
+do $$ begin
+  create type public.attempt_status as enum ('completed', 'abandoned');
+exception when duplicate_object then null; end $$;
 
-create type public.media_kind as enum ('image', 'audio', 'svg');
+do $$ begin
+  create type public.media_kind as enum ('image', 'audio', 'svg');
+exception when duplicate_object then null; end $$;
 
-create type public.validation_status as enum (
-  'verified',
-  'validation_required'
-);
+do $$ begin
+  create type public.validation_status as enum ('verified', 'validation_required');
+exception when duplicate_object then null; end $$;
 
 -- ── RLS helper functions (stable, security definer) ────────────────────────
 -- These read JWT claims set by the custom access token hook.
@@ -56,7 +61,8 @@ create type public.validation_status as enum (
 
 create or replace function app.role()
 returns public.app_role
-language stable
+language sql
+stable
 security definer
 set search_path = public
 as $$
@@ -65,7 +71,8 @@ $$;
 
 create or replace function app.school_id()
 returns uuid
-language stable
+language sql
+stable
 security definer
 set search_path = public
 as $$
@@ -74,7 +81,8 @@ $$;
 
 create or replace function app.class_ids()
 returns uuid[]
-language stable
+language sql
+stable
 security definer
 set search_path = public
 as $$
@@ -86,7 +94,8 @@ $$;
 
 create or replace function app.is_super()
 returns boolean
-language stable
+language sql
+stable
 security definer
 set search_path = public
 as $$
@@ -105,7 +114,7 @@ end;
 $$;
 
 -- ── schools ────────────────────────────────────────────────────────────────
-create table public.schools (
+create table if not exists public.schools (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   slug text not null unique,
@@ -117,12 +126,13 @@ create table public.schools (
   updated_at timestamptz not null default now()
 );
 
+drop trigger if exists schools_updated_at on public.schools;
 create trigger schools_updated_at
   before update on public.schools
   for each row execute function public.set_updated_at();
 
 -- ── profiles (1:1 with auth.users) ─────────────────────────────────────────
-create table public.profiles (
+create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   display_name text not null,
   locale text not null default 'en' check (locale in ('en', 'sn', 'nd')),
@@ -130,7 +140,7 @@ create table public.profiles (
 );
 
 -- ── memberships ────────────────────────────────────────────────────────────
-create table public.memberships (
+create table if not exists public.memberships (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   school_id uuid not null references public.schools(id) on delete restrict,
@@ -142,18 +152,19 @@ create table public.memberships (
   unique(user_id, school_id)
 );
 
+drop trigger if exists memberships_updated_at on public.memberships;
 create trigger memberships_updated_at
   before update on public.memberships
   for each row execute function public.set_updated_at();
 
-create index memberships_user_id_active_idx
+create index if not exists memberships_user_id_active_idx
   on public.memberships(user_id)
   where is_active = true;
 
 -- ── teacher_classes (relational source of truth for teacher↔class) ─────────
 -- Per database.md §2.2: table is source of truth; array is denormalised into
 -- claims by the token hook.
-create table public.teacher_classes (
+create table if not exists public.teacher_classes (
   membership_id uuid not null references public.memberships(id) on delete cascade,
   class_id uuid not null,  -- FK added in migration 0002 when classes table exists
   primary key (membership_id, class_id)
@@ -287,6 +298,7 @@ begin
 end;
 $$;
 
+drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();

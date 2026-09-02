@@ -183,7 +183,8 @@ alter table public.content_pack_versions enable row level security;
 -- Helper: check if user can read content of a given status
 create or replace function public.can_read_content(content_school_id uuid, content_status public.content_status)
 returns boolean
-language stable
+language plpgsql
+stable
 security definer
 set search_path = public
 as $$
