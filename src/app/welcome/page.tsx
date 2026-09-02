@@ -37,6 +37,12 @@ export default function WelcomePage() {
         >
           Sign in as Classroom Device
         </Link>
+        <Link
+          href="/kids"
+          className="flex items-center justify-center rounded-xl bg-[var(--color-brand-msasa)] px-6 py-4 font-semibold text-white transition-opacity hover:opacity-90"
+        >
+          Child Mode (Play directly)
+        </Link>
       </div>
 
       <Link

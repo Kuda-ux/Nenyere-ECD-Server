@@ -133,18 +133,18 @@ security definer
 set search_path = public
 as $$
 declare
-  user_id uuid;
+  p_user_id uuid;
   claims jsonb;
   membership record;
-  class_ids uuid[];
+  p_class_ids uuid[];
 begin
-  user_id := event -> 'event' ->> 'user_id';
+  p_user_id := (event -> 'event' ->> 'user_id')::uuid;
 
   -- Fetch the first active membership for this user
   select m.role, m.school_id, m.class_ids
   into membership
   from public.memberships m
-  where m.user_id = user_id
+  where m.user_id = p_user_id
     and m.is_active = true
   order by m.created_at
   limit 1;
@@ -156,14 +156,14 @@ begin
 
   -- Build class_ids from teacher_classes if class_ids is null on membership
   if membership.class_ids is not null then
-    class_ids := membership.class_ids;
+    p_class_ids := membership.class_ids;
   else
     select coalesce(array_agg(tc.class_id), '{}'::uuid[])
-    into class_ids
+    into p_class_ids
     from public.teacher_classes tc
     where tc.membership_id = (
       select m.id from public.memberships m
-      where m.user_id = user_id and m.is_active = true
+      where m.user_id = p_user_id and m.is_active = true
       order by m.created_at limit 1
     );
   end if;
@@ -172,7 +172,7 @@ begin
   claims := jsonb_build_object(
     'app_role', membership.role::text,
     'school_id', membership.school_id::text,
-    'class_ids', class_ids
+    'class_ids', p_class_ids
   );
 
   return jsonb_set(

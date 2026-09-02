@@ -29,6 +29,12 @@ export default function HomePage() {
           Welcome / Sign In
         </Link>
         <Link
+          href="/kids"
+          className="rounded-lg bg-[var(--color-brand-msasa)] px-6 py-3 text-center font-semibold text-white transition-opacity hover:opacity-90"
+        >
+          Child Mode
+        </Link>
+        <Link
           href="/privacy"
           className="rounded-lg border border-[var(--color-surface-2)] px-6 py-3 text-center font-semibold text-ink-700 transition-colors hover:bg-[var(--color-surface-1)]"
         >
