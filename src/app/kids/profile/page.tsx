@@ -4,11 +4,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useRef, useEffect, Suspense } from "react";
 import { getLearnerStats, getPillarProgress, getAllBadges } from "@/lib/dev-tracker";
 import { PILLARS } from "@/lib/activity-catalog";
+import { useSound } from "@/hooks/use-sound";
 
 function ProfileContent() {
   const router = useRouter();
   const params = useSearchParams();
   const learnerId = params.get("learner") ?? "tari";
+  const { unlock } = useSound();
   const [exitProgress, setExitProgress] = useState(0);
   const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const [stats, setStats] = useState<ReturnType<typeof getLearnerStats> | null>(null);
@@ -59,7 +61,7 @@ function ProfileContent() {
         <button
           className="relative flex h-14 w-14 items-center justify-center rounded-full text-2xl text-white shadow-lg transition-all hover:scale-110 active:scale-95"
           style={{ backgroundColor: "var(--color-brand-jacaranda)" }}
-          onPointerDown={handleExitHoldStart}
+          onPointerDown={() => { unlock(); handleExitHoldStart(); }}
           onPointerUp={handleExitHoldEnd}
           onPointerLeave={handleExitHoldEnd}
           aria-label="Hold to go back"

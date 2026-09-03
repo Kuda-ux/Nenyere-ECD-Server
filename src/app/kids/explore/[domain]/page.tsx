@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { getActivitiesByPillar, toActivityCard, PILLARS, type PillarKey } from "@/lib/activity-catalog";
 import { useState, useRef } from "react";
+import { useSound } from "@/hooks/use-sound";
 
 const VALID_PILLARS = new Set(PILLARS.map((p) => p.key));
 
@@ -19,6 +20,7 @@ const ACTIVITY_CARD_COLORS = [
 
 export default function ExplorePage({ params }: { params: Promise<{ domain: string }> }) {
   const router = useRouter();
+  const { play, unlock } = useSound();
   const [exitProgress, setExitProgress] = useState(0);
   const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const [pillar, setPillar] = useState<PillarKey | null>(null);
@@ -68,7 +70,7 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
         <button
           className="relative flex h-14 w-14 items-center justify-center rounded-full text-2xl text-white shadow-lg transition-all hover:scale-110 active:scale-95"
           style={{ backgroundColor: pillarInfo.color }}
-          onPointerDown={handleExitHoldStart}
+          onPointerDown={() => { unlock(); handleExitHoldStart(); }}
           onPointerUp={handleExitHoldEnd}
           onPointerLeave={handleExitHoldEnd}
           aria-label="Hold to go back"
@@ -104,7 +106,7 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
             {activities.map((activity, i) => (
               <button
                 key={activity.id}
-                onClick={() => router.push(`/kids/play/${activity.id}`)}
+                onClick={() => { play("pop"); router.push(`/kids/play/${activity.id}`); }}
                 className={`kids-card flex flex-col items-center gap-3 p-6 anim-pop-in`}
                 style={{
                   background: ACTIVITY_CARD_COLORS[i % ACTIVITY_CARD_COLORS.length],

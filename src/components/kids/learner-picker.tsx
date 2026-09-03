@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useSound } from "@/hooks/use-sound";
 
 type Learner = {
   id: string;
@@ -49,6 +50,7 @@ const FLOATING_DECORATIONS = [
 
 export function LearnerPicker() {
   const router = useRouter();
+  const { play, unlock } = useSound();
 
   const learners: Learner[] = [
     { id: "00000000-0000-0000-0000-000000001001", preferred_name: "Tari", first_name: "Tariro", avatar_key: "star", ecd_level: "ECD_A" },
@@ -57,7 +59,9 @@ export function LearnerPicker() {
   ];
 
   function handleSelect(learner: Learner) {
-    router.push(`/kids/dashboard?learner=${learner.id}`);
+    unlock();
+    play("pop");
+    setTimeout(() => router.push(`/kids/dashboard?learner=${learner.id}`), 200);
   }
 
   return (
@@ -135,7 +139,7 @@ export function LearnerPicker() {
       {/* Exit gate */}
       <button
         className="kids-btn mt-4 text-base text-[var(--color-ink-500)] underline-offset-4 hover:underline"
-        onClick={() => router.push("/welcome")}
+        onClick={() => { play("tap"); router.push("/welcome"); }}
         style={{ fontFamily: "var(--font-kids)" }}
       >
         ← Exit Child Mode

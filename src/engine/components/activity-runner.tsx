@@ -9,6 +9,7 @@ import { useActivityRunner } from "../runner/use-activity-runner";
 import { getEngineComponent } from "./registry";
 import type { AnyActivity } from "../schema";
 import type { ItemResponse, ItemResult } from "../schema/common";
+import { useSound } from "@/hooks/use-sound";
 
 type Props = {
   activity: AnyActivity;
@@ -45,6 +46,8 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
     onExit();
   }, [exit, onExit]);
 
+  const { play: playSound, unlock: unlockSound, muted: soundMuted, toggleMute: toggleSoundMute } = useSound();
+
   // ── COMPLETED ─────────────────────────────────────────────────────────────
   if (state.phase === "completed") {
     if (onComplete) {
@@ -62,7 +65,7 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
           All done! 🌟
         </p>
         <button
-          onClick={handleExit}
+          onClick={() => { playSound("tap"); handleExit(); }}
           className="kids-btn px-8 py-4 text-lg text-white shadow-lg transition-all hover:scale-105"
           style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
         >
@@ -98,14 +101,14 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
         </p>
         <div className="flex gap-3">
           <button
-            onClick={finish}
+            onClick={() => { playSound("celebrate"); finish(); }}
             className="kids-btn px-8 py-3 text-base text-white shadow-lg transition-all hover:scale-105"
             style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
           >
             Done ★
           </button>
           <button
-            onClick={handleExit}
+            onClick={() => { playSound("tap"); handleExit(); }}
             className="kids-btn border-4 px-6 py-3 text-base text-[var(--color-ink-700)] shadow-md transition-all hover:scale-105"
             style={{ borderColor: "var(--color-brand-jacaranda)", backgroundColor: "white" }}
           >
@@ -136,14 +139,14 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
           </p>
         )}
         <button
-          onClick={start}
+          onClick={() => { unlockSound(); playSound("whoosh"); start(); }}
           className="kids-btn anim-pop-in anim-delay-2 px-12 py-4 text-xl text-white shadow-lg transition-all hover:scale-105"
           style={{ background: "linear-gradient(135deg, #4CAF50, #00B894)" }}
         >
           Let&apos;s Play! ▶
         </button>
         <button
-          onClick={handleExit}
+          onClick={() => { playSound("tap"); handleExit(); }}
           className="text-sm text-[var(--color-ink-500)] underline-offset-4 hover:underline"
           style={{ fontFamily: "var(--font-kids)" }}
         >
@@ -173,7 +176,7 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
           </p>
         )}
         <button
-          onClick={instructionDone}
+          onClick={() => { playSound("chime"); instructionDone(); }}
           className="kids-btn px-10 py-3 text-lg text-white shadow-lg transition-all hover:scale-105"
           style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
         >
@@ -198,7 +201,7 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
           {pick.text.en}
         </p>
         <button
-          onClick={feedbackDone}
+          onClick={() => { playSound(isCorrect ? "correct" : "wrong"); feedbackDone(); }}
           className="kids-btn px-10 py-3 text-lg text-white shadow-lg transition-all hover:scale-105"
           style={{ background: isCorrect ? "linear-gradient(135deg, #4CAF50, #00B894)" : "linear-gradient(135deg, #FFB627, #FF9F43)" }}
         >
@@ -235,11 +238,11 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
 
         {/* Mute toggle */}
         <button
-          onClick={audio.toggleMute}
+          onClick={() => { toggleSoundMute(); audio.toggleMute(); }}
           className="absolute right-4 top-4 text-2xl"
-          aria-label={audio.muted ? "Unmute" : "Mute"}
+          aria-label={audio.muted || soundMuted ? "Unmute" : "Mute"}
         >
-          {audio.muted ? "🔇" : "🔊"}
+          {audio.muted || soundMuted ? "🔇" : "🔊"}
         </button>
 
         {/* Engine component */}

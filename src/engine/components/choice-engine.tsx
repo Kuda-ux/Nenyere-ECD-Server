@@ -9,6 +9,7 @@ import { useState, useRef, useCallback } from "react";
 import type { ChoiceActivity, ChoiceItem } from "../schema/choice";
 import type { ItemResponse, ItemResult } from "../schema/common";
 import { useAudio } from "../audio/audio-manager";
+import { useSound } from "@/hooks/use-sound";
 import { ContentImage } from "./content-image";
 
 type Props = {
@@ -20,6 +21,7 @@ type Props = {
 
 export function ChoiceEngine({ activity, item, onResult, hintLevel }: Props) {
   const audio = useAudio();
+  const { play: playSound } = useSound();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showCorrect, setShowCorrect] = useState(false);
   const [attempts, setAttempts] = useState(0);
@@ -33,6 +35,9 @@ export function ChoiceEngine({ activity, item, onResult, hintLevel }: Props) {
       const isCorrect = choiceItem.is_correct;
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
+
+      // Play synthesized sound feedback
+      playSound(isCorrect ? "correct" : "wrong");
 
       // Play audio if the choice has audio
       if (choiceItem.stimulus.audio) {
@@ -72,7 +77,7 @@ export function ChoiceEngine({ activity, item, onResult, hintLevel }: Props) {
 
       onResult(response, result);
     },
-    [selectedId, attempts, activity, item, onResult, audio, hintLevel],
+    [selectedId, attempts, activity, item, onResult, audio, hintLevel, playSound],
   );
 
   // Highlight correct item as hint

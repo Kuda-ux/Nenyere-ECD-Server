@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useSound } from "@/hooks/use-sound";
 
 const FLOATING_EMOJIS = [
   { emoji: "🌈", top: "10%", left: "5%", size: "3rem", anim: "anim-float-slow", delay: "anim-delay-2" },
@@ -12,6 +15,8 @@ const FLOATING_EMOJIS = [
 ];
 
 export default function HomePage() {
+  const { play, unlock } = useSound();
+
   return (
     <main className="kids-bg-rainbow relative flex min-h-screen flex-col items-center justify-center gap-8 overflow-hidden px-6 py-16">
       {/* Floating decorations */}
@@ -53,6 +58,7 @@ export default function HomePage() {
       <div className="flex flex-col gap-3 sm:flex-row anim-slide-up anim-delay-2">
         <Link
           href="/welcome"
+          onClick={() => { unlock(); play("pop"); }}
           className="kids-btn px-8 py-4 text-lg text-white shadow-lg transition-all hover:scale-105"
           style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
         >
@@ -60,6 +66,7 @@ export default function HomePage() {
         </Link>
         <Link
           href="/kids"
+          onClick={() => { unlock(); play("pop"); }}
           className="kids-btn px-8 py-4 text-lg text-white shadow-lg transition-all hover:scale-105"
           style={{ background: "linear-gradient(135deg, #4CAF50, #00B894)" }}
         >
@@ -67,6 +74,7 @@ export default function HomePage() {
         </Link>
         <Link
           href="/privacy"
+          onClick={() => play("tap")}
           className="kids-btn border-4 px-8 py-4 text-lg text-[var(--color-ink-700)] shadow-md transition-all hover:scale-105"
           style={{ borderColor: "var(--color-brand-jacaranda)", backgroundColor: "white" }}
         >

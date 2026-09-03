@@ -1,11 +1,11 @@
-import Link from "next/link";
+"use client";
 
-export const metadata = {
-  title: "Welcome",
-  description: "Sign in to Nenyere ECD Digital Learning Platform",
-};
+import Link from "next/link";
+import { useSound } from "@/hooks/use-sound";
 
 export default function WelcomePage() {
+  const { play, unlock } = useSound();
+
   return (
     <main className="kids-bg-sunset relative flex min-h-screen flex-col items-center justify-center gap-12 overflow-hidden px-6 py-16">
       {/* Floating decorations */}
@@ -39,6 +39,7 @@ export default function WelcomePage() {
       <div className="flex w-full max-w-sm flex-col gap-4 anim-slide-up anim-delay-2">
         <Link
           href="/login"
+          onClick={() => { unlock(); play("pop"); }}
           className="kids-btn flex items-center justify-center gap-2 px-6 py-4 text-lg text-white shadow-lg transition-all hover:scale-105"
           style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
         >
@@ -46,6 +47,7 @@ export default function WelcomePage() {
         </Link>
         <Link
           href="/login?mode=device"
+          onClick={() => { unlock(); play("chime"); }}
           className="kids-btn flex items-center justify-center gap-2 px-6 py-4 text-lg text-white shadow-lg transition-all hover:scale-105"
           style={{ background: "linear-gradient(135deg, #4FC3F7, #6C5CE7)" }}
         >
@@ -53,6 +55,7 @@ export default function WelcomePage() {
         </Link>
         <Link
           href="/kids"
+          onClick={() => { unlock(); play("pop"); }}
           className="kids-btn flex items-center justify-center gap-2 px-6 py-4 text-lg text-white shadow-lg transition-all hover:scale-105"
           style={{ background: "linear-gradient(135deg, #4CAF50, #00B894)" }}
         >
@@ -62,6 +65,7 @@ export default function WelcomePage() {
 
       <Link
         href="/"
+        onClick={() => play("tap")}
         className="text-base text-[var(--color-ink-500)] underline-offset-4 hover:underline"
         style={{ fontFamily: "var(--font-kids)" }}
       >

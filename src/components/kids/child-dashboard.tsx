@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { PILLARS, type PillarKey } from "@/lib/activity-catalog";
 import { getLearnerStats } from "@/lib/dev-tracker";
+import { useSound } from "@/hooks/use-sound";
 
 const PILLAR_ROUTES: Record<PillarKey, string> = {
   cognitive: "/kids/explore/cognitive",
@@ -31,6 +32,7 @@ const FLOATING_DECORATIONS = [
 
 export function ChildDashboard({ learnerId }: { learnerId: string }) {
   const router = useRouter();
+  const { play, unlock } = useSound();
   const [exitProgress, setExitProgress] = useState(0);
   const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const [stats, setStats] = useState<{ totalStars: number; totalActivities: number } | null>(null);
@@ -64,7 +66,8 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
   }
 
   function handlePillarClick(pillar: PillarKey) {
-    router.push(PILLAR_ROUTES[pillar]);
+    play("pop");
+    setTimeout(() => router.push(PILLAR_ROUTES[pillar]), 150);
   }
 
   return (
@@ -88,7 +91,7 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
       <button
         className="absolute left-4 top-4 z-10 flex h-14 w-14 items-center justify-center rounded-full text-2xl text-white shadow-lg transition-all hover:scale-110 active:scale-95"
         style={{ backgroundColor: "var(--color-brand-jacaranda)" }}
-        onPointerDown={handleExitHoldStart}
+        onPointerDown={() => { unlock(); handleExitHoldStart(); }}
         onPointerUp={handleExitHoldEnd}
         onPointerLeave={handleExitHoldEnd}
         aria-label="Hold to exit"
@@ -124,21 +127,21 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
         {stats && (
           <div className="mt-3 flex gap-3">
             <button
-              onClick={() => router.push(`/kids/profile?learner=${learnerId}`)}
+              onClick={() => { play("star"); router.push(`/kids/profile?learner=${learnerId}`); }}
               className="kids-btn flex items-center gap-2 px-5 py-2.5 text-base shadow-md transition-all hover:scale-105"
               style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)", color: "white" }}
             >
               ⭐ {stats.totalStars}
             </button>
             <button
-              onClick={() => router.push(`/kids/profile?learner=${learnerId}`)}
+              onClick={() => { play("chime"); router.push(`/kids/profile?learner=${learnerId}`); }}
               className="kids-btn flex items-center gap-2 px-5 py-2.5 text-base shadow-md transition-all hover:scale-105"
               style={{ background: "linear-gradient(135deg, #9B59D0, #6C5CE7)", color: "white" }}
             >
               🎯 {stats.totalActivities}
             </button>
             <button
-              onClick={() => router.push(`/kids/rewards?learner=${learnerId}`)}
+              onClick={() => { play("tinkle"); router.push(`/kids/rewards?learner=${learnerId}`); }}
               className="kids-btn flex items-center gap-2 px-5 py-2.5 text-base shadow-md transition-all hover:scale-105"
               style={{ background: "linear-gradient(135deg, #FF6B9D, #E84393)", color: "white" }}
             >

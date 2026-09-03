@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { getAllStories } from "@/lib/activity-catalog";
 import { useState, useRef } from "react";
+import { useSound } from "@/hooks/use-sound";
 
 const STORY_GRADIENTS = [
   "linear-gradient(135deg, #9B59D0, #B388FF)",
@@ -24,6 +25,7 @@ const FLOATING_DECORATIONS = [
 
 export default function StoriesPage() {
   const router = useRouter();
+  const { play, unlock } = useSound();
   const [exitProgress, setExitProgress] = useState(0);
   const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const stories = getAllStories();
@@ -68,7 +70,7 @@ export default function StoriesPage() {
         <button
           className="relative flex h-14 w-14 items-center justify-center rounded-full text-2xl text-white shadow-lg transition-all hover:scale-110 active:scale-95"
           style={{ backgroundColor: "var(--color-brand-jacaranda)" }}
-          onPointerDown={handleExitHoldStart}
+          onPointerDown={() => { unlock(); handleExitHoldStart(); }}
           onPointerUp={handleExitHoldEnd}
           onPointerLeave={handleExitHoldEnd}
           aria-label="Hold to go back"
@@ -101,7 +103,7 @@ export default function StoriesPage() {
             {stories.map((story, i) => (
               <button
                 key={story.id}
-                onClick={() => router.push(`/kids/play/${story.id}`)}
+                onClick={() => { play("magic"); router.push(`/kids/play/${story.id}`); }}
                 className={`kids-card flex flex-col items-center gap-4 p-8 anim-pop-in`}
                 style={{
                   background: STORY_GRADIENTS[i % STORY_GRADIENTS.length],

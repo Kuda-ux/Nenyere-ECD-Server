@@ -4,11 +4,13 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useRef, useEffect, Suspense } from "react";
 import { getAllBadges, getLearnerStats } from "@/lib/dev-tracker";
 import { Confetti } from "@/components/kids/confetti";
+import { useSound } from "@/hooks/use-sound";
 
 function RewardsContent() {
   const router = useRouter();
   const params = useSearchParams();
   const learnerId = params.get("learner") ?? "tari";
+  const { play, unlock } = useSound();
   const [exitProgress, setExitProgress] = useState(0);
   const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const [badges, setBadges] = useState<ReturnType<typeof getAllBadges> | null>(null);
@@ -18,6 +20,16 @@ function RewardsContent() {
     setBadges(getAllBadges(learnerId));
     setStats(getLearnerStats(learnerId));
   }, [learnerId]);
+
+  // Play celebration sound on mount if badges earned
+  useEffect(() => {
+    const b = getAllBadges(learnerId);
+    const earned = b.filter((bd) => bd.earned).length;
+    if (earned > 0) {
+      const timer = setTimeout(() => play("celebrate"), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [learnerId, play]);
 
   function handleExitHoldStart() {
     setExitProgress(0);
@@ -52,7 +64,7 @@ function RewardsContent() {
         <button
           className="relative flex h-14 w-14 items-center justify-center rounded-full text-2xl text-white shadow-lg transition-all hover:scale-110 active:scale-95"
           style={{ backgroundColor: "var(--color-brand-jacaranda)" }}
-          onPointerDown={handleExitHoldStart}
+          onPointerDown={() => { unlock(); handleExitHoldStart(); }}
           onPointerUp={handleExitHoldEnd}
           onPointerLeave={handleExitHoldEnd}
           aria-label="Hold to go back"
@@ -98,7 +110,7 @@ function RewardsContent() {
         </p>
         {stats && (
           <button
-            onClick={() => router.push(`/kids/profile?learner=${learnerId}`)}
+            onClick={() => { play("chime"); router.push(`/kids/profile?learner=${learnerId}`); }}
             className="kids-btn mt-2 px-6 py-3 text-base shadow-md transition-all hover:scale-105"
             style={{ background: "linear-gradient(135deg, #9B59D0, #6C5CE7)", color: "white" }}
           >
