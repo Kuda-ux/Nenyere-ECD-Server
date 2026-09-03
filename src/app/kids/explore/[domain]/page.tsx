@@ -1,21 +1,21 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { getActivitiesByDomain, toActivityCard, DOMAINS, type DomainKey } from "@/lib/activity-catalog";
+import { getActivitiesByPillar, toActivityCard, PILLARS, type PillarKey } from "@/lib/activity-catalog";
 import { useState, useRef } from "react";
 
-const VALID_DOMAINS = new Set(DOMAINS.map((d) => d.key));
+const VALID_PILLARS = new Set(PILLARS.map((p) => p.key));
 
 export default function ExplorePage({ params }: { params: Promise<{ domain: string }> }) {
   const router = useRouter();
   const [exitProgress, setExitProgress] = useState(0);
   const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [domain, setDomain] = useState<DomainKey | null>(null);
+  const [pillar, setPillar] = useState<PillarKey | null>(null);
 
   // Unwrap params promise
   params.then((p) => {
-    if (VALID_DOMAINS.has(p.domain as DomainKey)) {
-      setDomain(p.domain as DomainKey);
+    if (VALID_PILLARS.has(p.domain as PillarKey)) {
+      setPillar(p.domain as PillarKey);
     }
   });
 
@@ -37,7 +37,7 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
     setExitProgress(0);
   }
 
-  if (!domain) {
+  if (!pillar) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--color-surface-0)]">
         <p className="text-lg text-[var(--color-ink-500)]">Loading...</p>
@@ -45,8 +45,8 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
     );
   }
 
-  const domainInfo = DOMAINS.find((d) => d.key === domain)!;
-  const activities = getActivitiesByDomain(domain).map(toActivityCard);
+  const pillarInfo = PILLARS.find((p) => p.key === pillar)!;
+  const activities = getActivitiesByPillar(pillar).map(toActivityCard);
 
   return (
     <div
@@ -79,8 +79,11 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
           )}
         </button>
         <div className="flex items-center gap-3">
-          <span className="text-4xl" aria-hidden="true">{domainInfo.emoji}</span>
-          <h1 className="text-2xl font-bold text-[var(--color-ink-900)]">{domainInfo.label}</h1>
+          <span className="text-4xl" aria-hidden="true">{pillarInfo.emoji}</span>
+          <div className="flex flex-col">
+            <h1 className="text-2xl font-bold text-[var(--color-ink-900)]">{pillarInfo.label}</h1>
+            <p className="text-xs text-[var(--color-ink-500)]">{pillarInfo.description}</p>
+          </div>
         </div>
       </div>
 
@@ -99,7 +102,7 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
                 onClick={() => router.push(`/kids/play/${activity.id}`)}
                 className="flex flex-col items-center gap-3 rounded-2xl bg-white p-6 transition-all hover:shadow-lg active:scale-95"
                 style={{
-                  border: `3px solid ${domainInfo.color}`,
+                  border: `3px solid ${pillarInfo.color}`,
                   minHeight: "160px",
                   minWidth: "140px",
                 }}
@@ -107,6 +110,10 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
                 <span className="text-5xl" aria-hidden="true">{activity.emoji}</span>
                 <span className="text-center text-lg font-bold text-[var(--color-ink-900)]">
                   {activity.title}
+                </span>
+                {/* Level badge */}
+                <span className="rounded-full bg-[var(--color-surface-1)] px-2 py-0.5 text-xs font-medium text-[var(--color-ink-500)]">
+                  {activity.ecd_level.replace("_", " ")}
                 </span>
                 {/* Star indicator */}
                 <div className="flex gap-1" aria-label="Stars earned">

@@ -1,70 +1,178 @@
 /**
- * Activity catalog — maps child-facing domains to seed activities.
- * Used by the child dashboard, explore pages, and story shelf.
+ * Activity catalog — maps child-facing pillars to seed activities.
+ * Organised around 10 developmental pillars aligned to the Zimbabwe
+ * Heritage-Based Curriculum 2024–2030.
  */
 import { seedActivities, seedStories } from "@/engine/seed/activities";
 import type { AnyActivity } from "@/engine/schema";
 
-export type DomainKey =
-  | "numbers"
-  | "letters-sounds"
-  | "colours"
-  | "shapes"
-  | "animals-nature"
+export type PillarKey =
+  | "cognitive"
+  | "pre-writing"
+  | "mathematics"
+  | "literacy"
+  | "indigenous-language"
+  | "science"
+  | "social-studies"
+  | "social-emotional"
+  | "creativity"
+  | "physical"
   | "stories"
-  | "puzzles"
-  | "explore";
+  | "themes";
 
-export type Domain = {
-  key: DomainKey;
+export type Pillar = {
+  key: PillarKey;
   label: string;
   emoji: string;
   color: string;
+  description: string;
 };
 
-export const DOMAINS: Domain[] = [
-  { key: "numbers", label: "Numbers", emoji: "🔢", color: "var(--color-brand-msasa)" },
-  { key: "letters-sounds", label: "Letters & Sounds", emoji: "🔤", color: "var(--color-brand-sky)" },
-  { key: "colours", label: "Colours", emoji: "🎨", color: "var(--color-brand-sun)" },
-  { key: "shapes", label: "Shapes", emoji: "⭐", color: "var(--color-brand-jacaranda)" },
-  { key: "animals-nature", label: "Animals & Nature", emoji: "🐘", color: "var(--color-brand-clay)" },
-  { key: "stories", label: "Stories", emoji: "📖", color: "var(--color-brand-jacaranda)" },
-  { key: "puzzles", label: "Puzzles", emoji: "🧩", color: "var(--color-brand-msasa)" },
-  { key: "explore", label: "Explore", emoji: "🌟", color: "var(--color-brand-sun)" },
+export const PILLARS: Pillar[] = [
+  {
+    key: "cognitive",
+    label: "Thinking",
+    emoji: "🧠",
+    color: "var(--color-brand-jacaranda)",
+    description: "Matching, sorting, memory, puzzles, patterns",
+  },
+  {
+    key: "pre-writing",
+    label: "Tracing",
+    emoji: "✏️",
+    color: "var(--color-brand-sky)",
+    description: "Lines, shapes, letters, numbers",
+  },
+  {
+    key: "mathematics",
+    label: "Numbers",
+    emoji: "🔢",
+    color: "var(--color-brand-msasa)",
+    description: "Counting, addition, subtraction, shapes",
+  },
+  {
+    key: "literacy",
+    label: "Letters",
+    emoji: "🔤",
+    color: "var(--color-brand-sky)",
+    description: "Phonics, vowels, alphabet, vocabulary",
+  },
+  {
+    key: "indigenous-language",
+    label: "ChiShona",
+    emoji: "🇿🇼",
+    color: "var(--color-brand-sun)",
+    description: "Learn in ChiShona and isiNdebele",
+  },
+  {
+    key: "science",
+    label: "Discovery",
+    emoji: "🔬",
+    color: "var(--color-brand-clay)",
+    description: "Animals, weather, plants, senses",
+  },
+  {
+    key: "social-studies",
+    label: "My World",
+    emoji: "🌍",
+    color: "var(--color-brand-msasa)",
+    description: "Family, community, Zimbabwe, transport",
+  },
+  {
+    key: "social-emotional",
+    label: "Feelings",
+    emoji: "❤️",
+    color: "var(--color-brand-sun)",
+    description: "Emotions, sharing, kindness, respect",
+  },
+  {
+    key: "creativity",
+    label: "Create",
+    emoji: "🎨",
+    color: "var(--color-brand-sun)",
+    description: "Colours, drawing, music, dance",
+  },
+  {
+    key: "physical",
+    label: "Move",
+    emoji: "🏃",
+    color: "var(--color-brand-clay)",
+    description: "Jump, clap, balance, coordination",
+  },
+  {
+    key: "stories",
+    label: "Stories",
+    emoji: "📖",
+    color: "var(--color-brand-jacaranda)",
+    description: "Interactive Zimbabwean stories",
+  },
+  {
+    key: "themes",
+    label: "Themes",
+    emoji: "🌟",
+    color: "var(--color-brand-sun)",
+    description: "Animals, transport, weather themes",
+  },
 ];
 
-const DOMAIN_FILTERS: Record<DomainKey, (a: AnyActivity) => boolean> = {
-  numbers: (a) => a.engine === "counting",
-  "letters-sounds": (a) =>
-    a.type === "phonics_recognition" ||
-    a.type === "sound_recognition" ||
-    a.type === "animal_sound_recognition" ||
-    a.type === "audio_to_image" ||
-    a.type === "image_to_audio" ||
-    a.type === "tracing",
-  colours: (a) =>
-    a.type === "colour_identification" ||
-    a.type === "colouring" ||
-    (a.type === "tap_correct" && a.learning_area === "physical_education_and_arts"),
-  shapes: (a) =>
+// ── Pillar filters: map each pillar to activity type/area filters ──────────
+
+const PILLAR_FILTERS: Record<PillarKey, (a: AnyActivity) => boolean> = {
+  cognitive: (a) =>
+    a.type === "matching" ||
+    a.type === "sorting" ||
+    a.type === "classification" ||
+    a.type === "memory_game" ||
+    a.type === "pattern_completion" ||
+    a.type === "sequence_ordering" ||
+    a.type === "spot_the_difference" ||
+    a.type === "puzzle" ||
+    (a.type === "tap_correct" && a.learning_area === "mathematics" && a.tags.includes("cognitive")),
+  "pre-writing": (a) =>
+    a.type === "tracing" ||
+    a.type === "joining_dots" ||
+    a.type === "colouring",
+  mathematics: (a) =>
+    a.engine === "counting" ||
+    a.type === "basic_addition" ||
+    a.type === "basic_subtraction" ||
     a.type === "shape_matching" ||
     a.type === "shape_sorting" ||
-    (a.type === "tap_correct" && a.learning_area === "mathematics"),
-  "animals-nature": (a) =>
-    a.learning_area === "science_and_technology" ||
+    (a.type === "tap_correct" && a.learning_area === "mathematics" && !a.tags.includes("cognitive")) ||
+    (a.type === "multiple_choice" && a.learning_area === "mathematics"),
+  literacy: (a) =>
+    a.type === "phonics_recognition" ||
+    a.type === "sound_recognition" ||
+    a.type === "image_identification" && a.learning_area === "english_language" ||
+    a.type === "audio_to_image" && a.learning_area === "english_language" ||
+    a.type === "image_to_audio" && a.learning_area === "english_language",
+  "indigenous-language": (a) =>
+    a.learning_area === "indigenous_language" ||
+    a.tags.includes("indigenous"),
+  science: (a) =>
+    a.learning_area === "science_and_technology",
+  "social-studies": (a) =>
     a.learning_area === "social_sciences",
+  "social-emotional": (a) =>
+    a.tags.includes("social-emotional"),
+  creativity: (a) =>
+    a.type === "colour_identification" ||
+    a.type === "colouring" ||
+    (a.type === "tap_correct" && a.learning_area === "physical_education_and_arts") ||
+    a.type === "audio_to_image" && a.learning_area === "physical_education_and_arts",
+  physical: (a) =>
+    a.tags.includes("physical") ||
+    a.type === "pointing_target",
   stories: () => false,
-  puzzles: (a) =>
-    a.type === "memory_game" ||
-    a.type === "puzzle" ||
-    a.type === "spot_the_difference" ||
-    a.type === "joining_dots",
-  explore: () => true,
+  themes: (a) =>
+    a.tags.includes("theme-animals") ||
+    a.tags.includes("theme-transport") ||
+    a.tags.includes("theme-weather"),
 };
 
-export function getActivitiesByDomain(domain: DomainKey): AnyActivity[] {
-  if (domain === "stories") return [];
-  const filter = DOMAIN_FILTERS[domain] ?? (() => true);
+export function getActivitiesByPillar(pillar: PillarKey): AnyActivity[] {
+  if (pillar === "stories") return [];
+  const filter = PILLAR_FILTERS[pillar] ?? (() => true);
   return seedActivities.filter(filter);
 }
 
@@ -88,6 +196,8 @@ export function getActivitiesByEcdLevel(level: "ECD_A" | "ECD_B"): AnyActivity[]
   return seedActivities.filter((a) => a.ecd_level === level);
 }
 
+// ── Activity card type for display ─────────────────────────────────────────
+
 export type ActivityCard = {
   id: string;
   title: string;
@@ -97,6 +207,7 @@ export type ActivityCard = {
   difficulty: string;
   emoji: string;
   stars: number;
+  pillar: PillarKey;
 };
 
 const TYPE_EMOJI: Record<string, string> = {
@@ -114,14 +225,52 @@ const TYPE_EMOJI: Record<string, string> = {
   sequence_ordering: "1️⃣",
   memory_game: "🃏",
   tracing: "✏️",
+  joining_dots: "🔵",
+  colouring: "🖍️",
   image_identification: "🖼️",
   phonics_recognition: "🔤",
   animal_sound_recognition: "🎵",
   audio_to_image: "👂",
+  image_to_audio: "🔊",
   story_interaction: "📖",
+  classification: "🔍",
+  spot_the_difference: "👀",
+  puzzle: "🧩",
+  pointing_target: "👆",
+  sound_recognition: "🎵",
+  drag_and_drop: "🤚",
+};
+
+const PILLAR_FOR_ACTIVITY: Record<string, PillarKey> = {
+  counting: "mathematics",
+  basic_addition: "mathematics",
+  basic_subtraction: "mathematics",
+  shape_matching: "mathematics",
+  shape_sorting: "mathematics",
+  matching: "cognitive",
+  sorting: "cognitive",
+  classification: "cognitive",
+  memory_game: "cognitive",
+  pattern_completion: "cognitive",
+  sequence_ordering: "cognitive",
+  spot_the_difference: "cognitive",
+  puzzle: "cognitive",
+  tracing: "pre-writing",
+  joining_dots: "pre-writing",
+  colouring: "creativity",
+  colour_identification: "creativity",
+  phonics_recognition: "literacy",
+  sound_recognition: "literacy",
+  animal_sound_recognition: "science",
+  image_identification: "literacy",
+  audio_to_image: "literacy",
+  image_to_audio: "literacy",
+  story_interaction: "stories",
+  pointing_target: "physical",
 };
 
 export function toActivityCard(activity: AnyActivity): ActivityCard {
+  const pillar = (PILLAR_FOR_ACTIVITY[activity.type] ?? "cognitive") as PillarKey;
   return {
     id: activity.id,
     title: activity.title.en,
@@ -131,5 +280,6 @@ export function toActivityCard(activity: AnyActivity): ActivityCard {
     difficulty: activity.difficulty,
     emoji: TYPE_EMOJI[activity.type] ?? "🎯",
     stars: 0,
+    pillar,
   };
 }

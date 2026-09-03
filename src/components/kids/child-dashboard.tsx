@@ -1,24 +1,35 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useRef } from "react";
-import { DOMAINS, type DomainKey } from "@/lib/activity-catalog";
+import { useState, useRef, useEffect } from "react";
+import { PILLARS, type PillarKey } from "@/lib/activity-catalog";
+import { getLearnerStats } from "@/lib/dev-tracker";
 
-const DOMAIN_ROUTES: Record<DomainKey, string> = {
-  numbers: "/kids/explore/numbers",
-  "letters-sounds": "/kids/explore/letters-sounds",
-  colours: "/kids/explore/colours",
-  shapes: "/kids/explore/shapes",
-  "animals-nature": "/kids/explore/animals-nature",
+const PILLAR_ROUTES: Record<PillarKey, string> = {
+  cognitive: "/kids/explore/cognitive",
+  "pre-writing": "/kids/explore/pre-writing",
+  mathematics: "/kids/explore/mathematics",
+  literacy: "/kids/explore/literacy",
+  "indigenous-language": "/kids/explore/indigenous-language",
+  science: "/kids/explore/science",
+  "social-studies": "/kids/explore/social-studies",
+  "social-emotional": "/kids/explore/social-emotional",
+  creativity: "/kids/explore/creativity",
+  physical: "/kids/explore/physical",
   stories: "/kids/stories",
-  puzzles: "/kids/explore/puzzles",
-  explore: "/kids/explore/explore",
+  themes: "/kids/explore/themes",
 };
 
 export function ChildDashboard({ learnerId }: { learnerId: string }) {
   const router = useRouter();
   const [exitProgress, setExitProgress] = useState(0);
   const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [stats, setStats] = useState<{ totalStars: number; totalActivities: number } | null>(null);
+
+  useEffect(() => {
+    const s = getLearnerStats(learnerId);
+    setStats({ totalStars: s.totalStars, totalActivities: s.totalActivities });
+  }, [learnerId]);
 
   if (!learnerId) {
     router.push("/kids");
@@ -43,8 +54,8 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
     setExitProgress(0);
   }
 
-  function handleDomainClick(domain: DomainKey) {
-    router.push(DOMAIN_ROUTES[domain]);
+  function handlePillarClick(pillar: PillarKey) {
+    router.push(PILLAR_ROUTES[pillar]);
   }
 
   return (
@@ -78,7 +89,7 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
       </button>
 
       {/* Greeting */}
-      <div className="flex flex-col items-center gap-2 px-6 pt-12 pb-6">
+      <div className="flex flex-col items-center gap-2 px-6 pt-12 pb-4">
         <div
           className="flex h-16 w-16 items-center justify-center rounded-2xl text-4xl"
           style={{ backgroundColor: "var(--color-brand-sun)" }}
@@ -92,31 +103,55 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
         >
           Let&apos;s play!
         </h1>
+        <p className="text-sm text-[var(--color-ink-500)]">
+          Choose what to learn today
+        </p>
+        {stats && (
+          <div className="mt-2 flex gap-4">
+            <button
+              onClick={() => router.push(`/kids/profile?learner=${learnerId}`)}
+              className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-bold transition-all hover:scale-105"
+              style={{ backgroundColor: "var(--color-brand-sun)", color: "white" }}
+            >
+              ⭐ {stats.totalStars} stars · 🎯 {stats.totalActivities} activities
+            </button>
+            <button
+              onClick={() => router.push(`/kids/rewards?learner=${learnerId}`)}
+              className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-bold transition-all hover:scale-105"
+              style={{ backgroundColor: "var(--color-brand-jacaranda)", color: "white" }}
+            >
+              🏆 Badges
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Domain tiles */}
-      <div className="flex flex-1 items-center justify-center px-6 pb-8">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-          {DOMAINS.map((domain) => (
+      {/* Pillar tiles */}
+      <div className="flex flex-1 items-start justify-center px-4 pb-8">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+          {PILLARS.map((pillar) => (
             <button
-              key={domain.key}
-              onClick={() => handleDomainClick(domain.key)}
-              className="flex flex-col items-center gap-3 rounded-2xl p-6 transition-all hover:shadow-lg active:scale-95"
+              key={pillar.key}
+              onClick={() => handlePillarClick(pillar.key)}
+              className="flex flex-col items-center gap-2 rounded-2xl p-4 transition-all hover:shadow-lg active:scale-95"
               style={{
                 backgroundColor: "white",
-                border: `3px solid ${domain.color}`,
-                minHeight: "160px",
-                minWidth: "140px",
+                border: `3px solid ${pillar.color}`,
+                minHeight: "130px",
+                minWidth: "120px",
               }}
             >
-              <span className="text-5xl" aria-hidden="true">
-                {domain.emoji}
+              <span className="text-4xl" aria-hidden="true">
+                {pillar.emoji}
               </span>
               <span
-                className="text-xl font-bold"
+                className="text-base font-bold"
                 style={{ color: "var(--color-ink-900)" }}
               >
-                {domain.label}
+                {pillar.label}
+              </span>
+              <span className="text-center text-xs text-[var(--color-ink-500)]">
+                {pillar.description}
               </span>
             </button>
           ))}

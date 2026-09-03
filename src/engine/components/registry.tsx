@@ -12,6 +12,11 @@ import { TraceEngine } from "./trace-engine";
 import { MemoryEngine } from "./memory-engine";
 import { StoryEngine } from "./story-engine";
 import { DragSortEngine } from "./drag-sort-engine";
+import { JoinDotsEngine } from "./join-dots-engine";
+import { ColouringEngine } from "./colouring-engine";
+import { SequenceEngine } from "./sequence-engine";
+import { PuzzleEngine } from "./puzzle-engine";
+import { SpotDifferenceEngine } from "./spot-difference-engine";
 
 export type EngineComponentProps = {
   activity: AnyActivity;
@@ -35,17 +40,16 @@ export function getEngineComponent(engine: Engine): React.ComponentType<EngineCo
       return StoryEngineWrapper;
     case "drag-sort":
       return DragSortEngineWrapper;
-    // Engines with placeholder wrappers (to be implemented with full UI)
     case "join-dots":
-      return PlaceholderEngine;
+      return JoinDotsEngine;
     case "colouring":
-      return PlaceholderEngine;
+      return ColouringEngine;
     case "sequence":
-      return PlaceholderEngine;
+      return SequenceEngine;
     case "puzzle":
-      return PlaceholderEngine;
+      return PuzzleEngine;
     case "spot-difference":
-      return PlaceholderEngine;
+      return SpotDifferenceEngine;
     default:
       return PlaceholderEngine;
   }
