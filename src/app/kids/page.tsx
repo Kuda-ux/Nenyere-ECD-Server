@@ -9,8 +9,7 @@ export const metadata: Metadata = {
 export default function KidsPage() {
   return (
     <div
-      className="flex min-h-screen flex-col items-center justify-center px-6 py-8"
-      style={{ backgroundColor: "var(--color-surface-0)" }}
+      className="kids-bg-rainbow flex min-h-screen flex-col items-center justify-center px-6 py-8"
     >
       <LearnerPicker />
     </div>

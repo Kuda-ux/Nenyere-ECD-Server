@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Nunito } from "next/font/google";
+import { Inter, Fredoka } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -8,10 +8,10 @@ const inter = Inter({
   display: "swap",
 });
 
-const nunito = Nunito({
+const fredoka = Fredoka({
   subsets: ["latin"],
-  variable: "--font-kids",
-  weight: ["400", "600", "700", "800"],
+  variable: "--font-fredoka",
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -37,7 +37,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#F2A93B",
+  themeColor: "#FFB627",
   viewportFit: "cover",
 };
 
@@ -48,7 +48,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${nunito.variable} antialiased`}>
+      <body className={`${inter.variable} ${fredoka.variable} antialiased`}>
         {children}
       </body>
     </html>

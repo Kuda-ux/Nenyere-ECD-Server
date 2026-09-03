@@ -1,79 +1,92 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   Nenyere ECD Design Tokens
-   Source: docs/design-system.md §2
-   Every colour and size comes from a Variable (design review checklist §7).
+   Nenyere ECD Design Tokens — Vibrant Kids Edition
+   Bright, playful, joyful — designed to make toddlers fall in love
    ========================================================================== */
 
 @theme {
-  /* --- Brand colours --- */
-  --color-brand-sun: #f2a93b;
-  --color-brand-msasa: #4f8a5b;
-  --color-brand-clay: #c9704a;
-  --color-brand-jacaranda: #7e6bb5;
-  --color-brand-sky: #5fa8d3;
+  /* --- Brand colours (brightened) --- */
+  --color-brand-sun: #FFB627;
+  --color-brand-msasa: #4CAF50;
+  --color-brand-clay: #FF6B35;
+  --color-brand-jacaranda: #9B59D0;
+  --color-brand-sky: #4FC3F7;
+
+  /* --- Extra vibrant accent colours --- */
+  --color-brand-pink: #FF6B9D;
+  --color-brand-coral: #FF5252;
+  --color-brand-mint: #26D0A8;
+  --color-brand-lemon: #FFEB3B;
+  --color-brand-grape: #6C5CE7;
+  --color-brand-tangerine: #FF9F43;
+  --color-brand-berry: #E84393;
+  --color-brand-leaf: #00B894;
 
   /* --- Ink (text) --- */
-  --color-ink-900: #1e1b16;
-  --color-ink-700: #4a443a;
-  --color-ink-500: #7a7267;
+  --color-ink-900: #1a1a2e;
+  --color-ink-700: #4a4a6a;
+  --color-ink-500: #7a7a8e;
 
-  /* --- Surfaces (warm off-whites) --- */
-  --color-surface-0: #fffdf8;
-  --color-surface-1: #fbf5ea;
-  --color-surface-2: #f3eadb;
+  /* --- Surfaces (warm, bright) --- */
+  --color-surface-0: #FFFBF0;
+  --color-surface-1: #FFF5E1;
+  --color-surface-2: #F5EBD8;
 
   /* --- Feedback --- */
   --color-feedback-correct: var(--color-brand-msasa);
   --color-feedback-encourage: var(--color-brand-sun);
-  --color-danger: #b4453a;
+  --color-danger: #E74C3C;
 
   /* --- Activity colour set (colour-learning stimuli) --- */
-  --color-activity-red: #d64545;
-  --color-activity-blue: #4a7fc1;
-  --color-activity-yellow: #f0c83b;
-  --color-activity-green: #5a9e57;
-  --color-activity-orange: #e88a3a;
-  --color-activity-purple: #8b6db5;
+  --color-activity-red: #FF5252;
+  --color-activity-blue: #448AFF;
+  --color-activity-yellow: #FFD740;
+  --color-activity-green: #69F0AE;
+  --color-activity-orange: #FFAB40;
+  --color-activity-purple: #B388FF;
   --color-activity-black: #2a2a2a;
   --color-activity-white: #fafafa;
-  --color-activity-brown: #8b6240;
-  --color-activity-pink: #e091b0;
+  --color-activity-brown: #8B6240;
+  --color-activity-pink: #FF80AB;
 
-  /* --- Typography (variables set by next/font in layout.tsx) --- */
-  --font-kids: var(--font-kids), "Andika", system-ui, sans-serif;
+  /* --- Typography --- */
+  --font-kids: var(--font-fredoka), "Fredoka", "Nunito", system-ui, sans-serif;
   --font-adult: var(--font-adult), system-ui, -apple-system, sans-serif;
 
   /* --- Spacing (4-pt base) --- */
-  --spacing-1: 0.25rem; /* 4 */
-  --spacing-2: 0.5rem; /* 8 */
-  --spacing-3: 0.75rem; /* 12 */
-  --spacing-4: 1rem; /* 16 */
-  --spacing-6: 1.5rem; /* 24 */
-  --spacing-8: 2rem; /* 32 */
-  --spacing-12: 3rem; /* 48 */
-  --spacing-16: 4rem; /* 64 */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
 
-  /* --- Radii --- */
-  --radius-sm: 0.5rem; /* 8 */
-  --radius-md: 1rem; /* 16 */
-  --radius-lg: 1.5rem; /* 24 */
+  /* --- Radii (chunkier for kids) --- */
+  --radius-sm: 0.75rem;
+  --radius-md: 1.25rem;
+  --radius-lg: 2rem;
+  --radius-xl: 2.5rem;
   --radius-pill: 9999px;
 
   /* --- Elevation (warm-tinted shadows) --- */
-  --shadow-1: 0 1px 3px 0 rgba(62, 50, 30, 0.08),
-    0 1px 2px 0 rgba(62, 50, 30, 0.06);
-  --shadow-2: 0 4px 12px -2px rgba(62, 50, 30, 0.1),
-    0 2px 6px -1px rgba(62, 50, 30, 0.06);
-  --shadow-3: 0 12px 32px -4px rgba(62, 50, 30, 0.14),
-    0 4px 12px -2px rgba(62, 50, 30, 0.08);
+  --shadow-1: 0 2px 8px -1px rgba(62, 50, 30, 0.1),
+    0 1px 3px 0 rgba(62, 50, 30, 0.06);
+  --shadow-2: 0 6px 20px -3px rgba(62, 50, 30, 0.15),
+    0 3px 8px -2px rgba(62, 50, 30, 0.08);
+  --shadow-3: 0 16px 40px -6px rgba(62, 50, 30, 0.2),
+    0 6px 16px -3px rgba(62, 50, 30, 0.1);
+  --shadow-glow: 0 0 24px rgba(255, 182, 39, 0.4);
+  --shadow-pop: 0 8px 0px 0px rgba(0, 0, 0, 0.08);
 
   /* --- Motion --- */
   --duration-fast: 120ms;
   --duration-normal: 200ms;
   --duration-slow: 320ms;
   --ease-natural: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 /* ==========================================================================
@@ -111,7 +124,7 @@ body {
 
 /* Focus visible for keyboard navigation */
 :focus-visible {
-  outline: 2px solid var(--color-brand-sun);
+  outline: 3px solid var(--color-brand-sun);
   outline-offset: 2px;
 }
 
@@ -125,4 +138,243 @@ body {
 
 .font-adult {
   font-family: var(--font-adult);
+}
+
+/* ==========================================================================
+   Vibrant gradient backgrounds for kids pages
+   ========================================================================== */
+
+.kids-bg-rainbow {
+  background: linear-gradient(135deg,
+    #FFF5E1 0%,
+    #FFE0F0 25%,
+    #E0F7FA 50%,
+    #FFF8E1 75%,
+    #F3E5F5 100%
+  );
+}
+
+.kids-bg-sunny {
+  background: linear-gradient(180deg,
+    #FFF5E1 0%,
+    #FFECB3 40%,
+    #FFE0B2 100%
+  );
+}
+
+.kids-bg-ocean {
+  background: linear-gradient(180deg,
+    #E1F5FE 0%,
+    #B3E5FC 50%,
+    #81D4FA 100%
+  );
+}
+
+.kids-bg-garden {
+  background: linear-gradient(180deg,
+    #F1F8E9 0%,
+    #DCEDC8 50%,
+    #C5E1A5 100%
+  );
+}
+
+.kids-bg-candy {
+  background: linear-gradient(135deg,
+    #FCE4EC 0%,
+    #F8BBD0 50%,
+    #E1BEE7 100%
+  );
+}
+
+.kids-bg-sunset {
+  background: linear-gradient(135deg,
+    #FFF3E0 0%,
+    #FFE0B2 30%,
+    #FFCCBC 60%,
+    #F8BBD0 100%
+  );
+}
+
+.kids-bg-playful {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 107, 157, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(79, 195, 247, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(255, 182, 39, 0.08) 0%, transparent 50%),
+    #FFFBF0;
+}
+
+/* ==========================================================================
+   Animations — playful, joyful micro-interactions
+   ========================================================================== */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.1); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0); opacity: 0; }
+  80% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slide-up {
+  0% { transform: translateY(30px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 182, 39, 0.4); }
+  50% { box-shadow: 0 0 20px 8px rgba(255, 182, 39, 0.2); }
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes star-burst {
+  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+  50% { transform: scale(1.3) rotate(180deg); opacity: 1; }
+  100% { transform: scale(1) rotate(360deg); opacity: 1; }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(8deg); }
+}
+
+@keyframes heart-beat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.15); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.1); }
+  60% { transform: scale(1); }
+}
+
+/* Animation utility classes */
+.anim-float { animation: float 3s ease-in-out infinite; }
+.anim-float-slow { animation: float-slow 5s ease-in-out infinite; }
+.anim-wobble { animation: wobble 2s ease-in-out infinite; }
+.anim-bounce-in { animation: bounce-in 0.6s var(--ease-bounce) both; }
+.anim-pop-in { animation: pop-in 0.5s var(--ease-bounce) both; }
+.anim-slide-up { animation: slide-up 0.5s var(--ease-natural) both; }
+.anim-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.anim-star-burst { animation: star-burst 0.8s var(--ease-bounce) both; }
+.anim-wiggle { animation: wiggle 1.5s ease-in-out infinite; }
+.anim-heart-beat { animation: heart-beat 1.5s ease-in-out infinite; }
+
+/* Staggered animation delays */
+.anim-delay-1 { animation-delay: 0.1s; }
+.anim-delay-2 { animation-delay: 0.2s; }
+.anim-delay-3 { animation-delay: 0.3s; }
+.anim-delay-4 { animation-delay: 0.4s; }
+.anim-delay-5 { animation-delay: 0.5s; }
+.anim-delay-6 { animation-delay: 0.6s; }
+.anim-delay-7 { animation-delay: 0.7s; }
+.anim-delay-8 { animation-delay: 0.8s; }
+
+/* ==========================================================================
+   Confetti pieces (for celebration screens)
+   ========================================================================== */
+
+.confetti-piece {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  z-index: 100;
+  pointer-events: none;
+  animation: confetti-fall 3s linear forwards;
+}
+
+/* ==========================================================================
+   Kids card — chunky, playful, with bottom shadow for depth
+   ========================================================================== */
+
+.kids-card {
+  border-radius: var(--radius-lg);
+  background: white;
+  box-shadow: var(--shadow-pop);
+  transition: all var(--duration-normal) var(--ease-natural);
+}
+
+.kids-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-2), var(--shadow-pop);
+}
+
+.kids-card:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: var(--shadow-1);
+}
+
+/* ==========================================================================
+   Kids button — big, chunky, satisfying
+   ========================================================================== */
+
+.kids-btn {
+  font-family: var(--font-kids);
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  transition: all var(--duration-fast) var(--ease-natural);
+  position: relative;
+}
+
+.kids-btn:active {
+  transform: scale(0.95);
+}
+
+/* Shimmer effect for special buttons */
+.kids-btn-shimmer {
+  background: linear-gradient(90deg,
+    var(--color-brand-sun) 0%,
+    var(--color-brand-tangerine) 25%,
+    var(--color-brand-coral) 50%,
+    var(--color-brand-tangerine) 75%,
+    var(--color-brand-sun) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ==========================================================================
+   Scrollbar styling for kids areas
+   ========================================================================== */
+
+.kids-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.kids-scroll::-webkit-scrollbar-track {
+  background: var(--color-surface-1);
+  border-radius: var(--radius-pill);
+}
+
+.kids-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-brand-sun);
+  border-radius: var(--radius-pill);
 }

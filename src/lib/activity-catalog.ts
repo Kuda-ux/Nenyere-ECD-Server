@@ -25,6 +25,7 @@ export type Pillar = {
   label: string;
   emoji: string;
   color: string;
+  gradient: string;
   description: string;
 };
 
@@ -34,6 +35,7 @@ export const PILLARS: Pillar[] = [
     label: "Thinking",
     emoji: "🧠",
     color: "var(--color-brand-jacaranda)",
+    gradient: "linear-gradient(135deg, #9B59D0, #6C5CE7)",
     description: "Matching, sorting, memory, puzzles, patterns",
   },
   {
@@ -41,6 +43,7 @@ export const PILLARS: Pillar[] = [
     label: "Tracing",
     emoji: "✏️",
     color: "var(--color-brand-sky)",
+    gradient: "linear-gradient(135deg, #4FC3F7, #26D0A8)",
     description: "Lines, shapes, letters, numbers",
   },
   {
@@ -48,6 +51,7 @@ export const PILLARS: Pillar[] = [
     label: "Numbers",
     emoji: "🔢",
     color: "var(--color-brand-msasa)",
+    gradient: "linear-gradient(135deg, #4CAF50, #00B894)",
     description: "Counting, addition, subtraction, shapes",
   },
   {
@@ -55,6 +59,7 @@ export const PILLARS: Pillar[] = [
     label: "Letters",
     emoji: "🔤",
     color: "var(--color-brand-sky)",
+    gradient: "linear-gradient(135deg, #4FC3F7, #6C5CE7)",
     description: "Phonics, vowels, alphabet, vocabulary",
   },
   {
@@ -62,6 +67,7 @@ export const PILLARS: Pillar[] = [
     label: "ChiShona",
     emoji: "🇿🇼",
     color: "var(--color-brand-sun)",
+    gradient: "linear-gradient(135deg, #FFB627, #FF9F43)",
     description: "Learn in ChiShona and isiNdebele",
   },
   {
@@ -69,6 +75,7 @@ export const PILLARS: Pillar[] = [
     label: "Discovery",
     emoji: "🔬",
     color: "var(--color-brand-clay)",
+    gradient: "linear-gradient(135deg, #FF6B35, #FF5252)",
     description: "Animals, weather, plants, senses",
   },
   {
@@ -76,6 +83,7 @@ export const PILLARS: Pillar[] = [
     label: "My World",
     emoji: "🌍",
     color: "var(--color-brand-msasa)",
+    gradient: "linear-gradient(135deg, #00B894, #26D0A8)",
     description: "Family, community, Zimbabwe, transport",
   },
   {
@@ -83,6 +91,7 @@ export const PILLARS: Pillar[] = [
     label: "Feelings",
     emoji: "❤️",
     color: "var(--color-brand-sun)",
+    gradient: "linear-gradient(135deg, #FF6B9D, #E84393)",
     description: "Emotions, sharing, kindness, respect",
   },
   {
@@ -90,6 +99,7 @@ export const PILLARS: Pillar[] = [
     label: "Create",
     emoji: "🎨",
     color: "var(--color-brand-sun)",
+    gradient: "linear-gradient(135deg, #FFEB3B, #FF9F43)",
     description: "Colours, drawing, music, dance",
   },
   {
@@ -97,6 +107,7 @@ export const PILLARS: Pillar[] = [
     label: "Move",
     emoji: "🏃",
     color: "var(--color-brand-clay)",
+    gradient: "linear-gradient(135deg, #FF9F43, #FF6B35)",
     description: "Jump, clap, balance, coordination",
   },
   {
@@ -104,6 +115,7 @@ export const PILLARS: Pillar[] = [
     label: "Stories",
     emoji: "📖",
     color: "var(--color-brand-jacaranda)",
+    gradient: "linear-gradient(135deg, #9B59D0, #B388FF)",
     description: "Interactive Zimbabwean stories",
   },
   {
@@ -111,6 +123,7 @@ export const PILLARS: Pillar[] = [
     label: "Themes",
     emoji: "🌟",
     color: "var(--color-brand-sun)",
+    gradient: "linear-gradient(135deg, #FFB627, #FF6B9D)",
     description: "Animals, transport, weather themes",
   },
 ];

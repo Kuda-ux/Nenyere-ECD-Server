@@ -20,6 +20,15 @@ const PILLAR_ROUTES: Record<PillarKey, string> = {
   themes: "/kids/explore/themes",
 };
 
+const FLOATING_DECORATIONS = [
+  { emoji: "⭐", top: "5%", left: "3%", size: "2.5rem", anim: "anim-float-slow", delay: "anim-delay-2" },
+  { emoji: "🌈", top: "8%", left: "92%", size: "2.5rem", anim: "anim-float", delay: "anim-delay-1" },
+  { emoji: "🦋", top: "88%", left: "5%", size: "2rem", anim: "anim-float-slow", delay: "anim-delay-4" },
+  { emoji: "🎈", top: "85%", left: "90%", size: "2.5rem", anim: "anim-float", delay: "anim-delay-3" },
+  { emoji: "☁️", top: "12%", left: "70%", size: "2.5rem", anim: "anim-float-slow", delay: "anim-delay-5" },
+  { emoji: "🌟", top: "80%", left: "50%", size: "2rem", anim: "anim-wiggle", delay: "" },
+];
+
 export function ChildDashboard({ learnerId }: { learnerId: string }) {
   const router = useRouter();
   const [exitProgress, setExitProgress] = useState(0);
@@ -60,15 +69,25 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
 
   return (
     <div
-      className="flex min-h-screen flex-col"
-      style={{
-        backgroundColor: "var(--color-surface-0)",
-        fontFamily: "var(--font-kids)",
-      }}
+      className="kids-bg-playful relative flex min-h-screen flex-col overflow-hidden"
+      style={{ fontFamily: "var(--font-kids)" }}
     >
+      {/* Floating decorations */}
+      {FLOATING_DECORATIONS.map((dec, i) => (
+        <span
+          key={i}
+          className={`pointer-events-none absolute ${dec.anim} ${dec.delay}`}
+          style={{ top: dec.top, left: dec.left, fontSize: dec.size, opacity: 0.5 }}
+          aria-hidden="true"
+        >
+          {dec.emoji}
+        </span>
+      ))}
+
       {/* Exit gate — hold 2s */}
       <button
-        className="absolute left-4 top-4 z-10 flex h-12 w-12 items-center justify-center rounded-full text-2xl text-[var(--color-ink-500)] transition-colors hover:bg-[var(--color-surface-1)]"
+        className="absolute left-4 top-4 z-10 flex h-14 w-14 items-center justify-center rounded-full text-2xl text-white shadow-lg transition-all hover:scale-110 active:scale-95"
+        style={{ backgroundColor: "var(--color-brand-jacaranda)" }}
         onPointerDown={handleExitHoldStart}
         onPointerUp={handleExitHoldEnd}
         onPointerLeave={handleExitHoldEnd}
@@ -77,48 +96,51 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
         ←
         {exitProgress > 0 && (
           <svg className="absolute inset-0 -rotate-90" viewBox="0 0 48 48">
-            <circle
-              cx="24" cy="24" r="22"
-              fill="none"
-              stroke="var(--color-brand-sun)"
-              strokeWidth="3"
-              strokeDasharray={`${exitProgress * 138.2} 138.2`}
-            />
+            <circle cx="24" cy="24" r="22" fill="none" stroke="var(--color-brand-sun)" strokeWidth="3" strokeDasharray={`${exitProgress * 138.2} 138.2`} />
           </svg>
         )}
       </button>
 
       {/* Greeting */}
-      <div className="flex flex-col items-center gap-2 px-6 pt-12 pb-4">
+      <div className="flex flex-col items-center gap-2 px-6 pt-14 pb-4 anim-bounce-in">
         <div
-          className="flex h-16 w-16 items-center justify-center rounded-2xl text-4xl"
-          style={{ backgroundColor: "var(--color-brand-sun)" }}
+          className="anim-float flex h-20 w-20 items-center justify-center rounded-full text-5xl shadow-lg"
+          style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
           aria-hidden="true"
         >
-          ⭐
+          🌟
         </div>
         <h1
-          className="text-3xl font-bold text-[var(--color-ink-900)]"
+          className="text-4xl font-bold text-[var(--color-ink-900)]"
           style={{ fontFamily: "var(--font-kids)" }}
         >
           Let&apos;s play!
         </h1>
-        <p className="text-sm text-[var(--color-ink-500)]">
-          Choose what to learn today
+        <p className="text-lg text-[var(--color-ink-500)]">
+          Choose what to learn today 😊
         </p>
+
+        {/* Stats badges */}
         {stats && (
-          <div className="mt-2 flex gap-4">
+          <div className="mt-3 flex gap-3">
             <button
               onClick={() => router.push(`/kids/profile?learner=${learnerId}`)}
-              className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-bold transition-all hover:scale-105"
-              style={{ backgroundColor: "var(--color-brand-sun)", color: "white" }}
+              className="kids-btn flex items-center gap-2 px-5 py-2.5 text-base shadow-md transition-all hover:scale-105"
+              style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)", color: "white" }}
             >
-              ⭐ {stats.totalStars} stars · 🎯 {stats.totalActivities} activities
+              ⭐ {stats.totalStars}
+            </button>
+            <button
+              onClick={() => router.push(`/kids/profile?learner=${learnerId}`)}
+              className="kids-btn flex items-center gap-2 px-5 py-2.5 text-base shadow-md transition-all hover:scale-105"
+              style={{ background: "linear-gradient(135deg, #9B59D0, #6C5CE7)", color: "white" }}
+            >
+              🎯 {stats.totalActivities}
             </button>
             <button
               onClick={() => router.push(`/kids/rewards?learner=${learnerId}`)}
-              className="flex items-center gap-1 rounded-full px-4 py-2 text-sm font-bold transition-all hover:scale-105"
-              style={{ backgroundColor: "var(--color-brand-jacaranda)", color: "white" }}
+              className="kids-btn flex items-center gap-2 px-5 py-2.5 text-base shadow-md transition-all hover:scale-105"
+              style={{ background: "linear-gradient(135deg, #FF6B9D, #E84393)", color: "white" }}
             >
               🏆 Badges
             </button>
@@ -127,30 +149,31 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
       </div>
 
       {/* Pillar tiles */}
-      <div className="flex flex-1 items-start justify-center px-4 pb-8">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-          {PILLARS.map((pillar) => (
+      <div className="flex flex-1 items-start justify-center overflow-y-auto kids-scroll px-4 pb-8">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+          {PILLARS.map((pillar, i) => (
             <button
               key={pillar.key}
               onClick={() => handlePillarClick(pillar.key)}
-              className="flex flex-col items-center gap-2 rounded-2xl p-4 transition-all hover:shadow-lg active:scale-95"
+              className={`kids-card flex flex-col items-center gap-2 border-4 p-4 anim-pop-in`}
               style={{
-                backgroundColor: "white",
-                border: `3px solid ${pillar.color}`,
-                minHeight: "130px",
-                minWidth: "120px",
+                borderColor: "transparent",
+                background: pillar.gradient,
+                minHeight: "140px",
+                minWidth: "130px",
+                animationDelay: `${i * 0.06}s`,
               }}
             >
-              <span className="text-4xl" aria-hidden="true">
+              <span className="text-5xl drop-shadow-md anim-float" style={{ animationDelay: `${i * 0.2}s` }} aria-hidden="true">
                 {pillar.emoji}
               </span>
               <span
-                className="text-base font-bold"
-                style={{ color: "var(--color-ink-900)" }}
+                className="text-lg font-bold text-white drop-shadow-md"
+                style={{ fontFamily: "var(--font-kids)" }}
               >
                 {pillar.label}
               </span>
-              <span className="text-center text-xs text-[var(--color-ink-500)]">
+              <span className="text-center text-xs text-white/80">
                 {pillar.description}
               </span>
             </button>
