@@ -20,6 +20,7 @@ import { SpotDifferenceEngine } from "./spot-difference-engine";
 
 export type EngineComponentProps = {
   activity: AnyActivity;
+  itemIndex?: number;
   onResult: (response: import("../schema/common").ItemResponse, result: import("../schema/common").ItemResult) => void;
   hintLevel: number;
 };
@@ -57,9 +58,9 @@ export function getEngineComponent(engine: Engine): React.ComponentType<EngineCo
 
 // ── Wrapper components to adapt engine-specific props to common interface ──
 
-function ChoiceEngineWrapper({ activity, onResult, hintLevel }: EngineComponentProps) {
+function ChoiceEngineWrapper({ activity, itemIndex = 0, onResult, hintLevel }: EngineComponentProps) {
   if (activity.engine !== "choice") return null;
-  const item = activity.items[0]; // Runner handles item indexing
+  const item = activity.items[itemIndex] ?? activity.items[0];
   return <ChoiceEngine activity={activity} item={item} onResult={onResult} hintLevel={hintLevel} />;
 }
 
@@ -68,15 +69,15 @@ function MatchEngineWrapper({ activity, onResult, hintLevel }: EngineComponentPr
   return <MatchEngine activity={activity} onResult={onResult} hintLevel={hintLevel} />;
 }
 
-function CountingEngineWrapper({ activity, onResult, hintLevel }: EngineComponentProps) {
+function CountingEngineWrapper({ activity, itemIndex = 0, onResult, hintLevel }: EngineComponentProps) {
   if (activity.engine !== "counting") return null;
-  const item = activity.items[0];
+  const item = activity.items[itemIndex] ?? activity.items[0];
   return <CountingEngine activity={activity} item={item} onResult={onResult} hintLevel={hintLevel} />;
 }
 
-function TraceEngineWrapper({ activity, onResult, hintLevel }: EngineComponentProps) {
+function TraceEngineWrapper({ activity, itemIndex = 0, onResult, hintLevel }: EngineComponentProps) {
   if (activity.engine !== "trace") return null;
-  const item = activity.items[0];
+  const item = activity.items[itemIndex] ?? activity.items[0];
   return <TraceEngine activity={activity} item={item} onResult={onResult} hintLevel={hintLevel} />;
 }
 

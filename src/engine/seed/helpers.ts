@@ -5,11 +5,16 @@ export const FEEDBACK = {
     { text: { en: "Excellent!", sn: "Zvakanaka!", nd: "Zwakanaka!" } },
     { text: { en: "Correct! You are so smart!", sn: "Chokwadi! Wakangwara!", nd: "Kuyiqiniso! Ukhokhle!" } },
     { text: { en: "Great job!", sn: "Basa rakanaka!", nd: "Umsebenzi omuhle!" } },
+    { text: { en: "You're a star! ⭐", sn: "Uri nyeredzi! ⭐", nd: "Ungumthwana! ⭐" } },
+    { text: { en: "Brilliant! 🌟", sn: "Basa rakanakisa! 🌟", nd: "Kuhle kakhulu! 🌟" } },
+    { text: { en: "Perfect! 👏", sn: "Zvakanaka kwazvo! 👏", nd: "Kuyaphila! 👏" } },
   ],
   encourage: [
     { text: { en: "Let's try again.", sn: "Tiyedze zvakare.", nd: "Ake tinze khonjo." } },
     { text: { en: "Good try!", sn: "Kuedza kwakanaka!", nd: "Kuyedza kwakanaka!" } },
     { text: { en: "Almost! Try once more.", sn: "Pedyo! Edza kamwe chete.", nd: "Kusedze! Zama futhi." } },
+    { text: { en: "You can do it! 💪", sn: "Unogona! 💪", nd: "Uyakwazi! 💪" } },
+    { text: { en: "Don't give up! 🌟", sn: "Usaregeredze! 🌟", nd: "Ungakhali! 🌟" } },
   ],
   celebration: "stars" as const,
 };

@@ -6,6 +6,7 @@ import { ActivityRunner } from "@/engine";
 import { getActivityById } from "@/lib/activity-catalog";
 import { recordActivityCompletion } from "@/lib/dev-tracker";
 import { Confetti } from "@/components/kids/confetti";
+import { Mascot } from "@/components/kids/mascot";
 import { useSound } from "@/hooks/use-sound";
 
 function PlayActivityContent({ params }: { params: Promise<{ activityId: string }> }) {
@@ -30,6 +31,14 @@ function PlayActivityContent({ params }: { params: Promise<{ activityId: string 
       }
     }
   }, [completed, completionResult, play]);
+
+  // Play celebrate sound after fanfare
+  useEffect(() => {
+    if (completed) {
+      const timer = setTimeout(() => play("celebrate"), 800);
+      return () => clearTimeout(timer);
+    }
+  }, [completed, play]);
 
   if (!activityId) {
     return (
@@ -66,8 +75,8 @@ function PlayActivityContent({ params }: { params: Promise<{ activityId: string 
         {/* Confetti celebration */}
         <Confetti count={50} />
 
-        {/* Celebration emoji */}
-        <div className="text-8xl anim-bounce-in" aria-hidden="true">🎉</div>
+        {/* Mascot celebrating */}
+        <Mascot mood="celebrating" size={100} />
 
         {/* Completion message */}
         <p className="text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-in anim-delay-1" style={{ fontFamily: "var(--font-kids)" }}>
@@ -82,10 +91,10 @@ function PlayActivityContent({ params }: { params: Promise<{ activityId: string 
           {[1, 2, 3].map((s) => (
             <span
               key={s}
-              className={`text-6xl ${s <= earnedStars ? "anim-star-burst" : ""}`}
+              className={`text-7xl ${s <= earnedStars ? "anim-star-burst-big" : ""}`}
               style={{
                 color: s <= earnedStars ? "var(--color-brand-sun)" : "var(--color-surface-2)",
-                animationDelay: `${s * 0.15}s`,
+                animationDelay: `${s * 0.2}s`,
               }}
               aria-hidden="true"
             >

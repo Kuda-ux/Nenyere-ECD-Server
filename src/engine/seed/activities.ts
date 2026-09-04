@@ -1,6 +1,6 @@
 /**
  * Seed activities for the Nenyere ECD platform.
- * Covers 10 developmental pillars aligned to the Zimbabwe HBC 2024-2030.
+ * Covers 10 developmental pillars for ECD A & ECD B learners.
  * Activities support English, ChiShona (sn), and isiNdebele (nd).
  * Each pillar has activities for both ECD_A and ECD_B levels.
  */

@@ -12,7 +12,7 @@ const CountingItemSchema = z.object({
   // What to count: visual objects on screen
   objects: z.object({
     image: LocalizedAssetRefSchema.optional(),
-    shape: z.enum(["circle", "square", "triangle", "star", "heart", "diamond"]).optional(),
+    shape: z.string().optional(),
     colour: z.string().optional(),
     count: z.number().int().min(1).max(20),
     arrangement: z.enum(["row", "grid", "scatter", "ten_frame"]).default("row"),

@@ -1,13 +1,30 @@
 /**
- * Drag-sort engine component.
+ * Drag-sort engine component — Enhanced with gradient cards, tap-to-place
+ * for tablets, sound feedback, and playful animations.
  * Renders sorting, sequence_ordering, pattern_completion.
- * Drag items into correct slots.
  */
 "use client";
 
 import { useState, useCallback } from "react";
 import type { DragSortActivity, SortItem } from "../schema/drag-sort";
 import { ContentImage } from "./content-image";
+import { useSound } from "@/hooks/use-sound";
+
+const SLOT_GRADIENTS = [
+  "linear-gradient(135deg, #FFF9E6, #FFE082)",
+  "linear-gradient(135deg, #E3F2FD, #BBDEFB)",
+  "linear-gradient(135deg, #F3E5F5, #E1BEE7)",
+  "linear-gradient(135deg, #E8F5E9, #C8E6C9)",
+];
+
+const SHAPE_EMOJI: Record<string, string> = {
+  star: "⭐",
+  circle: "🔵",
+  square: "🟦",
+  triangle: "🔺",
+  heart: "❤️",
+  diamond: "💎",
+};
 
 type Props = {
   activity: DragSortActivity;
@@ -16,8 +33,10 @@ type Props = {
 };
 
 export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
+  const { play: playSound } = useSound();
   const [placements, setPlacements] = useState<Record<string, string>>({});
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   const handleDragStart = useCallback((itemId: string) => {
     setDraggedItem(itemId);
@@ -25,13 +44,17 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
 
   const handleDrop = useCallback(
     (slotId: string) => {
-      if (!draggedItem) return;
-      setPlacements((prev) => ({ ...prev, [draggedItem]: slotId }));
-      setDraggedItem(null);
+      const itemToPlace = draggedItem || selectedItem;
+      if (!itemToPlace) return;
 
-      // Check if all items placed
-      const newPlacements = { ...placements, [draggedItem]: slotId };
+      playSound("pop");
+      setPlacements((prev) => ({ ...prev, [itemToPlace]: slotId }));
+      setDraggedItem(null);
+      setSelectedItem(null);
+
+      const newPlacements = { ...placements, [itemToPlace]: slotId };
       if (Object.keys(newPlacements).length === activity.items.length) {
+        playSound("correct");
         const responses = activity.items.map((item) => ({
           item_id: item.id,
           placed_slot_id: newPlacements[item.id],
@@ -40,32 +63,35 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
         onResult(responses);
       }
     },
-    [draggedItem, placements, activity.items, onResult, hintLevel],
+    [draggedItem, selectedItem, placements, activity.items, onResult, hintLevel, playSound],
   );
 
-  // For touch devices: tap-to-select then tap-to-place
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
-
   const handleItemTap = useCallback((itemId: string) => {
+    playSound("tap");
     setSelectedItem(itemId);
-  }, []);
+  }, [playSound]);
 
   const handleSlotTap = useCallback(
     (slotId: string) => {
-      if (!selectedItem) return;
+      if (!selectedItem && !draggedItem) return;
       handleDrop(slotId);
-      setSelectedItem(null);
     },
-    [selectedItem, handleDrop],
+    [selectedItem, draggedItem, handleDrop],
   );
 
   const unplacedItems = activity.items.filter((item) => !(item.id in placements));
 
   return (
     <div className="flex flex-col items-center gap-6">
-      {/* Items tray */}
+      {/* Items tray — themed */}
       {unplacedItems.length > 0 && (
-        <div className="flex flex-wrap gap-3 rounded-2xl bg-white p-4">
+        <div
+          className="flex flex-wrap gap-3 rounded-3xl p-5 shadow-md"
+          style={{ background: "linear-gradient(135deg, #F8F9FF, #E3F2FD)" }}
+        >
+          <p className="w-full text-center text-sm font-bold text-[var(--color-ink-500)]" style={{ fontFamily: "var(--font-kids)" }}>
+            👆 Tap a shape, then tap a box!
+          </p>
           {unplacedItems.map((item) => (
             <button
               key={item.id}
@@ -73,12 +99,17 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
               onDragStart={() => handleDragStart(item.id)}
               onClick={() => handleItemTap(item.id)}
               className={[
-                "flex items-center justify-center rounded-xl border-4 p-3 transition-all active:scale-95",
+                "flex items-center justify-center rounded-2xl p-3 transition-all active:scale-95 shadow-md",
+                "anim-pop-scale",
                 selectedItem === item.id
-                  ? "border-[var(--color-brand-sun)] bg-[var(--color-brand-sun)]/10"
-                  : "border-[var(--color-surface-2)] bg-white",
+                  ? "ring-4 ring-[var(--color-brand-sun)] anim-pulse-glow scale-110"
+                  : "hover:scale-105 hover:shadow-lg",
               ].join(" ")}
-              style={{ minHeight: "60px", minWidth: "60px" }}
+              style={{
+                minHeight: "70px",
+                minWidth: "70px",
+                background: "white",
+              }}
             >
               <ItemContent item={item} />
             </button>
@@ -86,10 +117,12 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
         </div>
       )}
 
-      {/* Slots */}
-      <div className={activity.layout === "sequence" ? "flex gap-2" : "grid grid-cols-2 gap-4 sm:grid-cols-3"}>
-        {activity.slots.map((slot) => {
+      {/* Slots — themed with gradients */}
+      <div className={activity.layout === "sequence" ? "flex gap-3" : "grid grid-cols-2 gap-4 sm:grid-cols-3"}>
+        {activity.slots.map((slot, idx) => {
           const placedItems = activity.items.filter((item) => placements[item.id] === slot.id);
+          const gradient = SLOT_GRADIENTS[idx % SLOT_GRADIENTS.length];
+          const hasItemToPlace = draggedItem || selectedItem;
 
           return (
             <div
@@ -98,19 +131,25 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
               onDrop={() => handleDrop(slot.id)}
               onClick={() => handleSlotTap(slot.id)}
               className={[
-                "flex min-h-[100px] min-w-[100px] flex-col items-center justify-center gap-2 rounded-2xl border-4 border-dashed p-4 transition-colors",
-                draggedItem || selectedItem
-                  ? "border-[var(--color-brand-sun)] bg-[var(--color-brand-sun)]/5"
-                  : "border-[var(--color-surface-2)] bg-white",
+                "flex min-h-[110px] min-w-[110px] flex-col items-center justify-center gap-2 rounded-2xl border-4 p-4 transition-all",
+                hasItemToPlace
+                  ? "border-[var(--color-brand-sun)] border-dashed anim-pulse-glow cursor-pointer"
+                  : placedItems.length > 0
+                    ? "border-[var(--color-success)]"
+                    : "border-dashed border-[var(--color-surface-2)]",
               ].join(" ")}
+              style={{ background: gradient }}
             >
               {slot.label && (
-                <span className="text-sm font-semibold text-ink-500">{slot.label.en}</span>
+                <span className="text-base font-bold text-[var(--color-ink-700)]" style={{ fontFamily: "var(--font-kids)" }}>
+                  {slot.label.en}
+                </span>
               )}
-              {slot.image && <ContentImage src={slot.image.en} alt="" containerClassName="h-8 w-8" />}
+              {slot.image && <ContentImage src={slot.image.en} alt="" containerClassName="h-10 w-10" />}
               {placedItems.map((item) => (
-                <div key={item.id} className="rounded-lg border-2 border-[var(--color-success)] p-2">
+                <div key={item.id} className="rounded-xl ring-2 ring-[var(--color-success)] p-2 bg-white/80 anim-bounce-in">
                   <ItemContent item={item} />
+                  <span className="absolute -right-1 -top-1 text-lg">✅</span>
                 </div>
               ))}
             </div>
@@ -123,20 +162,24 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
 
 function ItemContent({ item }: { item: SortItem }) {
   if (item.image) return <ContentImage src={item.image.en} alt="" containerClassName="h-10 w-10" />;
-  if (item.text) return <span className="font-bold" style={{ fontFamily: "var(--font-kids)" }}>{item.text.en}</span>;
-  if (item.shape) return <SimpleShape shape={item.shape} colour={item.colour} />;
-  if (item.colour) return <div className="h-8 w-8 rounded-lg" style={{ backgroundColor: item.colour }} />;
+  if (item.text) return <span className="text-xl font-bold" style={{ fontFamily: "var(--font-kids)" }}>{item.text.en}</span>;
+  if (item.shape) {
+    const emoji = SHAPE_EMOJI[item.shape];
+    if (emoji) return <span className="text-3xl">{emoji}</span>;
+    return <SimpleShape shape={item.shape} colour={item.colour} />;
+  }
+  if (item.colour) return <div className="h-10 w-10 rounded-xl shadow-inner" style={{ backgroundColor: item.colour }} />;
   return null;
 }
 
 function SimpleShape({ shape, colour }: { shape: string; colour?: string }) {
   const fill = colour ?? "var(--color-brand-sun)";
-  const s = 32;
+  const s = 36;
   switch (shape) {
     case "circle": return <svg width={s} height={s}><circle cx={s/2} cy={s/2} r={s/2-2} fill={fill} /></svg>;
-    case "square": return <svg width={s} height={s}><rect x={2} y={2} width={s-4} height={s-4} fill={fill} rx={4} /></svg>;
+    case "square": return <svg width={s} height={s}><rect x={2} y={2} width={s-4} height={s-4} fill={fill} rx={6} /></svg>;
     case "triangle": return <svg width={s} height={s}><polygon points={`${s/2},2 ${s-2},${s-2} 2,${s-2}`} fill={fill} /></svg>;
-    case "star": return <svg width={s} height={s}><polygon points="16,2 19,12 30,12 21,19 24,30 16,23 8,30 11,19 2,12 13,12" fill={fill} /></svg>;
+    case "star": return <svg width={s} height={s}><polygon points="18,2 22,14 34,14 24,22 28,34 18,26 8,34 12,22 2,14 14,14" fill={fill} /></svg>;
     default: return null;
   }
 }

@@ -1,15 +1,17 @@
 /**
  * ActivityRunner — the main UI shell that orchestrates activity phases.
+ * Enhanced with animated mascot, progress visuals, and playful transitions.
  * Per docs/activity-engine.md §5: INTRO → INSTRUCTION → ACTIVITY → FEEDBACK → SUMMARY
  */
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useActivityRunner } from "../runner/use-activity-runner";
 import { getEngineComponent } from "./registry";
 import type { AnyActivity } from "../schema";
 import type { ItemResponse, ItemResult } from "../schema/common";
 import { useSound } from "@/hooks/use-sound";
+import { Mascot } from "@/components/kids/mascot";
 
 type Props = {
   activity: AnyActivity;
@@ -34,6 +36,18 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
     audio,
   } = useActivityRunner(activity);
 
+  const { play: playSound, unlock: unlockSound, muted: soundMuted, toggleMute: toggleSoundMute, startMusic, stopMusic } = useSound();
+
+  // Start gentle background music during activity
+  useEffect(() => {
+    if (state.phase === "activity") {
+      startMusic();
+    } else {
+      stopMusic();
+    }
+    return () => stopMusic();
+  }, [state.phase, startMusic, stopMusic]);
+
   const handleResult = useCallback(
     (response: ItemResponse, result: ItemResult) => {
       submitResponse(response, result);
@@ -42,11 +56,10 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
   );
 
   const handleExit = useCallback(() => {
+    stopMusic();
     exit();
     onExit();
-  }, [exit, onExit]);
-
-  const { play: playSound, unlock: unlockSound, muted: soundMuted, toggleMute: toggleSoundMute } = useSound();
+  }, [exit, onExit, stopMusic]);
 
   // ── COMPLETED ─────────────────────────────────────────────────────────────
   if (state.phase === "completed") {
@@ -60,9 +73,9 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
     }
     return (
       <div className="flex flex-col items-center gap-6 py-16">
-        <div className="text-6xl anim-bounce-in" aria-hidden="true">🎉</div>
-        <p className="text-2xl font-bold text-[var(--color-ink-900)]" style={{ fontFamily: "var(--font-kids)" }}>
-          All done! 🌟
+        <Mascot mood="celebrating" size={100} />
+        <p className="text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-in" style={{ fontFamily: "var(--font-kids)" }}>
+          All done! You&apos;re a star! 🌟
         </p>
         <button
           onClick={() => { playSound("tap"); handleExit(); }}
@@ -77,16 +90,18 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
 
   // ── SUMMARY ───────────────────────────────────────────────────────────────
   if (state.phase === "summary") {
+    const mascotMood = state.stars === 3 ? "celebrating" : state.stars === 2 ? "happy" : "encouraging";
     return (
       <div className="flex flex-col items-center gap-6 py-16">
+        <Mascot mood={mascotMood} size={100} />
         <div className="flex gap-2" aria-hidden="true">
           {[1, 2, 3].map((s) => (
             <span
               key={s}
-              className={`text-6xl ${s <= state.stars ? "anim-star-burst" : ""}`}
+              className={`text-7xl ${s <= state.stars ? "anim-star-burst-big" : ""}`}
               style={{
                 color: s <= state.stars ? "var(--color-brand-sun)" : "var(--color-surface-2)",
-                animationDelay: `${s * 0.15}s`,
+                animationDelay: `${s * 0.2}s`,
               }}
             >
               ★
@@ -94,7 +109,7 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
           ))}
         </div>
         <p className="text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-in anim-delay-1" style={{ fontFamily: "var(--font-kids)" }}>
-          {state.stars === 3 ? "Amazing! 🌟" : state.stars === 2 ? "Great job! 👏" : "Good try! 💪"}
+          {state.stars === 3 ? "Amazing! You&apos;re brilliant! 🌟" : state.stars === 2 ? "Great job! Well done! 👏" : "Good try! Keep going! 💪"}
         </p>
         <p className="text-lg text-[var(--color-ink-500)]" style={{ fontFamily: "var(--font-kids)" }}>
           You got {state.itemsCorrect} out of {state.itemsTotal} right!
@@ -123,13 +138,7 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
   if (state.phase === "intro") {
     return (
       <div className="flex flex-col items-center gap-6 py-16">
-        <div
-          className="anim-float flex h-24 w-24 items-center justify-center rounded-full text-5xl shadow-lg"
-          style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
-          aria-hidden="true"
-        >
-          ⭐
-        </div>
+        <Mascot mood="happy" size={100} />
         <h1 className="text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-in" style={{ fontFamily: "var(--font-kids)" }}>
           {activity.title.en}
         </h1>
@@ -160,14 +169,8 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
   if (state.phase === "instruction") {
     return (
       <div className="flex flex-col items-center gap-6 py-16">
-        <div
-          className="anim-wobble flex h-16 w-16 items-center justify-center rounded-2xl text-3xl shadow-lg"
-          style={{ background: "linear-gradient(135deg, #4FC3F7, #6C5CE7)" }}
-          aria-hidden="true"
-        >
-          📢
-        </div>
-        <p className="max-w-md text-center text-2xl font-bold text-[var(--color-ink-900)]" style={{ fontFamily: "var(--font-kids)" }}>
+        <Mascot mood="thinking" size={80} />
+        <p className="max-w-md text-center text-2xl font-bold text-[var(--color-ink-900)] anim-slide-in-up" style={{ fontFamily: "var(--font-kids)" }}>
           {activity.instructions.text.en}
         </p>
         {activity.instructions.demo !== "none" && (
@@ -194,10 +197,8 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
 
     return (
       <div className="flex flex-col items-center gap-6 py-16">
-        <div className={`text-6xl ${isCorrect ? "anim-bounce-in" : "anim-wiggle"}`} aria-hidden="true">
-          {isCorrect ? "✅" : "💪"}
-        </div>
-        <p className="text-3xl font-bold text-[var(--color-ink-900)]" style={{ fontFamily: "var(--font-kids)" }}>
+        <Mascot mood={isCorrect ? "celebrating" : "encouraging"} size={90} />
+        <p className="text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-feedback" style={{ fontFamily: "var(--font-kids)" }}>
           {pick.text.en}
         </p>
         <button
@@ -214,22 +215,41 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
   // ── ACTIVITY ──────────────────────────────────────────────────────────────
   if (state.phase === "activity") {
     const EngineComponent = getEngineComponent(activity.engine);
+    const itemCount = getItemCount(activity);
+    const progressPercent = itemCount > 0 ? (state.results.length / itemCount) * 100 : 0;
 
     return (
       <div className="flex flex-col items-center gap-4 py-8">
-        {/* Progress bar */}
-        <div className="flex w-full max-w-md gap-1">
-          {Array.from({ length: getItemCount(activity) }, (_, i) => (
+        {/* Progress bar — themed */}
+        <div className="flex w-full max-w-md items-center gap-2">
+          <span className="text-2xl" aria-hidden="true">⭐</span>
+          <div className="relative h-4 flex-1 overflow-hidden rounded-full bg-[var(--color-surface-2)]">
+            <div
+              className="anim-progress-fill absolute inset-y-0 left-0 rounded-full"
+              style={{
+                width: `${progressPercent}%`,
+                background: "linear-gradient(90deg, #FFB627, #FF9F43, #FF6B6B)",
+              }}
+            />
+          </div>
+          <span className="text-sm font-bold text-[var(--color-ink-700)]" style={{ fontFamily: "var(--font-kids)" }}>
+            {state.results.length}/{itemCount}
+          </span>
+        </div>
+
+        {/* Item dots */}
+        <div className="flex w-full max-w-md gap-1.5">
+          {Array.from({ length: itemCount }, (_, i) => (
             <div
               key={i}
               className={[
-                "h-2 flex-1 rounded-full",
+                "h-3 flex-1 rounded-full transition-all",
                 i < state.results.length
                   ? state.results[i]?.is_correct
                     ? "bg-[var(--color-success)]"
                     : "bg-[var(--color-danger)]"
                   : i === state.itemIndex
-                    ? "bg-[var(--color-brand-sun)]"
+                    ? "bg-[var(--color-brand-sun)] anim-pulse-glow"
                     : "bg-[var(--color-surface-2)]",
               ].join(" ")}
             />
@@ -245,9 +265,11 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
           {audio.muted || soundMuted ? "🔇" : "🔊"}
         </button>
 
-        {/* Engine component */}
+        {/* Engine component — keyed by itemIndex to reset state on new item */}
         <EngineComponent
+          key={`${activity.id}-${state.itemIndex}`}
           activity={activity}
+          itemIndex={state.itemIndex}
           onResult={handleResult}
           hintLevel={state.attempts >= activity.hints.after_incorrect ? 1 : 0}
         />

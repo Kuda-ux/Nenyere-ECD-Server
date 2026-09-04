@@ -12,24 +12,16 @@ export const mathActivities: AnyActivity[] = [
       instruction_sn: "Verenga nyeredzi wobva wabata namba!", instruction_nd: "Bala mitshwana bese uthinte inombolo!",
       tags: ["mathematics"],
     }),
-    items: [{ id: "item-1", objects: { shape: "star", colour: "#F2A93B", count: 3, arrangement: "row" }, options: [2, 3, 4], correct_answer: 3 }],
+    items: [
+      { id: "item-1", objects: { shape: "star", colour: "#F2A93B", count: 3, arrangement: "row" }, options: [2, 3, 4], correct_answer: 3 },
+      { id: "item-2", objects: { shape: "star", colour: "#F2A93B", count: 1, arrangement: "row" }, options: [1, 2, 3], correct_answer: 1 },
+      { id: "item-3", objects: { shape: "star", colour: "#F2A93B", count: 5, arrangement: "grid" }, options: [4, 5, 3], correct_answer: 5 },
+      { id: "item-4", objects: { shape: "star", colour: "#F2A93B", count: 2, arrangement: "row" }, options: [1, 2, 3], correct_answer: 2 },
+    ],
     tap_to_count: true, show_number_line: true,
   } as unknown as AnyActivity,
 
-  // -- Count the Circles (1-5) --
-  {
-    ...base("00000000-0000-0000-0003-000000000002", "counting", "counting", "Count the Circles", {
-      learning_area: "mathematics", skills: [SKILL.counting_1_5],
-      description: "Count circles from 1 to 5",
-      title_sn: "Verenga Denderedzwa", title_nd: "Bala Amasiyingi",
-      instruction: "Count the circles!",
-      tags: ["mathematics"],
-    }),
-    items: [{ id: "item-1", objects: { shape: "circle", colour: "#E85D5D", count: 5, arrangement: "grid" }, options: [3, 4, 5], correct_answer: 5 }],
-    tap_to_count: true, show_number_line: true,
-  } as unknown as AnyActivity,
-
-  // -- Count Apples (1-5) --
+  // -- Count the Apples (1-5) --
   {
     ...base("00000000-0000-0000-0003-000000000003", "counting", "counting", "Count the Apples", {
       learning_area: "mathematics", skills: [SKILL.counting_1_5],
@@ -39,7 +31,11 @@ export const mathActivities: AnyActivity[] = [
       instruction_sn: "Maapuro mangani?", instruction_nd: "Zingaki ama-apple?",
       tags: ["mathematics"],
     }),
-    items: [{ id: "item-1", objects: { shape: "circle", colour: "#E85D5D", count: 4, arrangement: "row" }, options: [3, 4, 5], correct_answer: 4 }],
+    items: [
+      { id: "item-1", objects: { shape: "apple", colour: "#E85D5D", count: 4, arrangement: "row" }, options: [3, 4, 5], correct_answer: 4 },
+      { id: "item-2", objects: { shape: "apple", colour: "#E85D5D", count: 2, arrangement: "row" }, options: [1, 2, 3], correct_answer: 2 },
+      { id: "item-3", objects: { shape: "apple", colour: "#E85D5D", count: 5, arrangement: "grid" }, options: [4, 5, 3], correct_answer: 5 },
+    ],
     tap_to_count: true, show_number_line: true,
   } as unknown as AnyActivity,
 
@@ -78,6 +74,7 @@ export const mathActivities: AnyActivity[] = [
       { id: "p1", left: { colour: "#E85D5D" }, right: { colour: "#E85D5D" } },
       { id: "p2", left: { colour: "#5BA85B" }, right: { colour: "#5BA85B" } },
       { id: "p3", left: { colour: "#3B7DD8" }, right: { colour: "#3B7DD8" } },
+      { id: "p4", left: { colour: "#F2A93B" }, right: { colour: "#F2A93B" } },
     ],
     layout: "two_column", shuffle_right: true,
   } as unknown as AnyActivity,
@@ -92,7 +89,11 @@ export const mathActivities: AnyActivity[] = [
       instruction: "Count all the stars together!",
       tags: ["mathematics"],
     }),
-    items: [{ id: "item-1", objects: { shape: "star", colour: "#F2A93B", count: 2, arrangement: "row" }, options: [2, 3, 4], correct_answer: 3, operation: "add", operands: [2, 1] }],
+    items: [
+      { id: "item-1", objects: { shape: "star", colour: "#F2A93B", count: 3, arrangement: "row" }, options: [2, 3, 4], correct_answer: 3, operation: "add", operands: [2, 1] },
+      { id: "item-2", objects: { shape: "star", colour: "#F2A93B", count: 4, arrangement: "row" }, options: [3, 4, 5], correct_answer: 4, operation: "add", operands: [2, 2] },
+      { id: "item-3", objects: { shape: "star", colour: "#F2A93B", count: 5, arrangement: "row" }, options: [4, 5, 3], correct_answer: 5, operation: "add", operands: [3, 2] },
+    ],
     tap_to_count: true, show_number_line: true,
   } as unknown as AnyActivity,
 
@@ -106,7 +107,11 @@ export const mathActivities: AnyActivity[] = [
       instruction: "Some stars went away. How many are left?",
       tags: ["mathematics"],
     }),
-    items: [{ id: "item-1", objects: { shape: "star", colour: "#F2A93B", count: 5, arrangement: "row" }, options: [3, 4, 5], correct_answer: 3, operation: "subtract", operands: [5, 2] }],
+    items: [
+      { id: "item-1", objects: { shape: "star", colour: "#F2A93B", count: 3, arrangement: "row" }, options: [2, 3, 4], correct_answer: 3, operation: "subtract", operands: [5, 2] },
+      { id: "item-2", objects: { shape: "star", colour: "#F2A93B", count: 2, arrangement: "row" }, options: [1, 2, 3], correct_answer: 2, operation: "subtract", operands: [4, 2] },
+      { id: "item-3", objects: { shape: "star", colour: "#F2A93B", count: 1, arrangement: "row" }, options: [1, 2, 3], correct_answer: 1, operation: "subtract", operands: [3, 2] },
+    ],
     tap_to_count: true, show_number_line: true,
   } as unknown as AnyActivity,
 
@@ -123,6 +128,7 @@ export const mathActivities: AnyActivity[] = [
       { id: "i1", stimulus: { shape: "star" }, is_correct: true },
       { id: "i2", stimulus: { shape: "circle" }, is_correct: false },
       { id: "i3", stimulus: { shape: "square" }, is_correct: false },
+      { id: "i4", stimulus: { shape: "triangle" }, is_correct: false },
     ],
     prompt: { text: { en: "Find the star!", sn: "Tsvaga nyeredzi!", nd: "Thola umthwana!" }, audio: { en: "audio/find_star.mp3" } },
     layout: "grid", show_correct_after_attempts: 3,
@@ -145,5 +151,22 @@ export const mathActivities: AnyActivity[] = [
     ],
     prompt: { text: { en: "Find number 3!", sn: "Tsvaga namba 3!", nd: "Thola inombolo 3!" }, audio: { en: "audio/find_3.mp3" } },
     layout: "grid", show_correct_after_attempts: 3,
+  } as unknown as AnyActivity,
+
+  // -- Count the Flowers (1-5) --
+  {
+    ...base("00000000-0000-0000-0003-00000000000a", "counting", "counting", "Count the Flowers", {
+      learning_area: "mathematics", skills: [SKILL.counting_1_5],
+      description: "Count flowers from 1 to 5",
+      title_sn: "Verenga Maruva", title_nd: "Bala Imibali",
+      instruction: "How many flowers?",
+      tags: ["mathematics"],
+    }),
+    items: [
+      { id: "item-1", objects: { shape: "flower", colour: "#FF6B9D", count: 3, arrangement: "grid" }, options: [2, 3, 4], correct_answer: 3 },
+      { id: "item-2", objects: { shape: "flower", colour: "#FF6B9D", count: 4, arrangement: "row" }, options: [3, 4, 5], correct_answer: 4 },
+      { id: "item-3", objects: { shape: "flower", colour: "#FF6B9D", count: 1, arrangement: "row" }, options: [1, 2, 3], correct_answer: 1 },
+    ],
+    tap_to_count: true, show_number_line: true,
   } as unknown as AnyActivity,
 ];

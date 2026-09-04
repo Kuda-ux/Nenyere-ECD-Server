@@ -16,11 +16,12 @@ export const cognitiveActivities: AnyActivity[] = [
       { id: "p1", left: { shape: "circle" }, right: { shape: "circle" } },
       { id: "p2", left: { shape: "square" }, right: { shape: "square" } },
       { id: "p3", left: { shape: "triangle" }, right: { shape: "triangle" } },
+      { id: "p4", left: { shape: "star" }, right: { shape: "star" } },
     ],
     layout: "two_column", shuffle_right: true,
   } as unknown as AnyActivity,
 
-  // -- Odd One Out --
+  // -- Odd One Out: Animals --
   {
     ...base("00000000-0000-0000-0001-000000000002", "tap_correct", "choice", "Odd One Out", {
       learning_area: "mathematics", skills: [SKILL.odd_one_out],
@@ -34,8 +35,27 @@ export const cognitiveActivities: AnyActivity[] = [
       { id: "i1", stimulus: { text: { en: "🐄" } }, is_correct: false, alt: { en: "Cow" } },
       { id: "i2", stimulus: { text: { en: "🐄" } }, is_correct: false, alt: { en: "Cow" } },
       { id: "i3", stimulus: { text: { en: "🐔" } }, is_correct: true, alt: { en: "Chicken is different!" } },
+      { id: "i4", stimulus: { text: { en: "🐄" } }, is_correct: false, alt: { en: "Cow" } },
     ],
     prompt: { text: { en: "Which animal is different?", sn: "Ndechipi chisina kufanana?", nd: "Ngiphi esihlukile?" }, audio: { en: "audio/odd_one.mp3" } },
+    layout: "grid", show_correct_after_attempts: 3,
+  } as unknown as AnyActivity,
+
+  // -- Odd One Out: Fruit vs Vegetable --
+  {
+    ...base("00000000-0000-0000-0001-000000000002b", "tap_correct", "choice", "Odd One Out: Fruit", {
+      learning_area: "mathematics", skills: [SKILL.odd_one_out, SKILL.classification],
+      description: "Which one is not a fruit?",
+      title_sn: "Chisarwa: Muchero", title_nd: "Okuphela: Isithelo",
+      instruction: "Which one is NOT a fruit?",
+      tags: ["cognitive"],
+    }),
+    items: [
+      { id: "i1", stimulus: { text: { en: "🍎" } }, is_correct: false, alt: { en: "Apple is a fruit" } },
+      { id: "i2", stimulus: { text: { en: "🍌" } }, is_correct: false, alt: { en: "Banana is a fruit" } },
+      { id: "i3", stimulus: { text: { en: "🥕" } }, is_correct: true, alt: { en: "Carrot is not a fruit!" } },
+    ],
+    prompt: { text: { en: "Which one is NOT a fruit?", sn: "Ndechipi chisiri muchero?", nd: "Ngiphi esingisosithelo?" }, audio: { en: "audio/odd_fruit.mp3" } },
     layout: "row", show_correct_after_attempts: 3,
   } as unknown as AnyActivity,
 
@@ -50,14 +70,38 @@ export const cognitiveActivities: AnyActivity[] = [
       tags: ["cognitive"],
     }),
     cards: [
-      { id: "m1", pair_id: "pair-circle", text: { en: "●" } },
-      { id: "m2", pair_id: "pair-circle", text: { en: "●" } },
-      { id: "m3", pair_id: "pair-square", text: { en: "■" } },
-      { id: "m4", pair_id: "pair-square", text: { en: "■" } },
-      { id: "m5", pair_id: "pair-triangle", text: { en: "▲" } },
-      { id: "m6", pair_id: "pair-triangle", text: { en: "▲" } },
+      { id: "m1", pair_id: "pair-circle", text: { en: "🔴" } },
+      { id: "m2", pair_id: "pair-circle", text: { en: "🔴" } },
+      { id: "m3", pair_id: "pair-square", text: { en: "🟦" } },
+      { id: "m4", pair_id: "pair-square", text: { en: "🟦" } },
+      { id: "m5", pair_id: "pair-triangle", text: { en: "🔺" } },
+      { id: "m6", pair_id: "pair-triangle", text: { en: "🔺" } },
+      { id: "m7", pair_id: "pair-star", text: { en: "⭐" } },
+      { id: "m8", pair_id: "pair-star", text: { en: "⭐" } },
     ],
-    columns: 3, preview_ms: 3000,
+    columns: 4, preview_ms: 3000,
+  } as unknown as AnyActivity,
+
+  // -- Animal Memory --
+  {
+    ...base("00000000-0000-0000-0001-000000000003b", "memory_game", "memory", "Animal Memory", {
+      learning_area: "mathematics", skills: [SKILL.memory, SKILL.animal_identify],
+      description: "Find matching animal pairs",
+      title_sn: "Kumboredha Zvipfuya", title_nd: "Ukukhumbula Izilwane",
+      instruction: "Find the matching animals!",
+      tags: ["cognitive"],
+    }),
+    cards: [
+      { id: "m1", pair_id: "pair-cow", text: { en: "🐄" } },
+      { id: "m2", pair_id: "pair-cow", text: { en: "🐄" } },
+      { id: "m3", pair_id: "pair-dog", text: { en: "🐶" } },
+      { id: "m4", pair_id: "pair-dog", text: { en: "🐶" } },
+      { id: "m5", pair_id: "pair-cat", text: { en: "🐱" } },
+      { id: "m6", pair_id: "pair-cat", text: { en: "🐱" } },
+      { id: "m7", pair_id: "pair-bird", text: { en: "🐦" } },
+      { id: "m8", pair_id: "pair-bird", text: { en: "🐦" } },
+    ],
+    columns: 4, preview_ms: 3000,
   } as unknown as AnyActivity,
 
   // -- Complete the Pattern --
@@ -107,8 +151,8 @@ export const cognitiveActivities: AnyActivity[] = [
       tags: ["cognitive"],
     }),
     items: [
-      { id: "i1", stimulus: { text: { en: "★★★★★" } }, is_correct: true, alt: { en: "5 stars" } },
-      { id: "i2", stimulus: { text: { en: "★★" } }, is_correct: false, alt: { en: "2 stars" } },
+      { id: "i1", stimulus: { text: { en: "⭐⭐⭐⭐⭐" } }, is_correct: true, alt: { en: "5 stars" } },
+      { id: "i2", stimulus: { text: { en: "⭐⭐" } }, is_correct: false, alt: { en: "2 stars" } },
     ],
     prompt: { text: { en: "Which group has MORE stars?", sn: "Ndegurpa ripi rine nyeredzi zhinji?", nd: "Ngiliphi iqembu elinemitshwana eminingi?" }, audio: { en: "audio/more_stars.mp3" } },
     layout: "row", show_correct_after_attempts: 2,
@@ -125,12 +169,13 @@ export const cognitiveActivities: AnyActivity[] = [
     }),
     slots: [
       { id: "s-red", label: { en: "Red" }, accepts_item_ids: ["it1", "it3"] },
-      { id: "s-green", label: { en: "Green" }, accepts_item_ids: ["it2"] },
+      { id: "s-green", label: { en: "Green" }, accepts_item_ids: ["it2", "it4"] },
     ],
     items: [
       { id: "it1", colour: "#E85D5D", correct_slot_id: "s-red" },
       { id: "it2", colour: "#5BA85B", correct_slot_id: "s-green" },
       { id: "it3", colour: "#E85D5D", correct_slot_id: "s-red" },
+      { id: "it4", colour: "#5BA85B", correct_slot_id: "s-green" },
     ],
     layout: "bins",
   } as unknown as AnyActivity,

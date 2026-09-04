@@ -24,5 +24,13 @@ export function useSound() {
     setMuted(engine.muted);
   }, [engine]);
 
-  return { play, unlock, toggleMute, muted };
+  const startMusic = useCallback(() => {
+    engine.startMusic();
+  }, [engine]);
+
+  const stopMusic = useCallback(() => {
+    engine.stopMusic();
+  }, [engine]);
+
+  return { play, unlock, toggleMute, muted, startMusic, stopMusic };
 }

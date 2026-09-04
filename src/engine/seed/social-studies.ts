@@ -77,39 +77,39 @@ export const socialStudiesActivities: AnyActivity[] = [
     layout: "bins",
   } as unknown as AnyActivity,
 
-  // -- Zimbabwe Flag Colours (ECD_B) --
+  // -- My School (ECD_B) --
   {
-    ...base("00000000-0000-0000-0007-000000000005", "tap_correct", "choice", "Zimbabwe Flag Colours", {
-      ecd_level: "ECD_B", learning_area: "social_sciences", skills: [SKILL.zimbabwe_identity, SKILL.colour_identify],
-      description: "Identify colours in the Zimbabwe flag",
-      title_sn: "Mavara eFlag yeZimbabwe", title_nd: "Imibala Yeflegi yeZimbabwe",
-      instruction: "Which colour is in the Zimbabwe flag?",
+    ...base("00000000-0000-0000-0007-000000000005", "tap_correct", "choice", "My School", {
+      ecd_level: "ECD_B", learning_area: "social_sciences", skills: [SKILL.community_helpers, SKILL.colour_identify],
+      description: "Learn about our school",
+      title_sn: "Chikoro Changu", title_nd: "Isikole Sami",
+      instruction: "What do we do at school?",
       tags: ["social-studies"],
     }),
     items: [
-      { id: "i1", stimulus: { text: { en: "🟢 Green" } }, is_correct: true, alt: { en: "Green is in the flag!" } },
-      { id: "i2", stimulus: { text: { en: "🟣 Purple" } }, is_correct: false, alt: { en: "Not in the flag" } },
-      { id: "i3", stimulus: { text: { en: "🟠 Orange" } }, is_correct: false, alt: { en: "Not in the flag" } },
+      { id: "i1", stimulus: { text: { en: "� We learn!" } }, is_correct: true, alt: { en: "We learn at school!" } },
+      { id: "i2", stimulus: { text: { en: "� We sleep" } }, is_correct: false, alt: { en: "We don't sleep at school" } },
+      { id: "i3", stimulus: { text: { en: "🎮 We play games only" } }, is_correct: false, alt: { en: "We also learn!" } },
     ],
-    prompt: { text: { en: "Which colour is in our Zimbabwe flag?", sn: "Ruwara rwupi ruri muflag yeZimbabwe?", nd: "Umbala muni okuseflegi yeZimbabwe?" }, audio: { en: "audio/zim_flag.mp3" } },
+    prompt: { text: { en: "What do we do at school?", sn: "Tinoita chii kuchikoro?", nd: "Sizenza ntoni esikoleni?" }, audio: { en: "audio/school.mp3" } },
     layout: "row", show_correct_after_attempts: 3,
   } as unknown as AnyActivity,
 
-  // -- My Country (ECD_B) --
+  // -- My Favourite Food (ECD_B) --
   {
-    ...base("00000000-0000-0000-0007-000000000006", "tap_correct", "choice", "My Country Zimbabwe", {
-      ecd_level: "ECD_B", learning_area: "social_sciences", skills: [SKILL.zimbabwe_identity],
-      description: "Learn about Zimbabwe",
-      title_sn: "Nyika Yangu Zimbabwe", title_nd: "Izwe Lami Zimbabwe",
-      instruction: "What is the name of our country?",
+    ...base("00000000-0000-0000-0007-000000000006", "tap_correct", "choice", "My Favourite Food", {
+      ecd_level: "ECD_B", learning_area: "social_sciences", skills: [SKILL.food_sort, SKILL.vocabulary],
+      description: "Learn about food we eat at home",
+      title_sn: "Chikafu Chandinoda", title_nd: "Ukudla Engikuthandayo",
+      instruction: "Which food do we eat at home?",
       tags: ["social-studies"],
     }),
     items: [
-      { id: "i1", stimulus: { text: { en: "🇿🇼 Zimbabwe" } }, is_correct: true },
-      { id: "i2", stimulus: { text: { en: "🇿🇦 South Africa" } }, is_correct: false },
-      { id: "i3", stimulus: { text: { en: "🇰🇪 Kenya" } }, is_correct: false },
+      { id: "i1", stimulus: { text: { en: "� Sadza" } }, is_correct: true },
+      { id: "i2", stimulus: { text: { en: "🧱 Brick" } }, is_correct: false },
+      { id: "i3", stimulus: { text: { en: "🪨 Stone" } }, is_correct: false },
     ],
-    prompt: { text: { en: "What is the name of our country?", sn: "Zita renyika yedu nderei?", nd: "Ligama lezwe lethu ngisiphi?" }, audio: { en: "audio/my_country.mp3" } },
+    prompt: { text: { en: "Which one is food we eat?", sn: "Ndechipi chikafu chatinodya?", nd: "Ngiphi ukudla esikudlayo?" }, audio: { en: "audio/food_home.mp3" } },
     layout: "row", show_correct_after_attempts: 3,
   } as unknown as AnyActivity,
 ];

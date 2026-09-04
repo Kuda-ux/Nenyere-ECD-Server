@@ -9,6 +9,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { TraceActivity, TraceItem } from "../schema/trace";
 import type { ItemResponse, ItemResult } from "../schema/common";
+import { useSound } from "@/hooks/use-sound";
 
 type Props = {
   activity: TraceActivity;
@@ -20,6 +21,7 @@ type Props = {
 type Point = { x: number; y: number };
 
 export function TraceEngine({ activity, item, onResult, hintLevel }: Props) {
+  const { play: playSound } = useSound();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [userPoints, setUserPoints] = useState<Point[]>([]);
@@ -124,6 +126,7 @@ export function TraceEngine({ activity, item, onResult, hintLevel }: Props) {
 
     // Accept stroke if coverage >= min_coverage
     if (coverage >= item.min_coverage) {
+      playSound("sparkle");
       const newCompleted = completedStrokes + 1;
       setCompletedStrokes(newCompleted);
       setUserPoints([]);
@@ -150,55 +153,71 @@ export function TraceEngine({ activity, item, onResult, hintLevel }: Props) {
       }
     } else {
       // Reset stroke — encourage retry
+      playSound("wobble");
       setUserPoints([]);
     }
-  }, [isDrawing, userPoints, stroke, item, completedStrokes, onResult, hintLevel]);
+  }, [isDrawing, userPoints, stroke, item, completedStrokes, onResult, hintLevel, playSound]);
 
   return (
     <div className="flex flex-col items-center gap-4">
       {item.label && (
-        <p
-          className="text-2xl font-bold"
-          style={{ fontFamily: "var(--font-kids)" }}
+        <div
+          className="rounded-2xl px-6 py-2 shadow-md anim-slide-in-up"
+          style={{ background: "linear-gradient(135deg, #FFF9E6, #FFE082)" }}
         >
-          {item.label.en}
-        </p>
+          <p
+            className="text-3xl font-bold text-[var(--color-ink-900)]"
+            style={{ fontFamily: "var(--font-kids)" }}
+          >
+            {item.label.en}
+          </p>
+        </div>
       )}
 
-      <canvas
-        ref={canvasRef}
-        width={activity.canvas_width}
-        height={activity.canvas_height}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerLeave={handlePointerUp}
-        className="touch-none rounded-2xl border-4 border-[var(--color-surface-2)] bg-white"
-        style={{ maxWidth: "100%", height: "auto" }}
-      />
+      <div className="relative">
+        {/* Decorative border */}
+        <div
+          className="absolute -inset-2 rounded-3xl opacity-20"
+          style={{ background: "linear-gradient(135deg, #FFB627, #FF6B9D, #4FC3F7)" }}
+        />
+        <canvas
+          ref={canvasRef}
+          width={activity.canvas_width}
+          height={activity.canvas_height}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerLeave={handlePointerUp}
+          className="touch-none relative rounded-2xl border-4 border-[var(--color-brand-sun)] bg-white shadow-lg"
+          style={{ maxWidth: "100%", height: "auto" }}
+        />
+      </div>
 
-      {/* Brush colour picker */}
-      <div className="flex gap-2">
+      {/* Brush colours — themed */}
+      <div className="flex items-center gap-2 rounded-full bg-white/60 px-4 py-2">
         {activity.brush_colours.map((colour) => (
           <div
             key={colour}
-            className="h-8 w-8 rounded-full border-2 border-[var(--color-surface-2)]"
+            className="h-8 w-8 rounded-full border-2 border-white shadow-md"
             style={{ backgroundColor: colour }}
           />
         ))}
       </div>
 
-      {/* Progress indicator */}
-      <div className="flex gap-2">
-        {item.strokes.map((_, i) => (
-          <div
-            key={i}
-            className={[
-              "h-3 w-8 rounded-full",
-              i < completedStrokes ? "bg-[var(--color-success)]" : "bg-[var(--color-surface-2)]",
-            ].join(" ")}
-          />
-        ))}
+      {/* Progress indicator — themed */}
+      <div className="flex items-center gap-2">
+        <span className="text-lg">📝</span>
+        <div className="flex gap-2">
+          {item.strokes.map((_, i) => (
+            <div
+              key={i}
+              className={[
+                "h-3 w-10 rounded-full transition-all",
+                i < completedStrokes ? "bg-[var(--color-success)] anim-pop-scale" : "bg-[var(--color-surface-2)]",
+              ].join(" ")}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
