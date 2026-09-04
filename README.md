@@ -1,31 +1,30 @@
 # Nenyere ECD Digital Learning Platform
 
 A production-quality, offline-first, tablet-first Early Childhood Development
-(ECD A / ECD B) learning platform for Nenyere Day Care Centre, Mbare, Harare —
-built as the first tenant of the multi-school KuWeX ECD platform, aligned to the
-Zimbabwe Heritage-Based Curriculum 2024–2030.
+(ECD A / ECD B) learning platform for Nenyere Day Care Centre.
 
 ## Project status
 
-**Phase: Foundation (Session 3) — in progress.**
+**Ready for school deployment.**
 
-The repo scaffold, design tokens, Supabase migrations (7 files), RLS policies,
-auth flows, teacher dashboard, and Child Mode shell are complete. Activity
-engine and full offline sync are next.
+The platform includes a full Child Mode with 10 developmental pillars,
+interactive activities, synthesized sound effects, learner profiles,
+progress tracking, badges, and a tablet-optimised PWA interface.
 
-Start with `docs/implementation-plan.md` for the full roadmap, then:
+Teachers can add and manage pupils directly on the tablet — no server
+required for day-to-day use.
 
 | Document | Contents |
 | --- | --- |
 | `docs/product-requirements.md` | Vision, personas, information architecture, user journeys, MVP scope, NFRs |
 | `docs/architecture.md` | System architecture, technology decisions, module structure, tenancy, deployment topology, scale path |
 | `docs/architecture-decisions.md` | ADRs, including deviations from the master specification |
-| `docs/curriculum-map.md` | HBC 2024–2030 Infant learning areas → platform skills → activity types, with validation flags and sources |
+| `docs/curriculum-map.md` | Learning areas → platform skills → activity types, with validation flags |
 | `docs/activity-engine.md` | Activity types → interaction engines, lifecycle, versioned Zod schema design, scoring, tracing algorithm |
 | `docs/database.md` | Entities, RLS matrix, functions, indexes, retention, seed plan |
 | `docs/offline-sync.md` | PWA caching, IndexedDB layout, content packs, idempotent sync protocol, conflict handling |
 | `docs/security.md` | Threat model, auth/authz, headers, uploads, secrets, security test matrix |
-| `docs/privacy.md` | Zimbabwe CDPA / SI 155 / CDPG 2 research, data inventory, consent workflow, items for human legal review |
+| `docs/privacy.md` | Data protection research, data inventory, consent workflow, items for legal review |
 | `docs/design-system.md` | Brand direction, tokens, component inventory, layout system, Figma file plan, 42-screen inventory |
 | `docs/testing.md` | Test pyramid, 13 critical flows, security suite, DoD gates |
 | `docs/deployment.md` | Environments, CI/CD pipeline, env vars, release/rollback |

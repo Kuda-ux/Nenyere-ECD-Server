@@ -1,41 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useSound } from "@/hooks/use-sound";
-
-type Learner = {
-  id: string;
-  preferred_name: string;
-  first_name: string;
-  avatar_key: string;
-  ecd_level: string;
-};
-
-const AVATAR_EMOJI: Record<string, string> = {
-  star: "⭐",
-  elephant: "🐘",
-  lion: "🦁",
-  bird: "🐦",
-  fish: "🐟",
-  rabbit: "🐰",
-  sun: "☀️",
-  flower: "🌸",
-  tree: "🌳",
-  butterfly: "🦋",
-};
-
-const AVATAR_COLORS: Record<string, string> = {
-  star: "linear-gradient(135deg, #FFB627, #FF9F43)",
-  elephant: "linear-gradient(135deg, #4FC3F7, #6C5CE7)",
-  lion: "linear-gradient(135deg, #FF9F43, #FF6B35)",
-  bird: "linear-gradient(135deg, #26D0A8, #00B894)",
-  fish: "linear-gradient(135deg, #4FC3F7, #26D0A8)",
-  rabbit: "linear-gradient(135deg, #FF6B9D, #E84393)",
-  sun: "linear-gradient(135deg, #FFEB3B, #FFB627)",
-  flower: "linear-gradient(135deg, #FF6B9D, #9B59D0)",
-  tree: "linear-gradient(135deg, #4CAF50, #00B894)",
-  butterfly: "linear-gradient(135deg, #9B59D0, #6C5CE7)",
-};
+import {
+  getLearners,
+  addLearner,
+  AVATAR_EMOJI,
+  AVATAR_COLORS,
+  AVATAR_KEYS,
+  type Learner,
+  type ECDLevel,
+} from "@/lib/learner-store";
 
 const FLOATING_DECORATIONS = [
   { emoji: "🌈", top: "8%", left: "5%", size: "3rem", anim: "anim-float-slow", delay: "anim-delay-2" },
@@ -51,17 +27,40 @@ const FLOATING_DECORATIONS = [
 export function LearnerPicker() {
   const router = useRouter();
   const { play, unlock } = useSound();
+  const [learners, setLearners] = useState<Learner[]>([]);
+  const [loaded, setLoaded] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newFullName, setNewFullName] = useState("");
+  const [newAvatar, setNewAvatar] = useState("star");
+  const [newLevel, setNewLevel] = useState<ECDLevel>("ECD_A");
 
-  const learners: Learner[] = [
-    { id: "00000000-0000-0000-0000-000000001001", preferred_name: "Tari", first_name: "Tariro", avatar_key: "star", ecd_level: "ECD_A" },
-    { id: "00000000-0000-0000-0000-000000001002", preferred_name: "Tina", first_name: "Tinashe", avatar_key: "elephant", ecd_level: "ECD_A" },
-    { id: "00000000-0000-0000-0000-000000001003", preferred_name: "Rumbi", first_name: "Rumbidzai", avatar_key: "lion", ecd_level: "ECD_B" },
-  ];
+  if (!loaded) {
+    setLearners(getLearners());
+    setLoaded(true);
+  }
 
   function handleSelect(learner: Learner) {
     unlock();
     play("pop");
     setTimeout(() => router.push(`/kids/dashboard?learner=${learner.id}`), 200);
+  }
+
+  function handleAddLearner() {
+    if (!newName.trim()) return;
+    const learner = addLearner({
+      preferred_name: newName.trim(),
+      first_name: newFullName.trim() || newName.trim(),
+      avatar_key: newAvatar,
+      ecd_level: newLevel,
+    });
+    setLearners([...learners, learner]);
+    play("pop");
+    setNewName("");
+    setNewFullName("");
+    setNewAvatar("star");
+    setNewLevel("ECD_A");
+    setShowAddForm(false);
   }
 
   return (
@@ -134,7 +133,117 @@ export function LearnerPicker() {
             </button>
           );
         })}
+
+        {/* Add new pupil button */}
+        <button
+          onClick={() => { play("tap"); setShowAddForm(true); }}
+          className="kids-card flex flex-col items-center justify-center gap-3 border-4 border-dashed p-6 anim-pop-in anim-delay-4"
+          style={{ minHeight: "180px", minWidth: "150px", borderColor: "var(--color-brand-jacaranda)", opacity: 0.8 }}
+        >
+          <div
+            className="flex h-20 w-20 items-center justify-center rounded-full text-5xl shadow-md"
+            style={{ background: "white" }}
+            aria-hidden="true"
+          >
+            ➕
+          </div>
+          <span
+            className="text-lg font-bold text-[var(--color-ink-500)]"
+            style={{ fontFamily: "var(--font-kids)" }}
+          >
+            Add Pupil
+          </span>
+        </button>
       </div>
+
+      {/* Add pupil form */}
+      {showAddForm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => setShowAddForm(false)}
+        >
+          <div
+            className="flex w-full max-w-md flex-col gap-4 rounded-3xl bg-white p-8 shadow-2xl anim-bounce-in"
+            onClick={(e) => e.stopPropagation()}
+            style={{ fontFamily: "var(--font-kids)" }}
+          >
+            <h2 className="text-2xl font-bold text-[var(--color-ink-900)]">Add New Pupil 🌟</h2>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-bold text-[var(--color-ink-700)]">Name (what they tap)</label>
+              <input
+                type="text"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                placeholder="e.g. Tari"
+                className="rounded-xl border-2 border-[var(--color-surface-2)] px-4 py-3 text-lg focus:border-[var(--color-brand-sun)] focus:outline-none"
+                autoFocus
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-bold text-[var(--color-ink-700)]">Full Name (optional)</label>
+              <input
+                type="text"
+                value={newFullName}
+                onChange={(e) => setNewFullName(e.target.value)}
+                placeholder="e.g. Tariro"
+                className="rounded-xl border-2 border-[var(--color-surface-2)] px-4 py-3 text-lg focus:border-[var(--color-brand-sun)] focus:outline-none"
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-bold text-[var(--color-ink-700)]">Class Level</label>
+              <div className="flex gap-3">
+                {(["ECD_A", "ECD_B"] as ECDLevel[]).map((level) => (
+                  <button
+                    key={level}
+                    onClick={() => { play("tap"); setNewLevel(level); }}
+                    className={`flex-1 rounded-xl border-2 px-4 py-3 text-base font-bold transition-all ${newLevel === level ? "border-[var(--color-brand-sun)] bg-[var(--color-brand-sun)]/10" : "border-[var(--color-surface-2)]"}`}
+                  >
+                    {level.replace("_", " ")}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-bold text-[var(--color-ink-700)]">Pick an avatar</label>
+              <div className="grid grid-cols-5 gap-2">
+                {AVATAR_KEYS.map((key) => (
+                  <button
+                    key={key}
+                    onClick={() => { play("tap"); setNewAvatar(key); }}
+                    className={`flex h-12 w-12 items-center justify-center rounded-full text-2xl transition-all ${newAvatar === key ? "ring-4 ring-[var(--color-brand-sun)]" : ""}`}
+                    style={{ background: AVATAR_COLORS[key] }}
+                    aria-label={key}
+                  >
+                    {AVATAR_EMOJI[key]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={handleAddLearner}
+                disabled={!newName.trim()}
+                className="kids-btn flex-1 px-6 py-3 text-base text-white shadow-lg transition-all hover:scale-105 disabled:opacity-50"
+                style={{ background: "linear-gradient(135deg, #4CAF50, #00B894)" }}
+              >
+                ✓ Add Pupil
+              </button>
+              <button
+                onClick={() => { play("tap"); setShowAddForm(false); }}
+                className="kids-btn border-4 px-6 py-3 text-base text-[var(--color-ink-700)] shadow-md transition-all hover:scale-105"
+                style={{ borderColor: "var(--color-surface-2)", backgroundColor: "white" }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Exit gate */}
       <button

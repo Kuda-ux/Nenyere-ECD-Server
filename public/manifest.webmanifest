@@ -1,12 +1,15 @@
 {
-  "name": "Nenyere ECD",
+  "name": "Nenyere ECD Digital Learning Platform",
   "short_name": "Nenyere",
   "description": "Offline-first ECD learning platform for Nenyere Day Care Centre",
-  "start_url": "/",
+  "start_url": "/kids",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "fullscreen"],
   "background_color": "#FFFDF8",
-  "theme_color": "#F2A93B",
+  "theme_color": "#FFB627",
   "orientation": "any",
+  "categories": ["education", "kids"],
   "icons": [
     {
       "src": "/icons/icon.svg",

@@ -51,7 +51,7 @@ export default function HomePage() {
         >
           Fun, colourful learning for little stars! 🎉
           <br />
-          Aligned to the Zimbabwe Heritage-Based Curriculum 2024–2030.
+          Made with love for Nenyere Day Care Centre.
         </p>
       </div>
 
@@ -83,7 +83,7 @@ export default function HomePage() {
       </div>
 
       <p className="text-sm text-[var(--color-ink-500)]" style={{ fontFamily: "var(--font-kids)" }}>
-        Project status: Foundation phase — under active development. 🚧
+        Tap a button to begin! 🌟
       </p>
     </main>
   );

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: "%s — Nenyere ECD",
   },
   description:
-    "Offline-first, tablet-first Early Childhood Development learning platform aligned to the Zimbabwe Heritage-Based Curriculum 2024–2030.",
+    "Offline-first, tablet-first Early Childhood Development learning platform for Nenyere Day Care Centre.",
   applicationName: "Nenyere ECD",
   authors: [{ name: "KuWeX" }],
   manifest: "/manifest.webmanifest",

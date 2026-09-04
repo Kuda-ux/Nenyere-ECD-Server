@@ -1,7 +1,6 @@
 /**
  * Activity catalog — maps child-facing pillars to seed activities.
- * Organised around 10 developmental pillars aligned to the Zimbabwe
- * Heritage-Based Curriculum 2024–2030.
+ * Organised around 10 developmental pillars for ECD A & ECD B learners.
  */
 import { seedActivities, seedStories } from "@/engine/seed/activities";
 import type { AnyActivity } from "@/engine/schema";

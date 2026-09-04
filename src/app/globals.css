@@ -378,3 +378,69 @@ body {
   background: var(--color-brand-sun);
   border-radius: var(--radius-pill);
 }
+
+/* ==========================================================================
+   Tablet & touch optimizations — ECD pupils use tablets
+   ========================================================================== */
+
+/* Disable tap highlight color (Android) */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Prevent text selection on kids UI — toddlers drag fingers everywhere */
+button,
+a,
+.kids-card,
+.kids-btn,
+[role="button"] {
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+/* Allow text selection only in content areas (teacher/admin) */
+input,
+textarea,
+[contenteditable],
+.selectable {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Prevent pull-to-refresh and overscroll bounce on tablets */
+html,
+body {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure touch targets are at least 48px (WCAG recommended minimum) */
+button,
+a.kids-btn,
+[role="button"] {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+/* Smooth scrolling for kids scrollable areas */
+.kids-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Prevent pinch-zoom on kids pages (tablets in classroom) */
+.no-zoom {
+  touch-action: pan-x pan-y;
+}
+
+/* Larger touch targets on coarse pointers (tablets) */
+@media (pointer: coarse) {
+  button,
+  a.kids-btn,
+  [role="button"] {
+    min-height: 56px;
+    min-width: 56px;
+  }
+}

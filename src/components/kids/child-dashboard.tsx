@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { PILLARS, type PillarKey } from "@/lib/activity-catalog";
 import { getLearnerStats } from "@/lib/dev-tracker";
+import { getLearnerById, AVATAR_EMOJI, AVATAR_COLORS } from "@/lib/learner-store";
 import { useSound } from "@/hooks/use-sound";
 
 const PILLAR_ROUTES: Record<PillarKey, string> = {
@@ -36,10 +37,17 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
   const [exitProgress, setExitProgress] = useState(0);
   const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const [stats, setStats] = useState<{ totalStars: number; totalActivities: number } | null>(null);
+  const [learnerName, setLearnerName] = useState<string>("");
+  const [learnerAvatar, setLearnerAvatar] = useState<string>("star");
 
   useEffect(() => {
     const s = getLearnerStats(learnerId);
     setStats({ totalStars: s.totalStars, totalActivities: s.totalActivities });
+    const learner = getLearnerById(learnerId);
+    if (learner) {
+      setLearnerName(learner.preferred_name);
+      setLearnerAvatar(learner.avatar_key);
+    }
   }, [learnerId]);
 
   if (!learnerId) {
@@ -108,19 +116,19 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
       <div className="flex flex-col items-center gap-2 px-6 pt-14 pb-4 anim-bounce-in">
         <div
           className="anim-float flex h-20 w-20 items-center justify-center rounded-full text-5xl shadow-lg"
-          style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
+          style={{ background: AVATAR_COLORS[learnerAvatar] ?? "linear-gradient(135deg, #FFB627, #FF9F43)" }}
           aria-hidden="true"
         >
-          🌟
+          {AVATAR_EMOJI[learnerAvatar] ?? "🌟"}
         </div>
         <h1
           className="text-4xl font-bold text-[var(--color-ink-900)]"
           style={{ fontFamily: "var(--font-kids)" }}
         >
-          Let&apos;s play!
+          Hi, {learnerName || "friend"}! 👋
         </h1>
         <p className="text-lg text-[var(--color-ink-500)]">
-          Choose what to learn today 😊
+          What shall we play today? 😊
         </p>
 
         {/* Stats badges */}
