@@ -1,56 +1,72 @@
-import { requireAuth } from "@/lib/auth";
-import { SignOutButton } from "@/components/sign-out-button";
-import Link from "next/link";
-import { getAllActivities, toActivityCard } from "@/lib/activity-catalog";
+"use client";
+
+import { PortalLayout, type NavItem } from "@/components/portal/portal-layout";
+import { usePortalData } from "@/hooks/use-portal-data";
+import { getAllActivities, toActivityCard, PILLARS } from "@/lib/activity-catalog";
 import { AssignActivityForm } from "@/components/teach/assign-activity-form";
+import { SignOutButton } from "@/components/sign-out-button";
 
-export const metadata = {
-  title: "Assign Activities — Teacher Portal",
-};
+const TEACHER_NAV: NavItem[] = [
+  { href: "/teach", label: "Dashboard", icon: "📊", description: "Class overview" },
+  { href: "/teach/class", label: "My Class", icon: "🧒", description: "Roster & skills" },
+  { href: "/teach/assign", label: "Assign Activities", icon: "📌", description: "Pick for class" },
+  { href: "/teach/observations", label: "Observations", icon: "📝", description: "Record notes" },
+  { href: "/teach/content", label: "Content Library", icon: "📚", description: "Activities" },
+  { href: "/kids", label: "Child Mode", icon: "🎮", description: "Launch for learners" },
+];
 
-export default async function AssignPage() {
-  const user = await requireAuth();
+export default function AssignPage() {
+  const { data, loading } = usePortalData();
+
+  if (loading || !data) {
+    return (
+      <PortalLayout navItems={TEACHER_NAV} brandLabel="Nenyere ECD" brandIcon="★" brandGradient="linear-gradient(135deg, #FF9F43, #FF6B35)" roleLabel="teacher" userName="Teacher">
+        <div className="flex h-96 items-center justify-center">
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-slate-200 border-t-[#FF9F43]" />
+        </div>
+      </PortalLayout>
+    );
+  }
+
   const activities = getAllActivities().map(toActivityCard);
-
-  // Placeholder learners
-  const learners = [
-    { id: "00000000-0000-0000-0000-000000001001", preferred_name: "Tari", ecd_level: "ECD_A" },
-    { id: "00000000-0000-0000-0000-000000001002", preferred_name: "Tina", ecd_level: "ECD_A" },
-    { id: "00000000-0000-0000-0000-000000001003", preferred_name: "Rumbi", ecd_level: "ECD_B" },
-  ];
+  const learners = data.learners.map((l) => ({
+    id: l.id,
+    preferred_name: l.preferred_name,
+    ecd_level: l.ecd_level,
+  }));
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-0)]">
-      <header className="border-b border-[var(--color-surface-2)] bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-lg font-bold text-white"
-              style={{ backgroundColor: "var(--color-brand-sun)" }}
-              aria-hidden="true"
-            >
-              ★
-            </div>
-            <span className="font-semibold">Nenyere ECD</span>
-            <Link href="/teach" className="text-sm text-[var(--color-ink-500)] hover:underline">
-              ← Dashboard
-            </Link>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-ink-500">
-              {user.profile?.display_name ?? user.email}
-            </span>
-            <SignOutButton />
-          </div>
+    <PortalLayout navItems={TEACHER_NAV} brandLabel="Nenyere ECD" brandIcon="★" brandGradient="linear-gradient(135deg, #FF9F43, #FF6B35)" roleLabel="teacher" userName="Teacher">
+      {/* Page header */}
+      <div className="mb-6 rounded-2xl p-6 text-white shadow-lg" style={{ background: "linear-gradient(135deg, #FF9F43, #FF6B35)" }}>
+        <h1 className="text-2xl font-bold">Assign Activities 📌</h1>
+        <p className="mt-1 text-white/80">Pick activities for your class or individual learners</p>
+      </div>
+
+      {/* Quick stats */}
+      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-md">
+          <p className="text-sm text-slate-500">Available Activities</p>
+          <p className="mt-1 text-2xl font-bold text-slate-800">{activities.length}</p>
         </div>
-      </header>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-md">
+          <p className="text-sm text-slate-500">Learners</p>
+          <p className="mt-1 text-2xl font-bold text-slate-800">{learners.length}</p>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-md">
+          <p className="text-sm text-slate-500">Learning Pillars</p>
+          <p className="mt-1 text-2xl font-bold text-slate-800">{PILLARS.filter((p) => p.key !== "themes").length}</p>
+        </div>
+      </div>
 
-      <main className="mx-auto max-w-6xl px-6 py-8">
-        <h1 className="mb-2 text-2xl font-bold">Assign Activities</h1>
-        <p className="mb-6 text-sm text-ink-500">Pick activities for your class or individual learners</p>
-
+      {/* Assignment form */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-md">
         <AssignActivityForm activities={activities} learners={learners} />
-      </main>
-    </div>
+      </div>
+
+      <div className="mt-8 text-right">
+        <SignOutButton />
+      </div>
+    </PortalLayout>
   );
 }

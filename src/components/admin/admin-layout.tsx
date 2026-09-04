@@ -1,9 +1,22 @@
-import { requireAuth } from "@/lib/auth";
+"use client";
+
+import { PortalLayout, type NavItem } from "@/components/portal/portal-layout";
 import { SignOutButton } from "@/components/sign-out-button";
-import Link from "next/link";
 import type { ReactNode } from "react";
 
-export async function AdminLayout({
+const ADMIN_NAV: NavItem[] = [
+  { href: "/admin", label: "Dashboard", icon: "📊", description: "Overview & stats" },
+  { href: "/admin/school", label: "School Settings", icon: "🏫", description: "Terms, languages" },
+  { href: "/admin/users", label: "Staff & Roles", icon: "👥", description: "Manage users" },
+  { href: "/admin/classes", label: "Classes", icon: "📚", description: "Enrolments" },
+  { href: "/admin/learners", label: "Learner Registry", icon: "🧒", description: "Consent & DSAR" },
+  { href: "/admin/content", label: "Content (CMS)", icon: "📝", description: "Activities & media" },
+  { href: "/admin/reports", label: "Reports", icon: "📈", description: "Learner reports" },
+  { href: "/admin/audit", label: "Audit Log", icon: "🔍", description: "Action history" },
+  { href: "/admin/privacy", label: "Privacy", icon: "🔒", description: "Consent records" },
+];
+
+export function AdminLayout({
   title,
   subtitle,
   children,
@@ -12,39 +25,29 @@ export async function AdminLayout({
   subtitle?: string;
   children: ReactNode;
 }) {
-  const user = await requireAuth();
-
   return (
-    <div className="min-h-screen bg-[var(--color-surface-0)]">
-      <header className="border-b border-[var(--color-surface-2)] bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-lg font-bold text-white"
-              style={{ backgroundColor: "var(--color-brand-sun)" }}
-              aria-hidden="true"
-            >
-              ★
-            </div>
-            <span className="font-semibold">Nenyere ECD</span>
-            <Link href="/admin" className="text-sm text-[var(--color-ink-500)] hover:underline">
-              ← Admin
-            </Link>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-ink-500">
-              {user.profile?.display_name ?? user.email}
-            </span>
-            <SignOutButton />
-          </div>
-        </div>
-      </header>
+    <PortalLayout
+      navItems={ADMIN_NAV}
+      brandLabel="Nenyere ECD"
+      brandIcon="★"
+      brandGradient="linear-gradient(135deg, #6C5CE7, #4FC3F7)"
+      roleLabel="school admin"
+      userName="Admin"
+    >
+      {/* Page header */}
+      <div
+        className="mb-6 rounded-2xl p-6 text-white shadow-lg"
+        style={{ background: "linear-gradient(135deg, #6C5CE7, #4FC3F7)" }}
+      >
+        <h1 className="text-2xl font-bold">{title}</h1>
+        {subtitle && <p className="mt-1 text-white/80">{subtitle}</p>}
+      </div>
 
-      <main className="mx-auto max-w-6xl px-6 py-8">
-        <h1 className="mb-1 text-2xl font-bold">{title}</h1>
-        {subtitle && <p className="mb-6 text-sm text-ink-500">{subtitle}</p>}
-        {children}
-      </main>
-    </div>
+      {children}
+
+      <div className="mt-8 text-right">
+        <SignOutButton />
+      </div>
+    </PortalLayout>
   );
 }

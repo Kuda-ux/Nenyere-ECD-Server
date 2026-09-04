@@ -1,15 +1,21 @@
-import { requireAuth } from "@/lib/auth";
+"use client";
+
+import { PortalLayout, type NavItem } from "@/components/portal/portal-layout";
+import { getAllActivities, getAllStories, toActivityCard, PILLARS } from "@/lib/activity-catalog";
+import { ContentList } from "@/components/teach/content-list";
 import { SignOutButton } from "@/components/sign-out-button";
 import Link from "next/link";
-import { getAllActivities, getAllStories, toActivityCard } from "@/lib/activity-catalog";
-import { ContentList } from "@/components/teach/content-list";
 
-export const metadata = {
-  title: "Content — Teacher Portal",
-};
+const TEACHER_NAV: NavItem[] = [
+  { href: "/teach", label: "Dashboard", icon: "📊", description: "Class overview" },
+  { href: "/teach/class", label: "My Class", icon: "🧒", description: "Roster & skills" },
+  { href: "/teach/assign", label: "Assign Activities", icon: "📌", description: "Pick for class" },
+  { href: "/teach/observations", label: "Observations", icon: "📝", description: "Record notes" },
+  { href: "/teach/content", label: "Content Library", icon: "📚", description: "Activities" },
+  { href: "/kids", label: "Child Mode", icon: "🎮", description: "Launch for learners" },
+];
 
-export default async function ContentPage() {
-  const user = await requireAuth();
+export default function ContentPage() {
   const activities = getAllActivities().map(toActivityCard);
   const stories = getAllStories().map((s) => ({
     id: s.id,
@@ -23,47 +29,49 @@ export default async function ContentPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-[var(--color-surface-0)]">
-      <header className="border-b border-[var(--color-surface-2)] bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-lg font-bold text-white"
-              style={{ backgroundColor: "var(--color-brand-sun)" }}
-              aria-hidden="true"
-            >
-              ★
-            </div>
-            <span className="font-semibold">Nenyere ECD</span>
-            <Link href="/teach" className="text-sm text-[var(--color-ink-500)] hover:underline">
-              ← Dashboard
-            </Link>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-ink-500">
-              {user.profile?.display_name ?? user.email}
-            </span>
-            <SignOutButton />
-          </div>
+    <PortalLayout navItems={TEACHER_NAV} brandLabel="Nenyere ECD" brandIcon="★" brandGradient="linear-gradient(135deg, #FF9F43, #FF6B35)" roleLabel="teacher" userName="Teacher">
+      {/* Page header */}
+      <div className="mb-6 flex items-center justify-between">
+        <div className="rounded-2xl p-6 text-white shadow-lg" style={{ background: "linear-gradient(135deg, #FF9F43, #FF6B35)" }}>
+          <h1 className="text-2xl font-bold">Content Library 📚</h1>
+          <p className="mt-1 text-white/80">Activities and stories — review, edit, publish</p>
         </div>
-      </header>
+      </div>
 
-      <main className="mx-auto max-w-6xl px-6 py-8">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Content Library</h1>
-            <p className="mt-1 text-sm text-ink-500">Activities and stories — review, edit, publish</p>
-          </div>
-          <Link
-            href="/teach/content/new"
-            className="rounded-xl bg-[var(--color-brand-sun)] px-4 py-2 font-bold text-white transition-all active:scale-95"
-          >
-            + New Activity
-          </Link>
+      {/* Quick stats */}
+      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-md">
+          <p className="text-sm text-slate-500">Total Activities</p>
+          <p className="mt-1 text-2xl font-bold text-slate-800">{activities.length}</p>
         </div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-md">
+          <p className="text-sm text-slate-500">Stories</p>
+          <p className="mt-1 text-2xl font-bold text-slate-800">{stories.length}</p>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-md">
+          <p className="text-sm text-slate-500">Learning Pillars</p>
+          <p className="mt-1 text-2xl font-bold text-slate-800">{PILLARS.filter((p) => p.key !== "themes").length}</p>
+        </div>
+      </div>
 
+      {/* New activity button */}
+      <div className="mb-6 text-right">
+        <Link
+          href="/teach/content/new"
+          className="inline-block rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-6 py-3 font-bold text-white shadow-lg transition-all hover:scale-105 active:scale-95"
+        >
+          + New Activity
+        </Link>
+      </div>
+
+      {/* Content list */}
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-md">
         <ContentList activities={activities} stories={stories} />
-      </main>
-    </div>
+      </div>
+
+      <div className="mt-8 text-right">
+        <SignOutButton />
+      </div>
+    </PortalLayout>
   );
 }
