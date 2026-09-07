@@ -1,19 +1,29 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getActiveDeviceId } from "@/lib/device-store";
+import { getActiveDeviceId, getDeviceById } from "@/lib/device-store";
 import { DevicePinEntry } from "@/components/kids/device-pin-entry";
 import { LearnerPicker } from "@/components/kids/learner-picker";
 
 export function KidsPortal() {
   const [showPin, setShowPin] = useState(true);
+  const [deviceLearnerIds, setDeviceLearnerIds] = useState<string[] | null>(null);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const activeDevice = getActiveDeviceId();
-    // If no device is active, show PIN entry
-    // If device is active, show learner picker
-    setShowPin(!activeDevice);
+    const activeDeviceId = getActiveDeviceId();
+    if (activeDeviceId) {
+      const device = getDeviceById(activeDeviceId);
+      if (device) {
+        setDeviceLearnerIds(device.learnerIds);
+        setShowPin(false);
+      } else {
+        // Device was removed, show PIN entry
+        setShowPin(true);
+      }
+    } else {
+      setShowPin(true);
+    }
     setLoaded(true);
   }, []);
 
@@ -29,5 +39,5 @@ export function KidsPortal() {
     return <DevicePinEntry />;
   }
 
-  return <LearnerPicker />;
+  return <LearnerPicker deviceLearnerIds={deviceLearnerIds} />;
 }
