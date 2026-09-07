@@ -9,10 +9,11 @@ import Link from "next/link";
 const TEACHER_NAV: NavItem[] = [
   { href: "/teach", label: "Dashboard", icon: "📊", description: "Class overview" },
   { href: "/teach/class", label: "My Class", icon: "🧒", description: "Roster & skills" },
+  { href: "/teach/learners", label: "Manage Learners", icon: "👤", description: "Add & edit" },
+  { href: "/teach/devices", label: "Devices", icon: "📱", description: "Set up tablets" },
   { href: "/teach/assign", label: "Assign Activities", icon: "📌", description: "Pick for class" },
   { href: "/teach/observations", label: "Observations", icon: "📝", description: "Record notes" },
   { href: "/teach/content", label: "Content Library", icon: "📚", description: "Activities" },
-  { href: "/kids", label: "Child Mode", icon: "🎮", description: "Launch for learners" },
 ];
 
 export default function ContentPage() {

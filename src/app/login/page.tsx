@@ -1,15 +1,12 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 function LoginForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const isDeviceMode = searchParams.get("mode") === "device";
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -72,7 +69,7 @@ function LoginForm() {
           onClick={() => setMagicLinkSent(false)}
           className="text-sm text-ink-500 underline-offset-4 hover:underline"
         >
-          ← Use a different sign-in method
+          Use a different sign-in method
         </button>
       </div>
     );
@@ -88,9 +85,8 @@ function LoginForm() {
         >
           ★
         </div>
-        <h1 className="text-xl font-bold">
-          {isDeviceMode ? "Classroom Device Sign In" : "Teacher / Admin Sign In"}
-        </h1>
+        <h1 className="text-xl font-bold">Teacher Sign In</h1>
+        <p className="text-sm text-ink-500">Sign in to manage your class and devices</p>
       </div>
 
       <form onSubmit={handlePasswordSignIn} className="flex flex-col gap-4">
@@ -143,29 +139,25 @@ function LoginForm() {
         </button>
       </form>
 
-      {!isDeviceMode && (
-        <>
-          <div className="flex items-center gap-3">
-            <div className="h-px flex-1 bg-[var(--color-surface-2)]" />
-            <span className="text-xs text-ink-500">or</span>
-            <div className="h-px flex-1 bg-[var(--color-surface-2)]" />
-          </div>
+      <div className="flex items-center gap-3">
+        <div className="h-px flex-1 bg-[var(--color-surface-2)]" />
+        <span className="text-xs text-ink-500">or</span>
+        <div className="h-px flex-1 bg-[var(--color-surface-2)]" />
+      </div>
 
-          <button
-            onClick={handleMagicLink}
-            disabled={loading || !email}
-            className="rounded-lg border border-[var(--color-surface-2)] px-6 py-3 font-semibold text-ink-700 transition-colors hover:bg-[var(--color-surface-1)] disabled:opacity-50"
-          >
-            Send magic link
-          </button>
-        </>
-      )}
+      <button
+        onClick={handleMagicLink}
+        disabled={loading || !email}
+        className="rounded-lg border border-[var(--color-surface-2)] px-6 py-3 font-semibold text-ink-700 transition-colors hover:bg-[var(--color-surface-1)] disabled:opacity-50"
+      >
+        Send magic link
+      </button>
 
       <Link
-        href="/welcome"
+        href="/"
         className="text-center text-sm text-ink-500 underline-offset-4 hover:underline"
       >
-        ← Back to welcome
+        Back to home
       </Link>
     </div>
   );

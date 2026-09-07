@@ -43,11 +43,7 @@ export const AVATAR_COLORS: Record<string, string> = {
 
 export const AVATAR_KEYS = Object.keys(AVATAR_EMOJI);
 
-const DEFAULT_LEARNERS: Learner[] = [
-  { id: "00000000-0000-0000-0000-000000001001", preferred_name: "Tari", first_name: "Tariro", avatar_key: "star", ecd_level: "ECD_A" },
-  { id: "00000000-0000-0000-0000-000000001002", preferred_name: "Tina", first_name: "Tinashe", avatar_key: "elephant", ecd_level: "ECD_A" },
-  { id: "00000000-0000-0000-0000-000000001003", preferred_name: "Rumbi", first_name: "Rumbidzai", avatar_key: "lion", ecd_level: "ECD_B" },
-];
+const DEFAULT_LEARNERS: Learner[] = [];
 
 function loadLearners(): Learner[] {
   if (typeof window === "undefined") return DEFAULT_LEARNERS;

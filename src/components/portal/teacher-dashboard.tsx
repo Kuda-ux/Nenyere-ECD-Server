@@ -9,10 +9,11 @@ import { PILLARS } from "@/lib/activity-catalog";
 const TEACHER_NAV: NavItem[] = [
   { href: "/teach", label: "Dashboard", icon: "📊", description: "Class overview" },
   { href: "/teach/class", label: "My Class", icon: "🧒", description: "Roster & skills" },
+  { href: "/teach/learners", label: "Manage Learners", icon: "👤", description: "Add & edit" },
+  { href: "/teach/devices", label: "Devices", icon: "📱", description: "Set up tablets" },
   { href: "/teach/assign", label: "Assign Activities", icon: "📌", description: "Pick for class" },
   { href: "/teach/observations", label: "Observations", icon: "📝", description: "Record notes" },
   { href: "/teach/content", label: "Content Library", icon: "📚", description: "Activities" },
-  { href: "/kids", label: "Child Mode", icon: "🎮", description: "Launch for learners" },
 ];
 
 export function TeacherDashboard({ userName }: { userName: string }) {
@@ -43,6 +44,8 @@ export function TeacherDashboard({ userName }: { userName: string }) {
     return emerging.length > 0 || s.stats.totalActivities === 0;
   });
 
+  const hasLearners = data.totalLearners > 0;
+
   return (
     <PortalLayout
       navItems={TEACHER_NAV}
@@ -58,8 +61,36 @@ export function TeacherDashboard({ userName }: { userName: string }) {
         style={{ background: "linear-gradient(135deg, #FF9F43, #FF6B35)" }}
       >
         <h1 className="text-2xl font-bold">Hello, {userName}! 👋</h1>
-        <p className="mt-1 text-white/80">Your class has completed {data.classTotalActivities} activities and earned {data.classTotalStars} stars! 🌟</p>
+        <p className="mt-1 text-white/80">
+          {hasLearners
+            ? `Your class has completed ${data.classTotalActivities} activities and earned ${data.classTotalStars} stars! 🌟`
+            : "Welcome! Start by adding your learners and setting up classroom devices."}
+        </p>
       </div>
+
+      {/* Getting started guide (only when no learners) */}
+      {!hasLearners && (
+        <div className="mb-8 rounded-2xl border border-amber-200 bg-amber-50/50 p-6 shadow-md">
+          <h2 className="mb-4 text-lg font-bold text-slate-800">🚀 Getting Started</h2>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <Link href="/teach/learners" className="group rounded-xl bg-white p-5 shadow-sm transition-all hover:scale-105">
+              <span className="text-3xl">👤</span>
+              <p className="mt-2 font-semibold text-slate-800 group-hover:text-[#FF9F43]">1. Add Learners</p>
+              <p className="mt-1 text-xs text-slate-500">Create profiles for each child in your class</p>
+            </Link>
+            <Link href="/teach/devices" className="group rounded-xl bg-white p-5 shadow-sm transition-all hover:scale-105">
+              <span className="text-3xl">📱</span>
+              <p className="mt-2 font-semibold text-slate-800 group-hover:text-[#FF9F43]">2. Register Devices</p>
+              <p className="mt-1 text-xs text-slate-500">Set up tablets with PIN codes for children</p>
+            </Link>
+            <Link href="/teach/assign" className="group rounded-xl bg-white p-5 shadow-sm transition-all hover:scale-105">
+              <span className="text-3xl">📌</span>
+              <p className="mt-2 font-semibold text-slate-800 group-hover:text-[#FF9F43]">3. Assign Activities</p>
+              <p className="mt-1 text-xs text-slate-500">Pick learning activities for your class</p>
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Stat cards */}
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

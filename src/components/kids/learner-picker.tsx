@@ -40,6 +40,40 @@ export function LearnerPicker() {
     setLoaded(true);
   }
 
+  // Empty state: no learners added yet
+  if (loaded && learners.length === 0) {
+    return (
+      <div className="kids-bg-playful relative flex w-full max-w-2xl flex-col items-center gap-6 overflow-hidden rounded-3xl p-8 text-center">
+        <div
+          className="anim-float flex h-20 w-20 items-center justify-center rounded-full text-5xl shadow-lg"
+          style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
+          aria-hidden="true"
+        >
+          🌟
+        </div>
+        <h1
+          className="text-3xl font-bold text-[var(--color-ink-900)]"
+          style={{ fontFamily: "var(--font-kids)" }}
+        >
+          No learners yet!
+        </h1>
+        <p
+          className="text-lg text-[var(--color-ink-500)]"
+          style={{ fontFamily: "var(--font-kids)" }}
+        >
+          Your teacher needs to add learners from the teacher dashboard first. 📋
+        </p>
+        <button
+          className="kids-btn text-base text-[var(--color-ink-500)] underline-offset-4 hover:underline"
+          onClick={() => { play("tap"); router.push("/"); }}
+          style={{ fontFamily: "var(--font-kids)" }}
+        >
+          ← Back to Home
+        </button>
+      </div>
+    );
+  }
+
   function handleSelect(learner: Learner) {
     unlock();
     play("pop");
@@ -248,7 +282,7 @@ export function LearnerPicker() {
       {/* Exit gate */}
       <button
         className="kids-btn mt-4 text-base text-[var(--color-ink-500)] underline-offset-4 hover:underline"
-        onClick={() => { play("tap"); router.push("/welcome"); }}
+        onClick={() => { play("tap"); router.push("/"); }}
         style={{ fontFamily: "var(--font-kids)" }}
       >
         ← Exit Child Mode
