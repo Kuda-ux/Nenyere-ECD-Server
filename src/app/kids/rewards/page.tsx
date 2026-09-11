@@ -121,43 +121,43 @@ function RewardsContent() {
 
       {/* Badges grid */}
       <div className="flex flex-1 items-start justify-center overflow-y-auto kids-scroll px-6 pb-8">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3">
           {(badges ?? []).map((badge, i) => (
             <div
               key={badge.id}
-              className={`flex flex-col items-center gap-2 rounded-2xl p-5 shadow-md anim-pop-in ${badge.earned ? "anim-pulse-glow" : ""}`}
+              className={`flex flex-col items-center gap-3 rounded-3xl p-6 shadow-lg anim-pop-in ${badge.earned ? "anim-pulse-glow" : ""}`}
               style={{
                 background: badge.earned
                   ? "linear-gradient(135deg, #FFB627, #FF9F43)"
                   : "white",
                 border: `4px solid ${badge.earned ? "var(--color-brand-sun)" : "var(--color-surface-2)"}`,
-                minHeight: "150px",
-                minWidth: "130px",
+                minHeight: "180px",
+                minWidth: "150px",
                 opacity: badge.earned ? 1 : 0.5,
                 animationDelay: `${i * 0.06}s`,
               }}
             >
               <span
-                className={`text-5xl ${badge.earned ? "anim-wiggle" : ""}`}
+                className={`text-6xl ${badge.earned ? "anim-wiggle" : ""}`}
                 style={{ animationDelay: `${i * 0.1}s` }}
                 aria-hidden="true"
               >
                 {badge.emoji}
               </span>
               <span
-                className="text-center text-base font-bold"
+                className="text-center text-lg font-bold"
                 style={{ color: badge.earned ? "white" : "var(--color-ink-900)" }}
               >
                 {badge.label}
               </span>
               <span
-                className="text-center text-xs"
-                style={{ color: badge.earned ? "white/80" : "var(--color-ink-500)" }}
+                className="text-center text-sm"
+                style={{ color: badge.earned ? "rgba(255,255,255,0.85)" : "var(--color-ink-500)" }}
               >
                 {badge.description}
               </span>
               {badge.earned && (
-                <span className="rounded-full bg-white/30 px-3 py-0.5 text-xs font-bold text-white">
+                <span className="rounded-full bg-white/30 px-3 py-1 text-sm font-bold text-white">
                   ✓ Earned!
                 </span>
               )}

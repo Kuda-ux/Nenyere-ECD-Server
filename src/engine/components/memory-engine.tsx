@@ -9,6 +9,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import type { MemoryActivity, MemoryCard } from "../schema/engines";
 import type { ItemResponse, ItemResult } from "../schema/common";
 import { ContentImage } from "./content-image";
+import { EmojiText } from "./emoji-text";
 import { useSound } from "@/hooks/use-sound";
 
 type Props = {
@@ -138,7 +139,7 @@ export function MemoryEngine({ activity, onResult, hintLevel }: Props) {
 
       {/* Card grid with 3D flip */}
       <div
-        className="grid gap-3"
+        className="grid gap-4"
         style={{ gridTemplateColumns: `repeat(${activity.columns}, 1fr)` }}
       >
         {activity.cards.map((card, i) => {
@@ -156,22 +157,22 @@ export function MemoryEngine({ activity, onResult, hintLevel }: Props) {
                 state === "matched" ? "opacity-60" : "",
                 isFlipped ? "flipped" : "",
               ].join(" ")}
-              style={{ minHeight: "90px", minWidth: "90px" }}
+              style={{ minHeight: "110px", minWidth: "110px" }}
               aria-label={isFlipped ? card.text?.en ?? "Card" : "Hidden card"}
             >
               <div className="flip-card-inner relative h-full w-full">
                 {/* Card back (hidden state) */}
                 <div
-                  className="flip-card-front absolute inset-0 flex items-center justify-center rounded-2xl shadow-md"
+                  className="flip-card-front absolute inset-0 flex items-center justify-center rounded-2xl shadow-lg"
                   style={{ background: gradient }}
                 >
-                  <span className="text-4xl drop-shadow-md" aria-hidden="true">❓</span>
+                  <span className="text-5xl drop-shadow-md" aria-hidden="true">❓</span>
                 </div>
 
                 {/* Card front (revealed state) */}
                 <div
                   className={[
-                    "flip-card-back absolute inset-0 flex items-center justify-center rounded-2xl border-4 shadow-md",
+                    "flip-card-back absolute inset-0 flex items-center justify-center rounded-2xl border-4 shadow-lg",
                     state === "matched"
                       ? "border-[var(--color-success)] bg-[var(--color-success)]/10"
                       : "border-[var(--color-brand-sun)] bg-white",
@@ -179,7 +180,7 @@ export function MemoryEngine({ activity, onResult, hintLevel }: Props) {
                 >
                   <CardContent card={card} />
                   {state === "matched" && (
-                    <span className="absolute -right-2 -top-2 text-2xl anim-bounce-in" aria-hidden="true">✅</span>
+                    <span className="absolute -right-2 -top-2 text-3xl anim-bounce-in" aria-hidden="true">✅</span>
                   )}
                 </div>
               </div>
@@ -193,13 +194,11 @@ export function MemoryEngine({ activity, onResult, hintLevel }: Props) {
 
 function CardContent({ card }: { card: MemoryCard }) {
   if (card.image) {
-    return <ContentImage src={card.image.en} alt="" containerClassName="h-16 w-16" />;
+    return <ContentImage src={card.image.en} alt="" containerClassName="h-20 w-20" />;
   }
   if (card.text) {
     return (
-      <span className="text-4xl" style={{ fontFamily: "var(--font-kids)" }}>
-        {card.text.en}
-      </span>
+      <EmojiText text={card.text.en} emojiClassName="text-6xl" labelClassName="text-sm font-bold" />
     );
   }
   return null;

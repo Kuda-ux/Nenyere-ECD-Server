@@ -125,11 +125,11 @@ export function LearnerPicker({ deviceLearnerIds }: { deviceLearnerIds?: string[
               key={learner.id}
               onClick={() => handleSelect(learner)}
               className={`kids-card flex flex-col items-center gap-3 border-4 border-transparent p-6 anim-pop-in ${[`anim-delay-1`, `anim-delay-2`, `anim-delay-3`, `anim-delay-4`][i % 4]}`}
-              style={{ minHeight: "180px", minWidth: "150px" }}
+              style={{ minHeight: "200px", minWidth: "170px" }}
             >
               <div
-                className="flex h-20 w-20 items-center justify-center rounded-full text-5xl shadow-md transition-transform hover:scale-110"
-                style={{ background: gradient }}
+                className="anim-float flex h-24 w-24 items-center justify-center rounded-full text-6xl shadow-md transition-transform hover:scale-110"
+                style={{ background: gradient, animationDelay: `${i * 0.15}s` }}
                 aria-hidden="true"
               >
                 {AVATAR_EMOJI[learner.avatar_key] ?? "⭐"}
@@ -141,7 +141,7 @@ export function LearnerPicker({ deviceLearnerIds }: { deviceLearnerIds?: string[
                 {learner.preferred_name}
               </span>
               <span
-                className="rounded-full px-3 py-1 text-xs font-bold text-white"
+                className="rounded-full px-3 py-1 text-sm font-bold text-white"
                 style={{ backgroundColor: "var(--color-brand-jacaranda)" }}
               >
                 {learner.ecd_level.replace("_", " ")}

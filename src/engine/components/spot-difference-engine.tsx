@@ -37,17 +37,17 @@ export function SpotDifferenceEngine({ activity, onResult }: EngineComponentProp
   const renderScene = (isRight: boolean) => (
     <svg
       viewBox="0 0 200 200"
-      className="w-full rounded-2xl border-2"
+      className="w-full rounded-2xl border-4"
       style={{ borderColor: "var(--color-brand-jacaranda)", backgroundColor: "var(--color-surface-0)" }}
       onClick={handleClick}
     >
-      <circle cx={60} cy={50} r={25} fill="#F2A93B" />
-      <rect x={20} y={120} width={50} height={60} fill="#5BA85B" />
-      <rect x={100} y={100} width={60} height={40} fill="#3B7DD8" />
-      <circle cx={150} cy={60} r={15} fill="#E85D5D" />
-      {isRight && <circle cx={150} cy={90} r={10} fill="#E85D5D" />}
-      {isRight && <rect x={30} y={130} width={30} height={10} fill="#9C27B0" />}
-      {isRight && <circle cx={60} cy={50} r={25} fill="#F2A93B" stroke="#E85D5D" strokeWidth={3} />}
+      <circle cx={60} cy={50} r={30} fill="#F2A93B" />
+      <rect x={15} y={115} width={55} height={65} fill="#5BA85B" rx={8} />
+      <rect x={95} y={95} width={65} height={45} fill="#3B7DD8" rx={8} />
+      <circle cx={150} cy={60} r={18} fill="#E85D5D" />
+      {isRight && <circle cx={150} cy={90} r={12} fill="#E85D5D" />}
+      {isRight && <rect x={25} y={125} width={35} height={12} fill="#9C27B0" rx={4} />}
+      {isRight && <circle cx={60} cy={50} r={30} fill="#F2A93B" stroke="#E85D5D" strokeWidth={4} />}
       {Array.from(found).map((id) => {
         const diff = differences.find((d) => d.id === id);
         if (!diff) return null;
@@ -56,10 +56,11 @@ export function SpotDifferenceEngine({ activity, onResult }: EngineComponentProp
             key={id}
             cx={diff.x * 200}
             cy={diff.y * 200}
-            r={diff.radius * 200}
+            r={diff.radius * 200 + 8}
             fill="none"
             stroke="#5BA85B"
-            strokeWidth={3}
+            strokeWidth={4}
+            strokeDasharray="8 4"
           />
         );
       })}

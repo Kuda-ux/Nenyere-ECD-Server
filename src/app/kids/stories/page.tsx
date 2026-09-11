@@ -14,7 +14,7 @@ const STORY_GRADIENTS = [
   "linear-gradient(135deg, #FF6B35, #FF5252)",
 ];
 
-const STORY_EMOJIS = ["📚", "🦄", "🐰", "🌅", "🦁", " river"];
+const STORY_EMOJIS = ["📚", "🦄", "🐰", "🌅", "🦁", "🐟"];
 
 const FLOATING_DECORATIONS = [
   { emoji: "📖", top: "8%", left: "5%", size: "2.5rem", anim: "anim-float-slow", delay: "anim-delay-2" },
@@ -107,23 +107,23 @@ export default function StoriesPage() {
                 className={`kids-card flex flex-col items-center gap-4 p-8 anim-pop-in`}
                 style={{
                   background: STORY_GRADIENTS[i % STORY_GRADIENTS.length],
-                  minHeight: "220px",
-                  minWidth: "200px",
+                  minHeight: "240px",
+                  minWidth: "220px",
                   animationDelay: `${i * 0.08}s`,
                 }}
               >
-                <span className="text-7xl drop-shadow-lg anim-float" style={{ animationDelay: `${i * 0.3}s` }} aria-hidden="true">
+                <span className="text-8xl drop-shadow-lg anim-float" style={{ animationDelay: `${i * 0.3}s` }} aria-hidden="true">
                   {STORY_EMOJIS[i % STORY_EMOJIS.length]}
                 </span>
-                <span className="text-center text-xl font-bold text-white drop-shadow-md">
+                <span className="text-center text-2xl font-bold text-white drop-shadow-md">
                   {story.title.en}
                 </span>
                 {story.description && (
-                  <span className="text-center text-sm text-white/80">
+                  <span className="text-center text-base text-white/80">
                     {story.description.en}
                   </span>
                 )}
-                <span className="rounded-full bg-white/30 px-4 py-1 text-sm font-bold text-white">
+                <span className="rounded-full bg-white/30 px-4 py-1.5 text-base font-bold text-white">
                   Read me! 🎧
                 </span>
               </button>

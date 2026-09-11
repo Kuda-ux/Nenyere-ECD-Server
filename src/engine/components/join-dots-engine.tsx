@@ -76,8 +76,8 @@ export function JoinDotsEngine({ activity, onResult }: EngineComponentProps) {
               onMouseUp={() => handleDotUp(dot)}
               style={{ cursor: isNext ? "pointer" : "default" }}
             >
-              <circle cx={dot.x * 400} cy={dot.y * 400} r={isNext ? 20 : 16} fill={isDone ? "#5BA85B" : isNext ? "#F2A93B" : "#E0E0E0"} stroke="#333" strokeWidth={2} />
-              <text x={dot.x * 400} y={dot.y * 400 + 5} textAnchor="middle" fontSize={16} fontWeight="bold" fill="#333">{dot.number}</text>
+              <circle cx={dot.x * 400} cy={dot.y * 400} r={isNext ? 26 : 20} fill={isDone ? "#5BA85B" : isNext ? "#F2A93B" : "#E0E0E0"} stroke="#333" strokeWidth={2} />
+              <text x={dot.x * 400} y={dot.y * 400 + 7} textAnchor="middle" fontSize={22} fontWeight="bold" fill="#333">{dot.number}</text>
             </g>
           );
         })}

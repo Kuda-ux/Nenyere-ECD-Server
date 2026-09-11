@@ -76,22 +76,22 @@ function PlayActivityContent({ params }: { params: Promise<{ activityId: string 
         <Confetti count={50} />
 
         {/* Mascot celebrating */}
-        <Mascot mood="celebrating" size={100} />
+        <Mascot mood="celebrating" size={130} />
 
         {/* Completion message */}
-        <p className="text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-in anim-delay-1" style={{ fontFamily: "var(--font-kids)" }}>
+        <p className="text-4xl font-bold text-[var(--color-ink-900)] anim-bounce-in anim-delay-1" style={{ fontFamily: "var(--font-kids)" }}>
           Activity complete!
         </p>
-        <p className="text-lg text-[var(--color-ink-700)] anim-slide-up anim-delay-2" style={{ fontFamily: "var(--font-kids)" }}>
+        <p className="text-xl text-[var(--color-ink-700)] anim-slide-up anim-delay-2" style={{ fontFamily: "var(--font-kids)" }}>
           You did it! So clever! 🌟
         </p>
 
         {/* Stars earned */}
-        <div className="flex gap-3 anim-delay-3">
+        <div className="flex gap-4 anim-delay-3">
           {[1, 2, 3].map((s) => (
             <span
               key={s}
-              className={`text-7xl ${s <= earnedStars ? "anim-star-burst-big" : ""}`}
+              className={`text-8xl ${s <= earnedStars ? "anim-star-burst-big" : ""}`}
               style={{
                 color: s <= earnedStars ? "var(--color-brand-sun)" : "var(--color-surface-2)",
                 animationDelay: `${s * 0.2}s`,

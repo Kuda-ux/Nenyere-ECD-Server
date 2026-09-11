@@ -47,17 +47,19 @@ export function SequenceEngine({ activity, onResult }: EngineComponentProps) {
               key={step.id}
               onClick={() => handleStepClick(step)}
               disabled={isDone}
-              className="flex flex-col items-center gap-1 rounded-2xl border-4 p-4 transition-all"
+              className="flex flex-col items-center gap-2 rounded-3xl border-4 p-5 transition-all active:scale-95 shadow-md"
               style={{
                 borderColor: isDone ? "#5BA85B" : isNext ? "#F2A93B" : "#E0E0E0",
                 opacity: isDone ? 0.5 : 1,
                 cursor: isDone ? "default" : "pointer",
                 backgroundColor: isDone ? "#E8F5E9" : "var(--color-surface-0)",
+                minWidth: "110px",
+                minHeight: "120px",
               }}
             >
-              <span className="text-4xl">{step.emoji ?? "❓"}</span>
-              <span className="text-sm font-medium">{step.label.en}</span>
-              {isDone && <span className="text-xs text-green-600">✓ #{step.correct_order}</span>}
+              <span className="text-6xl leading-none">{step.emoji ?? "❓"}</span>
+              <span className="text-base font-bold">{step.label.en}</span>
+              {isDone && <span className="text-sm text-green-600 font-bold">✓ #{step.correct_order}</span>}
             </button>
           );
         })}

@@ -8,6 +8,7 @@
 import { useState, useCallback } from "react";
 import type { DragSortActivity, SortItem } from "../schema/drag-sort";
 import { ContentImage } from "./content-image";
+import { EmojiText } from "./emoji-text";
 import { useSound } from "@/hooks/use-sound";
 
 const SLOT_GRADIENTS = [
@@ -106,8 +107,8 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
                   : "hover:scale-105 hover:shadow-lg",
               ].join(" ")}
               style={{
-                minHeight: "70px",
-                minWidth: "70px",
+                minHeight: "85px",
+                minWidth: "85px",
                 background: "white",
               }}
             >
@@ -131,7 +132,7 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
               onDrop={() => handleDrop(slot.id)}
               onClick={() => handleSlotTap(slot.id)}
               className={[
-                "flex min-h-[110px] min-w-[110px] flex-col items-center justify-center gap-2 rounded-2xl border-4 p-4 transition-all",
+                "flex min-h-[130px] min-w-[130px] flex-col items-center justify-center gap-2 rounded-2xl border-4 p-4 transition-all",
                 hasItemToPlace
                   ? "border-[var(--color-brand-sun)] border-dashed anim-pulse-glow cursor-pointer"
                   : placedItems.length > 0
@@ -161,20 +162,20 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
 }
 
 function ItemContent({ item }: { item: SortItem }) {
-  if (item.image) return <ContentImage src={item.image.en} alt="" containerClassName="h-10 w-10" />;
-  if (item.text) return <span className="text-xl font-bold" style={{ fontFamily: "var(--font-kids)" }}>{item.text.en}</span>;
+  if (item.image) return <ContentImage src={item.image.en} alt="" containerClassName="h-14 w-14" />;
+  if (item.text) return <EmojiText text={item.text.en} emojiClassName="text-4xl" labelClassName="text-sm font-bold" />;
   if (item.shape) {
     const emoji = SHAPE_EMOJI[item.shape];
-    if (emoji) return <span className="text-3xl">{emoji}</span>;
+    if (emoji) return <span className="text-4xl">{emoji}</span>;
     return <SimpleShape shape={item.shape} colour={item.colour} />;
   }
-  if (item.colour) return <div className="h-10 w-10 rounded-xl shadow-inner" style={{ backgroundColor: item.colour }} />;
+  if (item.colour) return <div className="h-14 w-14 rounded-2xl shadow-inner" style={{ backgroundColor: item.colour }} />;
   return null;
 }
 
 function SimpleShape({ shape, colour }: { shape: string; colour?: string }) {
   const fill = colour ?? "var(--color-brand-sun)";
-  const s = 36;
+  const s = 48;
   switch (shape) {
     case "circle": return <svg width={s} height={s}><circle cx={s/2} cy={s/2} r={s/2-2} fill={fill} /></svg>;
     case "square": return <svg width={s} height={s}><rect x={2} y={2} width={s-4} height={s-4} fill={fill} rx={6} /></svg>;

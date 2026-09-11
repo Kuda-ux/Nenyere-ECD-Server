@@ -10,6 +10,7 @@ import { useState, useRef, useCallback } from "react";
 import type { MatchActivity, MatchPair } from "../schema/match";
 import type { ItemResponse, ItemResult } from "../schema/common";
 import { ContentImage } from "./content-image";
+import { EmojiText } from "./emoji-text";
 import { useSound } from "@/hooks/use-sound";
 
 const CARD_GRADIENTS = [
@@ -131,8 +132,8 @@ export function MatchEngine({ activity, onResult, hintLevel }: Props) {
                         : "hover:scale-105 hover:shadow-lg",
                 ].join(" ")}
                 style={{
-                  minHeight: "90px",
-                  minWidth: "110px",
+                  minHeight: "110px",
+                  minWidth: "130px",
                   background: isMatched ? "linear-gradient(135deg, #E8F5E9, #C8E6C9)" : isWrong ? "linear-gradient(135deg, #FFEBEE, #FFCDD2)" : gradient,
                   animationDelay: `${idx * 0.1}s`,
                 }}
@@ -171,8 +172,8 @@ export function MatchEngine({ activity, onResult, hintLevel }: Props) {
                         : "hover:scale-105 hover:shadow-lg",
                 ].join(" ")}
                 style={{
-                  minHeight: "90px",
-                  minWidth: "110px",
+                  minHeight: "110px",
+                  minWidth: "130px",
                   background: isMatched ? "linear-gradient(135deg, #E8F5E9, #C8E6C9)" : isWrong ? "linear-gradient(135deg, #FFEBEE, #FFCDD2)" : gradient,
                   animationDelay: `${idx * 0.1}s`,
                 }}
@@ -195,14 +196,10 @@ function PairContent({ side, pair }: { side: "left" | "right"; pair: MatchPair }
   const content = pair[side];
 
   if (content.image) {
-    return <ContentImage src={content.image.en} alt="" containerClassName="h-12 w-12" />;
+    return <ContentImage src={content.image.en} alt="" containerClassName="h-16 w-16" />;
   }
   if (content.text) {
-    return (
-      <span className="text-2xl font-bold text-white drop-shadow-md" style={{ fontFamily: "var(--font-kids)" }}>
-        {content.text.en}
-      </span>
-    );
+    return <EmojiText text={content.text.en} emojiClassName="text-5xl" labelClassName="text-lg font-bold text-white drop-shadow-md" />;
   }
   if (content.shape) {
     return <Shape shape={content.shape} colour={content.colour} />;
@@ -210,7 +207,7 @@ function PairContent({ side, pair }: { side: "left" | "right"; pair: MatchPair }
   if (content.colour) {
     return (
       <div
-        className="h-12 w-12 rounded-xl shadow-inner ring-2 ring-white/50"
+        className="h-16 w-16 rounded-2xl shadow-inner ring-4 ring-white/50"
         style={{ backgroundColor: content.colour }}
       />
     );

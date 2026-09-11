@@ -63,7 +63,7 @@ export function PuzzleEngine({ activity, onResult }: EngineComponentProps) {
             <button
               key={idx}
               onClick={() => handleSlotClick(row, col)}
-              className="flex h-24 w-24 items-center justify-center rounded-xl border-2 text-4xl"
+              className="flex h-28 w-28 items-center justify-center rounded-2xl border-4 text-5xl"
               style={{
                 borderColor: placedPiece ? "#5BA85B" : "#E0E0E0",
                 backgroundColor: placedPiece ? "#E8F5E9" : "var(--color-surface-0)",
@@ -79,7 +79,7 @@ export function PuzzleEngine({ activity, onResult }: EngineComponentProps) {
           <button
             key={piece.id}
             onClick={() => setSelectedPiece(piece.id)}
-            className="flex h-20 w-20 items-center justify-center rounded-xl border-4 text-4xl transition-transform hover:scale-105"
+            className="flex h-24 w-24 items-center justify-center rounded-2xl border-4 text-5xl transition-transform hover:scale-110 active:scale-95 shadow-md"
             style={{
               borderColor: selectedPiece === piece.id ? "#F2A93B" : "#E0E0E0",
               backgroundColor: "var(--color-surface-1)",

@@ -52,12 +52,20 @@ export function TraceEngine({ activity, item, onResult, hintLevel }: Props) {
     // Draw current guide as dotted
     if (stroke) {
       drawPath(ctx, stroke.points, w, h, stroke.colour, stroke.width, true);
-      // Draw starting dot
+      // Draw starting dot — big, pulsing, obvious
       if (activity.show_starting_dot && stroke.points.length > 0) {
         const p = stroke.points[0];
+        // Outer glow ring
         ctx.beginPath();
-        ctx.arc(p.x * w, p.y * h, 8, 0, Math.PI * 2);
+        ctx.arc(p.x * w, p.y * h, 16, 0, Math.PI * 2);
         ctx.fillStyle = stroke.colour;
+        ctx.globalAlpha = 0.3;
+        ctx.fill();
+        // Inner solid dot
+        ctx.beginPath();
+        ctx.arc(p.x * w, p.y * h, 12, 0, Math.PI * 2);
+        ctx.fillStyle = stroke.colour;
+        ctx.globalAlpha = 1;
         ctx.fill();
       }
     }
@@ -162,11 +170,11 @@ export function TraceEngine({ activity, item, onResult, hintLevel }: Props) {
     <div className="flex flex-col items-center gap-4">
       {item.label && (
         <div
-          className="rounded-2xl px-6 py-2 shadow-md anim-slide-in-up"
+          className="rounded-3xl px-8 py-3 shadow-lg anim-slide-in-up"
           style={{ background: "linear-gradient(135deg, #FFF9E6, #FFE082)" }}
         >
           <p
-            className="text-3xl font-bold text-[var(--color-ink-900)]"
+            className="text-4xl font-bold text-[var(--color-ink-900)]"
             style={{ fontFamily: "var(--font-kids)" }}
           >
             {item.label.en}

@@ -72,14 +72,14 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
       });
     }
     return (
-      <div className="flex flex-col items-center gap-6 py-16">
-        <Mascot mood="celebrating" size={100} />
-        <p className="text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-in" style={{ fontFamily: "var(--font-kids)" }}>
+      <div className="flex flex-col items-center gap-8 py-20">
+        <Mascot mood="celebrating" size={120} />
+        <p className="text-4xl font-bold text-[var(--color-ink-900)] anim-bounce-in" style={{ fontFamily: "var(--font-kids)" }}>
           All done! You&apos;re a star! 🌟
         </p>
         <button
           onClick={() => { playSound("tap"); handleExit(); }}
-          className="kids-btn px-8 py-4 text-lg text-white shadow-lg transition-all hover:scale-105"
+          className="kids-btn px-10 py-5 text-xl text-white shadow-xl transition-all hover:scale-105"
           style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
         >
           🏠 Back to Play
@@ -92,13 +92,13 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
   if (state.phase === "summary") {
     const mascotMood = state.stars === 3 ? "celebrating" : state.stars === 2 ? "happy" : "encouraging";
     return (
-      <div className="flex flex-col items-center gap-6 py-16">
-        <Mascot mood={mascotMood} size={100} />
-        <div className="flex gap-2" aria-hidden="true">
+      <div className="flex flex-col items-center gap-8 py-20">
+        <Mascot mood={mascotMood} size={120} />
+        <div className="flex gap-3" aria-hidden="true">
           {[1, 2, 3].map((s) => (
             <span
               key={s}
-              className={`text-7xl ${s <= state.stars ? "anim-star-burst-big" : ""}`}
+              className={`text-8xl ${s <= state.stars ? "anim-star-burst-big" : ""}`}
               style={{
                 color: s <= state.stars ? "var(--color-brand-sun)" : "var(--color-surface-2)",
                 animationDelay: `${s * 0.2}s`,
@@ -108,23 +108,23 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
             </span>
           ))}
         </div>
-        <p className="text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-in anim-delay-1" style={{ fontFamily: "var(--font-kids)" }}>
+        <p className="text-4xl font-bold text-[var(--color-ink-900)] anim-bounce-in anim-delay-1" style={{ fontFamily: "var(--font-kids)" }}>
           {state.stars === 3 ? "Amazing! You&apos;re brilliant! 🌟" : state.stars === 2 ? "Great job! Well done! 👏" : "Good try! Keep going! 💪"}
         </p>
-        <p className="text-lg text-[var(--color-ink-500)]" style={{ fontFamily: "var(--font-kids)" }}>
+        <p className="text-xl text-[var(--color-ink-500)]" style={{ fontFamily: "var(--font-kids)" }}>
           You got {state.itemsCorrect} out of {state.itemsTotal} right!
         </p>
-        <div className="flex gap-3">
+        <div className="flex gap-4">
           <button
             onClick={() => { playSound("celebrate"); finish(); }}
-            className="kids-btn px-8 py-3 text-base text-white shadow-lg transition-all hover:scale-105"
+            className="kids-btn px-10 py-4 text-lg text-white shadow-xl transition-all hover:scale-105"
             style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
           >
             Done ★
           </button>
           <button
             onClick={() => { playSound("tap"); handleExit(); }}
-            className="kids-btn border-4 px-6 py-3 text-base text-[var(--color-ink-700)] shadow-md transition-all hover:scale-105"
+            className="kids-btn border-4 px-8 py-4 text-lg text-[var(--color-ink-700)] shadow-md transition-all hover:scale-105"
             style={{ borderColor: "var(--color-brand-jacaranda)", backgroundColor: "white" }}
           >
             Exit
@@ -137,26 +137,26 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
   // ── INTRO ─────────────────────────────────────────────────────────────────
   if (state.phase === "intro") {
     return (
-      <div className="flex flex-col items-center gap-6 py-16">
-        <Mascot mood="happy" size={100} />
-        <h1 className="text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-in" style={{ fontFamily: "var(--font-kids)" }}>
+      <div className="flex flex-col items-center gap-8 py-20">
+        <Mascot mood="happy" size={120} />
+        <h1 className="text-4xl font-bold text-[var(--color-ink-900)] anim-bounce-in" style={{ fontFamily: "var(--font-kids)" }}>
           {activity.title.en}
         </h1>
         {activity.description && (
-          <p className="max-w-md text-center text-lg text-[var(--color-ink-500)] anim-slide-up anim-delay-1" style={{ fontFamily: "var(--font-kids)" }}>
+          <p className="max-w-lg text-center text-xl text-[var(--color-ink-500)] anim-slide-up anim-delay-1" style={{ fontFamily: "var(--font-kids)" }}>
             {activity.description.en}
           </p>
         )}
         <button
           onClick={() => { unlockSound(); playSound("whoosh"); start(); }}
-          className="kids-btn anim-pop-in anim-delay-2 px-12 py-4 text-xl text-white shadow-lg transition-all hover:scale-105"
+          className="kids-btn anim-pop-in anim-delay-2 px-14 py-5 text-2xl text-white shadow-xl transition-all hover:scale-105"
           style={{ background: "linear-gradient(135deg, #4CAF50, #00B894)" }}
         >
           Let&apos;s Play! ▶
         </button>
         <button
           onClick={() => { playSound("tap"); handleExit(); }}
-          className="text-sm text-[var(--color-ink-500)] underline-offset-4 hover:underline"
+          className="text-base text-[var(--color-ink-500)] underline-offset-4 hover:underline"
           style={{ fontFamily: "var(--font-kids)" }}
         >
           ← Exit
@@ -168,19 +168,19 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
   // ── INSTRUCTION ───────────────────────────────────────────────────────────
   if (state.phase === "instruction") {
     return (
-      <div className="flex flex-col items-center gap-6 py-16">
-        <Mascot mood="thinking" size={80} />
-        <p className="max-w-md text-center text-2xl font-bold text-[var(--color-ink-900)] anim-slide-in-up" style={{ fontFamily: "var(--font-kids)" }}>
+      <div className="flex flex-col items-center gap-8 py-20">
+        <Mascot mood="thinking" size={100} />
+        <p className="max-w-lg text-center text-3xl font-bold text-[var(--color-ink-900)] anim-slide-in-up" style={{ fontFamily: "var(--font-kids)" }}>
           {activity.instructions.text.en}
         </p>
         {activity.instructions.demo !== "none" && (
-          <p className="text-sm text-[var(--color-ink-500)]" style={{ fontFamily: "var(--font-kids)" }}>
+          <p className="text-base text-[var(--color-ink-500)]" style={{ fontFamily: "var(--font-kids)" }}>
             👀 Watch how to play!
           </p>
         )}
         <button
           onClick={() => { playSound("chime"); instructionDone(); }}
-          className="kids-btn px-10 py-3 text-lg text-white shadow-lg transition-all hover:scale-105"
+          className="kids-btn px-12 py-4 text-xl text-white shadow-xl transition-all hover:scale-105"
           style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
         >
           Ready! ✓
@@ -196,14 +196,14 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
     const pick = feedbackPool[Math.floor(Math.random() * feedbackPool.length)];
 
     return (
-      <div className="flex flex-col items-center gap-6 py-16">
-        <Mascot mood={isCorrect ? "celebrating" : "encouraging"} size={90} />
-        <p className="text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-feedback" style={{ fontFamily: "var(--font-kids)" }}>
+      <div className="flex flex-col items-center gap-8 py-20">
+        <Mascot mood={isCorrect ? "celebrating" : "encouraging"} size={110} />
+        <p className="text-4xl font-bold text-[var(--color-ink-900)] anim-bounce-feedback" style={{ fontFamily: "var(--font-kids)" }}>
           {pick.text.en}
         </p>
         <button
           onClick={() => { playSound(isCorrect ? "correct" : "wrong"); feedbackDone(); }}
-          className="kids-btn px-10 py-3 text-lg text-white shadow-lg transition-all hover:scale-105"
+          className="kids-btn px-12 py-4 text-xl text-white shadow-xl transition-all hover:scale-105"
           style={{ background: isCorrect ? "linear-gradient(135deg, #4CAF50, #00B894)" : "linear-gradient(135deg, #FFB627, #FF9F43)" }}
         >
           {isCorrect ? "Next →" : "Try again →"}

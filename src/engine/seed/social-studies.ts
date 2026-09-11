@@ -1,4 +1,4 @@
-import type { AnyActivity } from "../schema";
+﻿import type { AnyActivity } from "../schema";
 import { base, SKILL } from "./helpers";
 
 export const socialStudiesActivities: AnyActivity[] = [
@@ -92,8 +92,8 @@ export const socialStudiesActivities: AnyActivity[] = [
       tags: ["social-studies"],
     }),
     items: [
-      { id: "i1", stimulus: { text: { en: "� We learn!" } }, is_correct: true, alt: { en: "We learn at school!" } },
-      { id: "i2", stimulus: { text: { en: "� We sleep" } }, is_correct: false, alt: { en: "We don't sleep at school" } },
+      { id: "i1", stimulus: { text: { en: "📚 We learn!" } }, is_correct: true, alt: { en: "We learn at school!" } },
+      { id: "i2", stimulus: { text: { en: "😴 We sleep" } }, is_correct: false, alt: { en: "We don't sleep at school" } },
       { id: "i3", stimulus: { text: { en: "🎮 We play games only" } }, is_correct: false, alt: { en: "We also learn!" } },
     ],
     prompt: { text: { en: "What do we do at school?", sn: "Tinoita chii kuchikoro?", nd: "Sizenza ntoni esikoleni?" }, audio: { en: "audio/school.mp3" } },
@@ -110,7 +110,7 @@ export const socialStudiesActivities: AnyActivity[] = [
       tags: ["social-studies"],
     }),
     items: [
-      { id: "i1", stimulus: { text: { en: "� Sadza" } }, is_correct: true },
+      { id: "i1", stimulus: { text: { en: "🍲 Sadza" } }, is_correct: true },
       { id: "i2", stimulus: { text: { en: "🧱 Brick" } }, is_correct: false },
       { id: "i3", stimulus: { text: { en: "🪨 Stone" } }, is_correct: false },
     ],

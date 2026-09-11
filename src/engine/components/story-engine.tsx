@@ -79,9 +79,9 @@ export function StoryEngine({ activity, onResult, hintLevel }: Props) {
   );
 
   return (
-    <div className="flex max-w-2xl flex-col items-center gap-4">
+    <div className="flex max-w-3xl flex-col items-center gap-5">
       {/* Story image */}
-      <div className="relative w-full overflow-hidden rounded-2xl border-4 border-[var(--color-surface-2)]">
+      <div className="relative w-full overflow-hidden rounded-3xl border-4 border-[var(--color-brand-sun)] shadow-xl">
         <ContentImage
           src={page.image.en}
           alt={page.text?.en ?? `Page ${pageIndex + 1}`}
@@ -94,12 +94,12 @@ export function StoryEngine({ activity, onResult, hintLevel }: Props) {
             onClick={() => {
               if (spot.response_audio) audio.play(spot.response_audio.en);
             }}
-            className="absolute rounded-full border-2 border-[var(--color-brand-sun)] bg-[var(--color-brand-sun)]/20 transition-all hover:bg-[var(--color-brand-sun)]/40"
+            className="absolute rounded-full border-4 border-[var(--color-brand-sun)] bg-[var(--color-brand-sun)]/20 transition-all hover:bg-[var(--color-brand-sun)]/40"
             style={{
               left: `${spot.cx * 100}%`,
               top: `${spot.cy * 100}%`,
-              width: `${spot.radius * 200}px`,
-              height: `${spot.radius * 200}px`,
+              width: `${spot.radius * 240}px`,
+              height: `${spot.radius * 240}px`,
               transform: "translate(-50%, -50%)",
             }}
             aria-label={spot.response_text?.en ?? "Hotspot"}
@@ -110,7 +110,7 @@ export function StoryEngine({ activity, onResult, hintLevel }: Props) {
       {/* Story text */}
       {page.text && (
         <p
-          className="text-center text-lg"
+          className="text-center text-xl font-medium leading-relaxed"
           style={{ fontFamily: "var(--font-kids)" }}
         >
           {page.text.en}
@@ -119,18 +119,18 @@ export function StoryEngine({ activity, onResult, hintLevel }: Props) {
 
       {/* Interaction: tap_correct */}
       {page.interaction?.type === "tap_correct" && page.interaction.choices && (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           {page.interaction.prompt && (
-            <p className="text-center text-lg font-semibold" style={{ fontFamily: "var(--font-kids)" }}>
+            <p className="text-center text-xl font-bold" style={{ fontFamily: "var(--font-kids)" }}>
               {page.interaction.prompt.en}
             </p>
           )}
-          <div className="flex gap-3">
+          <div className="flex gap-4">
             {page.interaction.choices.map((choice) => (
               <button
                 key={choice.id}
                 onClick={() => handleInteraction(page.id, choice.is_correct)}
-                className="rounded-xl border-4 border-[var(--color-surface-2)] bg-white px-6 py-3 font-semibold transition-all hover:border-[var(--color-brand-sun)] active:scale-95"
+                className="rounded-2xl border-4 border-[var(--color-surface-2)] bg-white px-8 py-4 text-lg font-bold transition-all hover:border-[var(--color-brand-sun)] hover:scale-105 active:scale-95 shadow-md"
                 style={{ fontFamily: "var(--font-kids)" }}
               >
                 {choice.text.en}
@@ -144,21 +144,21 @@ export function StoryEngine({ activity, onResult, hintLevel }: Props) {
       {!page.interaction && (
         <button
           onClick={handleNext}
-          className="rounded-xl bg-[var(--color-brand-sun)] px-8 py-3 font-bold text-white transition-opacity hover:opacity-90 active:scale-95"
-          style={{ fontFamily: "var(--font-kids)" }}
+          className="kids-btn px-10 py-4 text-lg text-white shadow-lg transition-all hover:scale-105 active:scale-95"
+          style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)", fontFamily: "var(--font-kids)" }}
         >
           {isLastPage ? "Finish Story ★" : "Next →"}
         </button>
       )}
 
       {/* Page indicator */}
-      <div className="flex gap-1.5">
+      <div className="flex gap-2">
         {activity.pages.map((_, i) => (
           <div
             key={i}
             className={[
-              "h-2 w-2 rounded-full",
-              i === pageIndex ? "bg-[var(--color-brand-sun)]" : "bg-[var(--color-surface-2)]",
+              "h-3 w-3 rounded-full transition-all",
+              i === pageIndex ? "bg-[var(--color-brand-sun)] scale-125" : "bg-[var(--color-surface-2)]",
             ].join(" ")}
           />
         ))}

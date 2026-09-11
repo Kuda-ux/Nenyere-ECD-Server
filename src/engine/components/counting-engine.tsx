@@ -108,11 +108,11 @@ export function CountingEngine({ activity, item, onResult, hintLevel }: Props) {
       {/* Operation display for add/subtract */}
       {item.operation !== "count" && item.operands && (
         <div
-          className="flex items-center gap-3 rounded-2xl px-6 py-3 shadow-md anim-slide-in-up"
+          className="flex items-center gap-4 rounded-3xl px-8 py-4 shadow-lg anim-slide-in-up"
           style={{ background: "linear-gradient(135deg, #FFF9E6, #FFE082)" }}
         >
-          <span className="text-4xl">{item.objects.shape ? (SHAPE_EMOJI[item.objects.shape] ?? "⭐") : "⭐"}</span>
-          <span className="text-3xl font-bold text-[var(--color-ink-900)]" style={{ fontFamily: "var(--font-kids)" }}>
+          <span className="text-5xl">{item.objects.shape ? (SHAPE_EMOJI[item.objects.shape] ?? "⭐") : "⭐"}</span>
+          <span className="text-4xl font-bold text-[var(--color-ink-900)]" style={{ fontFamily: "var(--font-kids)" }}>
             {item.operands[0]} {item.operation === "add" ? "+" : "−"} {item.operands[1]} = ?
           </span>
         </div>
@@ -120,7 +120,7 @@ export function CountingEngine({ activity, item, onResult, hintLevel }: Props) {
 
       {/* Objects to count — themed container */}
       <div
-        className="flex flex-wrap items-center justify-center gap-3 rounded-3xl p-8 shadow-inner"
+        className="flex flex-wrap items-center justify-center gap-4 rounded-3xl p-8 shadow-inner"
         style={{ background: "linear-gradient(135deg, #F8F9FF, #E3F2FD)" }}
       >
         {objects.map((i) => {
@@ -132,25 +132,25 @@ export function CountingEngine({ activity, item, onResult, hintLevel }: Props) {
               disabled={!activity.tap_to_count || isTapped}
               className={[
                 "flex items-center justify-center rounded-2xl transition-all",
-                isTapped ? "scale-110 anim-pop-scale" : "hover:scale-105",
+                isTapped ? "scale-110 anim-pop-scale" : "hover:scale-110 active:scale-95",
               ].join(" ")}
               style={{
-                width: 60,
-                height: 60,
-                background: isTapped ? "rgba(76, 175, 80, 0.15)" : "rgba(255, 255, 255, 0.6)",
-                border: isTapped ? "3px solid var(--color-success)" : "2px solid transparent",
+                width: 80,
+                height: 80,
+                background: isTapped ? "rgba(76, 175, 80, 0.15)" : "rgba(255, 255, 255, 0.7)",
+                border: isTapped ? "4px solid var(--color-success)" : "3px solid transparent",
               }}
             >
               {item.objects.image ? (
-                <ContentImage src={item.objects.image!.en} alt="" containerClassName="h-10 w-10" />
+                <ContentImage src={item.objects.image!.en} alt="" containerClassName="h-14 w-14" />
               ) : shapeEmoji ? (
-                <span className="text-3xl" style={{ filter: isTapped ? "saturate(1.5)" : "none" }}>
+                <span className="text-5xl" style={{ filter: isTapped ? "saturate(1.5)" : "none" }}>
                   {shapeEmoji}
                 </span>
               ) : item.objects.shape ? (
                 <CountShape shape={item.objects.shape} colour={item.objects.colour} tapped={isTapped} />
               ) : (
-                <div className="h-8 w-8 rounded-full" style={{ backgroundColor: item.objects.colour ?? "var(--color-brand-sun)" }} />
+                <div className="h-12 w-12 rounded-full" style={{ backgroundColor: item.objects.colour ?? "var(--color-brand-sun)" }} />
               )}
             </button>
           );
@@ -176,12 +176,12 @@ export function CountingEngine({ activity, item, onResult, hintLevel }: Props) {
 
       {/* Number line — themed */}
       {activity.show_number_line && (
-        <div className="flex flex-wrap justify-center gap-1 rounded-xl bg-white/60 p-2">
+        <div className="flex flex-wrap justify-center gap-1.5 rounded-xl bg-white/60 p-3">
           {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
             <span
               key={n}
               className={[
-                "flex h-9 w-9 items-center justify-center rounded-lg text-base font-bold transition-all",
+                "flex h-11 w-11 items-center justify-center rounded-xl text-lg font-bold transition-all",
                 tappedCount === n ? "scale-125 bg-[var(--color-brand-sun)] text-white shadow-md" : "text-[var(--color-ink-600)]",
               ].join(" ")}
               style={{ fontFamily: "var(--font-kids)" }}
@@ -193,7 +193,7 @@ export function CountingEngine({ activity, item, onResult, hintLevel }: Props) {
       )}
 
       {/* Answer choices — gradient buttons */}
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-4">
         {item.options.map((num, idx) => {
           const isCorrectAnswer = num === item.correct_answer;
           const showAsCorrect = showCorrect && isCorrectAnswer;
@@ -206,7 +206,7 @@ export function CountingEngine({ activity, item, onResult, hintLevel }: Props) {
               onClick={() => handleAnswer(num)}
               disabled={selectedAnswer !== null}
               className={[
-                "flex h-20 w-20 items-center justify-center rounded-2xl text-3xl font-bold transition-all active:scale-95 shadow-md",
+                "flex h-24 w-24 items-center justify-center rounded-3xl text-4xl font-bold transition-all active:scale-90 shadow-lg",
                 "anim-pop-scale",
                 showAsCorrect
                   ? "ring-4 ring-[var(--color-success)] anim-wobble"
@@ -232,17 +232,17 @@ export function CountingEngine({ activity, item, onResult, hintLevel }: Props) {
 
 function CountShape({ shape, colour, tapped }: { shape: string; colour?: string; tapped: boolean }) {
   const fill = tapped ? "var(--color-success)" : (colour ?? "var(--color-brand-sun)");
-  const size = 36;
+  const size = 56;
   switch (shape) {
     case "circle":
-      return <svg width={size} height={size}><circle cx={size/2} cy={size/2} r={size/2-2} fill={fill} /></svg>;
+      return <svg width={size} height={size}><circle cx={size/2} cy={size/2} r={size/2-3} fill={fill} /></svg>;
     case "square":
-      return <svg width={size} height={size}><rect x={2} y={2} width={size-4} height={size-4} fill={fill} rx={4} /></svg>;
+      return <svg width={size} height={size}><rect x={3} y={3} width={size-6} height={size-6} fill={fill} rx={8} /></svg>;
     case "triangle":
-      return <svg width={size} height={size}><polygon points={`${size/2},2 ${size-2},${size-2} 2,${size-2}`} fill={fill} /></svg>;
+      return <svg width={size} height={size}><polygon points={`${size/2},3 ${size-3},${size-3} 3,${size-3}`} fill={fill} /></svg>;
     case "star":
-      return <svg width={size} height={size}><polygon points="18,2 22,14 34,14 24,22 28,34 18,26 8,34 12,22 2,14 14,14" fill={fill} /></svg>;
+      return <svg width={size} height={size}><polygon points="28,3 34,20 52,20 38,32 44,50 28,40 12,50 18,32 4,20 22,20" fill={fill} /></svg>;
     default:
-      return <svg width={size} height={size}><circle cx={size/2} cy={size/2} r={size/2-2} fill={fill} /></svg>;
+      return <svg width={size} height={size}><circle cx={size/2} cy={size/2} r={size/2-3} fill={fill} /></svg>;
   }
 }

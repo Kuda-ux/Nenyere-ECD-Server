@@ -39,12 +39,12 @@ export function ColouringEngine({ activity, onResult }: EngineComponentProps) {
       <p className="text-lg font-semibold" style={{ fontFamily: "var(--font-kids)" }}>
         Tap a colour, then tap a shape to colour it!
       </p>
-      <div className="flex gap-2 flex-wrap justify-center">
+      <div className="flex gap-3 flex-wrap justify-center">
         {palette.map((c) => (
           <button
             key={c}
             onClick={() => setSelectedColour(c)}
-            className="h-10 w-10 rounded-full border-4 transition-transform hover:scale-110"
+            className="h-14 w-14 rounded-full border-4 transition-transform hover:scale-110 active:scale-95 shadow-md"
             style={{
               backgroundColor: c,
               borderColor: selectedColour === c ? "#333" : "transparent",

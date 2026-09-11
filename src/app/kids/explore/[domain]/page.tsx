@@ -102,7 +102,7 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
             <p className="text-xl text-[var(--color-ink-500)]">No activities yet. Coming soon! 🌟</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-5 sm:grid-cols-3">
             {activities.map((activity, i) => (
               <button
                 key={activity.id}
@@ -110,17 +110,17 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
                 className={`kids-card flex flex-col items-center gap-3 p-6 anim-pop-in`}
                 style={{
                   background: ACTIVITY_CARD_COLORS[i % ACTIVITY_CARD_COLORS.length],
-                  minHeight: "170px",
-                  minWidth: "150px",
+                  minHeight: "200px",
+                  minWidth: "170px",
                   animationDelay: `${i * 0.05}s`,
                 }}
               >
-                <span className="text-5xl drop-shadow-md" aria-hidden="true">{activity.emoji}</span>
-                <span className="text-center text-base font-bold text-white drop-shadow-md">
+                <span className="text-6xl drop-shadow-lg" aria-hidden="true">{activity.emoji}</span>
+                <span className="text-center text-lg font-bold text-white drop-shadow-md">
                   {activity.title}
                 </span>
                 {/* Level badge */}
-                <span className="rounded-full bg-white/30 px-3 py-0.5 text-xs font-bold text-white">
+                <span className="rounded-full bg-white/30 px-3 py-1 text-sm font-bold text-white">
                   {activity.ecd_level.replace("_", " ")}
                 </span>
                 {/* Star indicator */}
@@ -128,7 +128,7 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
                   {[1, 2, 3].map((s) => (
                     <span
                       key={s}
-                      className={`text-lg ${s <= activity.stars ? "text-white" : "text-white/30"}`}
+                      className={`text-xl ${s <= activity.stars ? "text-white" : "text-white/30"}`}
                       aria-hidden="true"
                     >
                       ★

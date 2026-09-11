@@ -11,6 +11,7 @@ import type { ItemResponse, ItemResult } from "../schema/common";
 import { useAudio } from "../audio/audio-manager";
 import { useSound } from "@/hooks/use-sound";
 import { ContentImage } from "./content-image";
+import { EmojiText } from "./emoji-text";
 
 const CARD_GRADIENTS = [
   "linear-gradient(135deg, #FF6B9D, #FFC4D6)",
@@ -149,8 +150,8 @@ export function ChoiceEngine({ activity, item, onResult, hintLevel }: Props) {
                       : "hover:scale-105 hover:shadow-xl",
               ].join(" ")}
               style={{
-                minHeight: "140px",
-                minWidth: "120px",
+                minHeight: "160px",
+                minWidth: "140px",
                 background: showAsWrong ? "linear-gradient(135deg, #FFEBEE, #FFCDD2)" : showAsCorrect ? "linear-gradient(135deg, #E8F5E9, #C8E6C9)" : gradient,
                 animationDelay: `${idx * 0.08}s`,
               }}
@@ -160,25 +161,24 @@ export function ChoiceEngine({ activity, item, onResult, hintLevel }: Props) {
                 <ContentImage
                   src={choice.stimulus.image.en}
                   alt={choice.alt?.en ?? ""}
-                  containerClassName="h-20 w-20"
+                  containerClassName="h-24 w-24"
                 />
               )}
               {choice.stimulus.text && (
-                <span
-                  className="text-3xl font-bold text-white drop-shadow-md"
-                  style={{ fontFamily: "var(--font-kids)" }}
-                >
-                  {choice.stimulus.text.en}
-                </span>
+                <EmojiText
+                  text={choice.stimulus.text.en}
+                  emojiClassName="text-7xl"
+                  labelClassName="text-lg font-bold text-white drop-shadow-md"
+                />
               )}
               {choice.stimulus.shape && (
-                <Shape shape={choice.stimulus.shape} colour={choice.stimulus.colour} size={56} />
+                <Shape shape={choice.stimulus.shape} colour={choice.stimulus.colour} size={72} />
               )}
               {showAsCorrect && (
-                <span className="text-3xl anim-bounce-in" aria-hidden="true">✅</span>
+                <span className="text-4xl anim-bounce-in" aria-hidden="true">✅</span>
               )}
               {showAsWrong && (
-                <span className="text-3xl anim-bounce-in" aria-hidden="true">❌</span>
+                <span className="text-4xl anim-bounce-in" aria-hidden="true">❌</span>
               )}
             </button>
           );

@@ -161,30 +161,30 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
 
       {/* Pillar tiles */}
       <div className="flex flex-1 items-start justify-center overflow-y-auto kids-scroll px-4 pb-8">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3">
           {PILLARS.map((pillar, i) => (
             <button
               key={pillar.key}
               onClick={() => handlePillarClick(pillar.key)}
-              className={`kids-card flex flex-col items-center gap-2 border-4 p-4 anim-pop-in`}
+              className={`kids-card flex flex-col items-center gap-3 border-4 p-5 anim-pop-in`}
               style={{
                 borderColor: "transparent",
                 background: pillar.gradient,
-                minHeight: "140px",
-                minWidth: "130px",
+                minHeight: "170px",
+                minWidth: "160px",
                 animationDelay: `${i * 0.06}s`,
               }}
             >
-              <span className="text-5xl drop-shadow-md anim-float" style={{ animationDelay: `${i * 0.2}s` }} aria-hidden="true">
+              <span className="text-6xl drop-shadow-lg anim-float" style={{ animationDelay: `${i * 0.2}s` }} aria-hidden="true">
                 {pillar.emoji}
               </span>
               <span
-                className="text-lg font-bold text-white drop-shadow-md"
+                className="text-xl font-bold text-white drop-shadow-md"
                 style={{ fontFamily: "var(--font-kids)" }}
               >
                 {pillar.label}
               </span>
-              <span className="text-center text-xs text-white/80">
+              <span className="text-center text-sm text-white/80">
                 {pillar.description}
               </span>
             </button>
