@@ -154,4 +154,100 @@ export const literacyActivities: AnyActivity[] = [
     ],
     layout: "two_column", shuffle_right: true,
   } as unknown as AnyActivity,
+
+  // -- Letter C Sound (ECD_B) --
+  {
+    ...base("00000000-0000-0000-0004-000000000009", "phonics_recognition", "choice", "Letter C Sound", {
+      ecd_level: "ECD_B", learning_area: "english_language", skills: [SKILL.alphabet_c],
+      description: "Find the letter that makes the 'c' sound",
+      title_sn: "Inzwi ra C", title_nd: "Isandi le C",
+      instruction: "Which letter says 'kuh'?",
+      tags: ["literacy"],
+    }),
+    items: [
+      { id: "i1", stimulus: { text: { en: "Cc" } }, is_correct: true },
+      { id: "i2", stimulus: { text: { en: "Aa" } }, is_correct: false },
+      { id: "i3", stimulus: { text: { en: "Bb" } }, is_correct: false },
+      { id: "i4", stimulus: { text: { en: "Dd" } }, is_correct: false },
+    ],
+    prompt: { text: { en: "Which letter says 'kuh'?", sn: "Ndechipi chinzwi chinoti 'kuh'?", nd: "Ngiphi osithi 'kuh'?" }, audio: { en: "audio/phonics_c.mp3" } },
+    layout: "grid", show_correct_after_attempts: 3,
+  } as unknown as AnyActivity,
+
+  // -- Find Vowel I (ECD_B) --
+  {
+    ...base("00000000-0000-0000-0004-00000000000a", "tap_correct", "choice", "Find Vowel I", {
+      ecd_level: "ECD_B", learning_area: "english_language", skills: [SKILL.vowel_i],
+      description: "Identify the vowel I",
+      title_sn: "Tsvaga Vowel I", title_nd: "Thola Vowel I",
+      instruction: "Find the letter I!",
+      tags: ["literacy"],
+    }),
+    items: [
+      { id: "i1", stimulus: { text: { en: "I" } }, is_correct: true },
+      { id: "i2", stimulus: { text: { en: "J" } }, is_correct: false },
+      { id: "i3", stimulus: { text: { en: "K" } }, is_correct: false },
+      { id: "i4", stimulus: { text: { en: "L" } }, is_correct: false },
+    ],
+    prompt: { text: { en: "I is a vowel. Find I!", sn: "I ndi vowel. Tsvaga I!", nd: "I ngivoweli. Thola I!" }, audio: { en: "audio/vowel_i.mp3" } },
+    layout: "grid", show_correct_after_attempts: 3,
+  } as unknown as AnyActivity,
+
+  // -- Find Vowel O (ECD_B) --
+  {
+    ...base("00000000-0000-0000-0004-00000000000b", "tap_correct", "choice", "Find Vowel O", {
+      ecd_level: "ECD_B", learning_area: "english_language", skills: [SKILL.vowel_o],
+      description: "Identify the vowel O",
+      title_sn: "Tsvaga Vowel O", title_nd: "Thola Vowel O",
+      instruction: "Find the letter O!",
+      tags: ["literacy"],
+    }),
+    items: [
+      { id: "i1", stimulus: { text: { en: "O" } }, is_correct: true },
+      { id: "i2", stimulus: { text: { en: "P" } }, is_correct: false },
+      { id: "i3", stimulus: { text: { en: "Q" } }, is_correct: false },
+      { id: "i4", stimulus: { text: { en: "R" } }, is_correct: false },
+    ],
+    prompt: { text: { en: "O is a vowel. Find O!", sn: "O ndi vowel. Tsvaga O!", nd: "O ngivoweli. Thola O!" }, audio: { en: "audio/vowel_o.mp3" } },
+    layout: "grid", show_correct_after_attempts: 3,
+  } as unknown as AnyActivity,
+
+  // -- Find Vowel U (ECD_B) --
+  {
+    ...base("00000000-0000-0000-0004-00000000000c", "tap_correct", "choice", "Find Vowel U", {
+      ecd_level: "ECD_B", learning_area: "english_language", skills: [SKILL.vowel_u],
+      description: "Identify the vowel U",
+      title_sn: "Tsvaga Vowel U", title_nd: "Thola Vowel U",
+      instruction: "Find the letter U!",
+      tags: ["literacy"],
+    }),
+    items: [
+      { id: "i1", stimulus: { text: { en: "U" } }, is_correct: true },
+      { id: "i2", stimulus: { text: { en: "V" } }, is_correct: false },
+      { id: "i3", stimulus: { text: { en: "W" } }, is_correct: false },
+      { id: "i4", stimulus: { text: { en: "X" } }, is_correct: false },
+    ],
+    prompt: { text: { en: "U is a vowel. Find U!", sn: "U ndi vowel. Tsvaga U!", nd: "U ngivoweli. Thola U!" }, audio: { en: "audio/vowel_u.mp3" } },
+    layout: "grid", show_correct_after_attempts: 3,
+  } as unknown as AnyActivity,
+
+  // -- All the Vowels (ECD_B) --
+  {
+    ...base("00000000-0000-0000-0004-00000000000d", "tap_correct", "choice", "All the Vowels", {
+      ecd_level: "ECD_B", difficulty: "standard",
+      learning_area: "english_language", skills: [SKILL.vowel_a, SKILL.vowel_e, SKILL.vowel_i, SKILL.vowel_o, SKILL.vowel_u],
+      description: "Find the vowels among the letters",
+      title_sn: "Vowels Dzese", title_nd: "Ama-Voweli Wonke",
+      instruction: "Which letter is a vowel? A, E, I, O, U!",
+      tags: ["literacy"],
+    }),
+    items: [
+      { id: "i1", stimulus: { text: { en: "E" } }, is_correct: true, alt: { en: "E is a vowel!" } },
+      { id: "i2", stimulus: { text: { en: "T" } }, is_correct: false, alt: { en: "T is not a vowel" } },
+      { id: "i3", stimulus: { text: { en: "S" } }, is_correct: false, alt: { en: "S is not a vowel" } },
+      { id: "i4", stimulus: { text: { en: "M" } }, is_correct: false, alt: { en: "M is not a vowel" } },
+    ],
+    prompt: { text: { en: "A, E, I, O, U are vowels. Tap a vowel!", sn: "A, E, I, O, U ndiwo mavowels. Bata vowel!", nd: "A, E, I, O, U ngamavoweli. Thinta ivoweli!" }, audio: { en: "audio/vowels_all.mp3" } },
+    layout: "grid", show_correct_after_attempts: 3,
+  } as unknown as AnyActivity,
 ];

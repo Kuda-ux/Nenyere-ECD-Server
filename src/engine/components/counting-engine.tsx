@@ -38,6 +38,9 @@ const SHAPE_EMOJI: Record<string, string> = {
   moon: "🌙",
   leaf: "🍃",
   bug: "🐛",
+  cow: "🐄",
+  goat: "🐐",
+  chicken: "🐔",
 };
 
 type Props = {

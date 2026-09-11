@@ -58,7 +58,7 @@ function PlayActivityContent({ params }: { params: Promise<{ activityId: string 
           Activity not found
         </p>
         <button
-          onClick={() => { play("tap"); router.push("/kids/dashboard"); }}
+          onClick={() => { play("tap"); router.push(`/kids/dashboard?learner=${learnerId}`); }}
           className="kids-btn px-8 py-4 text-lg text-white shadow-lg transition-all hover:scale-105"
           style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
         >
@@ -120,7 +120,7 @@ function PlayActivityContent({ params }: { params: Promise<{ activityId: string 
             📊 My Progress
           </button>
           <button
-            onClick={() => { play("tap"); router.push("/kids/dashboard"); }}
+            onClick={() => { play("tap"); router.push(`/kids/dashboard?learner=${learnerId}`); }}
             className="kids-btn border-4 px-6 py-3 text-base text-[var(--color-ink-900)] shadow-md transition-all hover:scale-105"
             style={{ borderColor: "var(--color-brand-msasa)", backgroundColor: "white" }}
           >
@@ -135,7 +135,7 @@ function PlayActivityContent({ params }: { params: Promise<{ activityId: string 
     <div className="kids-bg-playful min-h-screen">
       <ActivityRunner
         activity={activity}
-        onExit={() => router.push("/kids/dashboard")}
+        onExit={() => router.push(`/kids/dashboard?learner=${learnerId}`)}
         onComplete={(result) => {
           unlock();
           recordActivityCompletion(learnerId, activityId, result.accuracy, activity.skills);

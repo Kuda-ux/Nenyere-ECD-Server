@@ -28,7 +28,7 @@ export const socialStudiesActivities: AnyActivity[] = [
       description: "Identify types of transport",
       title_sn: "Zvokufamba", title_nd: "Ezokuhamba",
       instruction: "What is this?",
-      tags: ["social-studies"],
+      tags: ["social-studies", "theme-transport"],
     }),
     items: [
       { id: "i1", stimulus: { text: { en: "🚌 Bus" } }, is_correct: true },
@@ -65,7 +65,7 @@ export const socialStudiesActivities: AnyActivity[] = [
       description: "Sort transport by land, air, water",
       title_sn: "Rongedza Zvokufamba", title_nd: "Hlela Ezokuhamba",
       instruction: "Put each transport in the right place!",
-      tags: ["social-studies"],
+      tags: ["social-studies", "theme-transport"],
     }),
     slots: [
       { id: "s-land", label: { en: "Land" }, accepts_item_ids: ["it1", "it4"] },

@@ -1,9 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getActivitiesByPillar, toActivityCard, PILLARS, type PillarKey } from "@/lib/activity-catalog";
-import { useState, useRef } from "react";
+import { Suspense, useState } from "react";
 import { useSound } from "@/hooks/use-sound";
+import { HoldExitButton } from "@/components/kids/hold-exit-button";
 
 const VALID_PILLARS = new Set(PILLARS.map((p) => p.key));
 
@@ -18,11 +19,11 @@ const ACTIVITY_CARD_COLORS = [
   "linear-gradient(135deg, #FFEB3B, #FF9F43)",
 ];
 
-export default function ExplorePage({ params }: { params: Promise<{ domain: string }> }) {
+function ExploreContent({ params }: { params: Promise<{ domain: string }> }) {
   const router = useRouter();
-  const { play, unlock } = useSound();
-  const [exitProgress, setExitProgress] = useState(0);
-  const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const searchParams = useSearchParams();
+  const learnerId = searchParams.get("learner") ?? "";
+  const { play } = useSound();
   const [pillar, setPillar] = useState<PillarKey | null>(null);
 
   params.then((p) => {
@@ -30,24 +31,6 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
       setPillar(p.domain as PillarKey);
     }
   });
-
-  function handleExitHoldStart() {
-    setExitProgress(0);
-    let elapsed = 0;
-    holdTimer.current = setInterval(() => {
-      elapsed += 100;
-      setExitProgress(elapsed / 2000);
-      if (elapsed >= 2000) {
-        if (holdTimer.current) clearInterval(holdTimer.current);
-        router.push("/kids/dashboard");
-      }
-    }, 100);
-  }
-
-  function handleExitHoldEnd() {
-    if (holdTimer.current) clearInterval(holdTimer.current);
-    setExitProgress(0);
-  }
 
   if (!pillar) {
     return (
@@ -67,21 +50,11 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
     >
       {/* Top bar with back button */}
       <div className="flex items-center gap-4 px-6 py-4">
-        <button
-          className="relative flex h-14 w-14 items-center justify-center rounded-full text-2xl text-white shadow-lg transition-all hover:scale-110 active:scale-95"
-          style={{ backgroundColor: pillarInfo.color }}
-          onPointerDown={() => { unlock(); handleExitHoldStart(); }}
-          onPointerUp={handleExitHoldEnd}
-          onPointerLeave={handleExitHoldEnd}
-          aria-label="Hold to go back"
-        >
-          ←
-          {exitProgress > 0 && (
-            <svg className="absolute inset-0 -rotate-90" viewBox="0 0 48 48">
-              <circle cx="24" cy="24" r="22" fill="none" stroke="var(--color-brand-sun)" strokeWidth="3" strokeDasharray={`${exitProgress * 138.2} 138.2`} />
-            </svg>
-          )}
-        </button>
+        <HoldExitButton
+          onExit={() => router.push(`/kids/dashboard?learner=${learnerId}`)}
+          color={pillarInfo.color}
+          label="Hold to go back"
+        />
         <div
           className="flex items-center gap-3 rounded-2xl px-5 py-3 shadow-lg anim-bounce-in"
           style={{ background: pillarInfo.gradient }}
@@ -106,7 +79,7 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
             {activities.map((activity, i) => (
               <button
                 key={activity.id}
-                onClick={() => { play("pop"); router.push(`/kids/play/${activity.id}`); }}
+                onClick={() => { play("pop"); router.push(`/kids/play/${activity.id}?learner=${learnerId}`); }}
                 className={`kids-card flex flex-col items-center gap-3 p-6 anim-pop-in`}
                 style={{
                   background: ACTIVITY_CARD_COLORS[i % ACTIVITY_CARD_COLORS.length],
@@ -141,5 +114,13 @@ export default function ExplorePage({ params }: { params: Promise<{ domain: stri
         )}
       </div>
     </div>
+  );
+}
+
+export default function ExplorePage({ params }: { params: Promise<{ domain: string }> }) {
+  return (
+    <Suspense fallback={<div className="kids-bg-playful flex min-h-screen items-center justify-center"><p className="text-xl text-[var(--color-ink-500)]" style={{ fontFamily: "var(--font-kids)" }}>Loading... ⏳</p></div>}>
+      <ExploreContent params={params} />
+    </Suspense>
   );
 }

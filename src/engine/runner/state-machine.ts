@@ -164,15 +164,22 @@ export function runnerReducer(state: RunnerState, event: RunnerEvent): RunnerSta
 }
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
+/**
+ * Number of item results an activity produces — i.e. how many times the
+ * engine will call onResult. Per-item engines (counting, trace, join-dots,
+ * sequence) emit one result per item; every other engine emits a single
+ * aggregate result when the whole activity is finished.
+ */
 function getItemCount(activity: AnyActivity): number {
-  if ("items" in activity) return activity.items.length;
-  if ("pairs" in activity) return activity.pairs.length;
-  if ("cards" in activity) return activity.cards.length / 2;
-  if ("pieces" in activity) return activity.pieces.length;
-  if ("differences" in activity) return activity.differences.length;
-  if ("pages" in activity) return activity.pages.filter((p) => p.interaction).length || 1;
-  if ("regions" in activity) return activity.regions.length;
-  return 1;
+  switch (activity.engine) {
+    case "counting":
+    case "trace":
+    case "join-dots":
+    case "sequence":
+      return "items" in activity ? Math.max(activity.items.length, 1) : 1;
+    default:
+      return 1;
+  }
 }
 
 function computeSummary(

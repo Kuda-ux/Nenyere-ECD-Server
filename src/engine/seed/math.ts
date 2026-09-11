@@ -169,4 +169,62 @@ export const mathActivities: AnyActivity[] = [
     ],
     tap_to_count: true, show_number_line: true,
   } as unknown as AnyActivity,
+
+  // -- What Number is Missing? --
+  {
+    ...base("00000000-0000-0000-0003-00000000000b", "tap_correct", "choice", "What Number is Missing?", {
+      learning_area: "mathematics", skills: [SKILL.missing_numbers, SKILL.counting_1_5],
+      description: "Find the missing number in the line",
+      title_sn: "Namba Iripi Yakashaya?", title_nd: "Inombolo Elahlekile Iphi?",
+      instruction: "One number is missing! Which one?",
+      instruction_sn: "Namba imwe yakaenda! Ndeipi?", instruction_nd: "Inombolo eyodwa ilahlekile! Iphi?",
+      tags: ["mathematics"],
+    }),
+    items: [
+      { id: "i1", stimulus: { text: { en: "3" } }, is_correct: true, alt: { en: "3 is missing!" } },
+      { id: "i2", stimulus: { text: { en: "1" } }, is_correct: false, alt: { en: "1 is already there" } },
+      { id: "i3", stimulus: { text: { en: "5" } }, is_correct: false, alt: { en: "5 comes after 4" } },
+      { id: "i4", stimulus: { text: { en: "6" } }, is_correct: false, alt: { en: "6 is too big" } },
+    ],
+    prompt: { text: { en: "1, 2, ?, 4, 5 — which number is missing?", sn: "1, 2, ?, 4, 5 — ndeipi namba yakaenda?", nd: "1, 2, ?, 4, 5 — iphi inombolo elahlekile?" }, audio: { en: "audio/missing_number.mp3" } },
+    layout: "row", show_correct_after_attempts: 3,
+  } as unknown as AnyActivity,
+
+  // -- Missing Number to 10 (ECD_B) --
+  {
+    ...base("00000000-0000-0000-0003-00000000000c", "tap_correct", "choice", "Missing Number to 10", {
+      ecd_level: "ECD_B", difficulty: "standard",
+      learning_area: "mathematics", skills: [SKILL.missing_numbers],
+      description: "Find the missing number up to 10",
+      title_sn: "Namba Yakaenda kusvika 10", title_nd: "Inombolo Elahlekile Kwelishumi",
+      instruction: "Which number is missing?",
+      tags: ["mathematics"],
+    }),
+    items: [
+      { id: "i1", stimulus: { text: { en: "7" } }, is_correct: true, alt: { en: "7 is missing!" } },
+      { id: "i2", stimulus: { text: { en: "5" } }, is_correct: false, alt: { en: "5 is already there" } },
+      { id: "i3", stimulus: { text: { en: "9" } }, is_correct: false, alt: { en: "9 comes after 8" } },
+      { id: "i4", stimulus: { text: { en: "10" } }, is_correct: false, alt: { en: "10 is at the end" } },
+    ],
+    prompt: { text: { en: "5, 6, ?, 8, 9, 10 — which number is missing?", sn: "5, 6, ?, 8, 9, 10 — ndeipi namba yakaenda?", nd: "5, 6, ?, 8, 9, 10 — iphi inombolo elahlekile?" }, audio: { en: "audio/missing_number_10.mp3" } },
+    layout: "row", show_correct_after_attempts: 3,
+  } as unknown as AnyActivity,
+
+  // -- Count the Animals --
+  {
+    ...base("00000000-0000-0000-0003-00000000000d", "counting", "counting", "Count the Animals", {
+      learning_area: "mathematics", skills: [SKILL.counting_1_5, SKILL.animal_identify],
+      description: "Count cows and goats",
+      title_sn: "Verenga Zvipfuya", title_nd: "Bala Izilwane",
+      instruction: "Count the animals!",
+      instruction_sn: "Verenga zvipfuya!", instruction_nd: "Bala izilwane!",
+      tags: ["mathematics", "theme-animals"],
+    }),
+    items: [
+      { id: "item-1", objects: { shape: "cow", colour: "#8D6E63", count: 3, arrangement: "row" }, options: [2, 3, 4], correct_answer: 3 },
+      { id: "item-2", objects: { shape: "goat", colour: "#9E9E9E", count: 5, arrangement: "grid" }, options: [4, 5, 6], correct_answer: 5 },
+      { id: "item-3", objects: { shape: "chicken", colour: "#F2A93B", count: 4, arrangement: "row" }, options: [3, 4, 5], correct_answer: 4 },
+    ],
+    tap_to_count: true, show_number_line: true,
+  } as unknown as AnyActivity,
 ];

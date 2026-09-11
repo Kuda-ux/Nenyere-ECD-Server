@@ -146,4 +146,44 @@ export const scienceActivities: AnyActivity[] = [
     ],
     layout: "bins",
   } as unknown as AnyActivity,
+
+  // -- ICT Tools: Find the Tablet --
+  {
+    ...base("00000000-0000-0000-0006-000000000008", "image_identification", "choice", "ICT Tools", {
+      learning_area: "science_and_technology", skills: [SKILL.ict_basic],
+      description: "Identify common technology tools",
+      title_sn: "Zvishandiso zveICT", title_nd: "Amathulusi e-ICT",
+      instruction: "Find the tablet — the one you are holding!",
+      instruction_sn: "Tsvaga tablet — iri mumaoko ako!", instruction_nd: "Thola i-tablet — leyo ophetheyo!",
+      tags: ["science", "ict"],
+    }),
+    items: [
+      { id: "i1", stimulus: { text: { en: "📱 Tablet" } }, is_correct: true, alt: { en: "Yes! A tablet like yours!" } },
+      { id: "i2", stimulus: { text: { en: "📺 TV" } }, is_correct: false, alt: { en: "A TV is big on the wall" } },
+      { id: "i3", stimulus: { text: { en: "📻 Radio" } }, is_correct: false, alt: { en: "A radio plays music" } },
+      { id: "i4", stimulus: { text: { en: "🧸 Teddy" } }, is_correct: false, alt: { en: "A teddy is a toy, not technology" } },
+    ],
+    prompt: { text: { en: "Which one is a tablet?", sn: "Ndeipi tablet?", nd: "Yiphi i-tablet?" }, audio: { en: "audio/ict_tablet.mp3" } },
+    layout: "grid", show_correct_after_attempts: 3,
+  } as unknown as AnyActivity,
+
+  // -- ICT Tools: Find the Computer (ECD_B) --
+  {
+    ...base("00000000-0000-0000-0006-000000000009", "image_identification", "choice", "Find the Computer", {
+      ecd_level: "ECD_B", difficulty: "standard",
+      learning_area: "science_and_technology", skills: [SKILL.ict_basic],
+      description: "Identify a computer among tools",
+      title_sn: "Tsvaga Computer", title_nd: "Thola Ikhompyutha",
+      instruction: "Find the computer!",
+      tags: ["science", "ict"],
+    }),
+    items: [
+      { id: "i1", stimulus: { text: { en: "💻 Computer" } }, is_correct: true, alt: { en: "Yes! A computer!" } },
+      { id: "i2", stimulus: { text: { en: "☎️ Phone" } }, is_correct: false, alt: { en: "A phone is for calling" } },
+      { id: "i3", stimulus: { text: { en: "🔦 Torch" } }, is_correct: false, alt: { en: "A torch makes light" } },
+      { id: "i4", stimulus: { text: { en: "🖨️ Printer" } }, is_correct: false, alt: { en: "A printer makes paper copies" } },
+    ],
+    prompt: { text: { en: "Which one is a computer?", sn: "Ndeipi computer?", nd: "Yiphi ikhompyutha?" }, audio: { en: "audio/ict_computer.mp3" } },
+    layout: "grid", show_correct_after_attempts: 3,
+  } as unknown as AnyActivity,
 ];

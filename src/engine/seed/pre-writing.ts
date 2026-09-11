@@ -117,4 +117,81 @@ export const preWritingActivities: AnyActivity[] = [
     canvas_width: 300, canvas_height: 300,
     brush_colours: ["#F2A93B", "#3B7DD8", "#E85D5D"], show_starting_dot: true,
   } as unknown as AnyActivity,
+
+  // -- Connect the Dots: Star & House --
+  {
+    ...base("00000000-0000-0000-0002-000000000006", "joining_dots", "join-dots", "Connect the Dots", {
+      learning_area: "physical_education_and_arts", skills: [SKILL.trace_line, SKILL.number_recognition],
+      description: "Join the numbered dots to draw a picture",
+      title_sn: "Batanidza Madoti", title_nd: "Hlanganisa Ama-Doti",
+      instruction: "Tap the dots in order — 1, 2, 3!",
+      instruction_sn: "Bata madoti nokurongwa — 1, 2, 3!", instruction_nd: "Thinta ama-doti ngokulandelana — 1, 2, 3!",
+      tags: ["pre-writing"],
+      duration: 90,
+    }),
+    items: [
+      {
+        id: "dots-star",
+        dots: [
+          { id: "d1", x: 0.5, y: 0.12, label: "1" },
+          { id: "d2", x: 0.82, y: 0.78, label: "2" },
+          { id: "d3", x: 0.12, y: 0.42, label: "3" },
+          { id: "d4", x: 0.88, y: 0.42, label: "4" },
+          { id: "d5", x: 0.18, y: 0.78, label: "5" },
+          { id: "d6", x: 0.5, y: 0.12, label: "6" },
+        ],
+        correct_sequence: ["d1", "d2", "d3", "d4", "d5", "d6"],
+        reveal_image: { en: "⭐" },
+        reveal_label: { en: "star" },
+      },
+      {
+        id: "dots-house",
+        dots: [
+          { id: "h1", x: 0.25, y: 0.78, label: "1" },
+          { id: "h2", x: 0.25, y: 0.48, label: "2" },
+          { id: "h3", x: 0.5, y: 0.2, label: "3" },
+          { id: "h4", x: 0.75, y: 0.48, label: "4" },
+          { id: "h5", x: 0.75, y: 0.78, label: "5" },
+          { id: "h6", x: 0.25, y: 0.78, label: "6" },
+        ],
+        correct_sequence: ["h1", "h2", "h3", "h4", "h5", "h6"],
+        reveal_image: { en: "🏠" },
+        reveal_label: { en: "house" },
+      },
+    ],
+    show_numbers: true, line_colour: "#F2A93B",
+  } as unknown as AnyActivity,
+
+  // -- Connect the Dots: Heart (ECD_B) --
+  {
+    ...base("00000000-0000-0000-0002-000000000007", "joining_dots", "join-dots", "Connect the Dots: Heart", {
+      ecd_level: "ECD_B", difficulty: "standard",
+      learning_area: "physical_education_and_arts", skills: [SKILL.trace_line],
+      description: "Join the dots to draw a heart",
+      title_sn: "Batanidza Madoti: Mwoyo", title_nd: "Hlanganisa Ama-Doti: Inhliziyo",
+      instruction: "Follow the numbers to make a heart!",
+      tags: ["pre-writing"],
+      duration: 90,
+    }),
+    items: [
+      {
+        id: "dots-heart",
+        dots: [
+          { id: "k1", x: 0.5, y: 0.32, label: "1" },
+          { id: "k2", x: 0.28, y: 0.18, label: "2" },
+          { id: "k3", x: 0.1, y: 0.34, label: "3" },
+          { id: "k4", x: 0.16, y: 0.55, label: "4" },
+          { id: "k5", x: 0.5, y: 0.85, label: "5" },
+          { id: "k6", x: 0.84, y: 0.55, label: "6" },
+          { id: "k7", x: 0.9, y: 0.34, label: "7" },
+          { id: "k8", x: 0.72, y: 0.18, label: "8" },
+          { id: "k9", x: 0.5, y: 0.32, label: "9" },
+        ],
+        correct_sequence: ["k1", "k2", "k3", "k4", "k5", "k6", "k7", "k8", "k9"],
+        reveal_image: { en: "❤️" },
+        reveal_label: { en: "heart" },
+      },
+    ],
+    show_numbers: true, line_colour: "#E85D5D",
+  } as unknown as AnyActivity,
 ];

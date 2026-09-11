@@ -155,9 +155,11 @@ const PILLAR_FILTERS: Record<PillarKey, (a: AnyActivity) => boolean> = {
   literacy: (a) =>
     a.type === "phonics_recognition" ||
     a.type === "sound_recognition" ||
-    a.type === "image_identification" && a.learning_area === "english_language" ||
-    a.type === "audio_to_image" && a.learning_area === "english_language" ||
-    a.type === "image_to_audio" && a.learning_area === "english_language",
+    (a.type === "image_identification" && a.learning_area === "english_language") ||
+    (a.type === "audio_to_image" && a.learning_area === "english_language") ||
+    (a.type === "image_to_audio" && a.learning_area === "english_language") ||
+    (a.type === "tap_correct" && a.learning_area === "english_language") ||
+    (a.type === "multiple_choice" && a.learning_area === "english_language"),
   "indigenous-language": (a) =>
     a.learning_area === "indigenous_language" ||
     a.tags.includes("indigenous"),

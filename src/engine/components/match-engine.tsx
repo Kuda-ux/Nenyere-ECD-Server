@@ -34,6 +34,7 @@ export function MatchEngine({ activity, onResult, hintLevel }: Props) {
   const [selectedRight, setSelectedRight] = useState<string | null>(null);
   const [matched, setMatched] = useState<Set<string>>(new Set());
   const [wrongPair, setWrongPair] = useState<{ left: string; right: string } | null>(null);
+  const [wrongAttempts, setWrongAttempts] = useState(0);
   const startTimeRef = useRef(Date.now());
 
   const shuffledRight = useRef<MatchPair[]>(
@@ -65,23 +66,28 @@ export function MatchEngine({ activity, onResult, hintLevel }: Props) {
         setSelectedLeft(null);
         setSelectedRight(null);
 
-        const elapsed = Date.now() - startTimeRef.current;
-        const response: ItemResponse = {
-          item_id: pairId,
-          client_response_id: crypto.randomUUID(),
-          value: { left_id: selectedLeft, right_id: pairId },
-          elapsed_ms: elapsed,
-          hint_level: Math.min(hintLevel, 2),
-        };
-        const result: ItemResult = {
-          item_id: pairId,
-          is_correct: true,
-          score: 1,
-          hint_level: Math.min(hintLevel, 2),
-        };
-        onResult(response, result);
+        // Submit a single aggregate result when all pairs are matched
+        if (newMatched.size === activity.pairs.length) {
+          const elapsed = Date.now() - startTimeRef.current;
+          const response: ItemResponse = {
+            item_id: activity.id,
+            client_response_id: crypto.randomUUID(),
+            value: { matched_pairs: Array.from(newMatched), wrong_attempts: wrongAttempts },
+            elapsed_ms: elapsed,
+            hint_level: Math.min(hintLevel, 2),
+          };
+          const result: ItemResult = {
+            item_id: activity.id,
+            is_correct: true,
+            score: 1,
+            hint_level: Math.min(hintLevel, 2),
+          };
+          // Small delay so the last ✅ shows before feedback
+          setTimeout(() => onResult(response, result), 600);
+        }
       } else {
         playSound("wrong");
+        setWrongAttempts((n) => n + 1);
         setWrongPair({ left: selectedLeft, right: pairId });
         setTimeout(() => {
           setWrongPair(null);
@@ -90,7 +96,7 @@ export function MatchEngine({ activity, onResult, hintLevel }: Props) {
         }, 800);
       }
     },
-    [selectedLeft, matched, onResult, hintLevel, playSound],
+    [selectedLeft, matched, wrongAttempts, activity, onResult, hintLevel, playSound],
   );
 
   return (

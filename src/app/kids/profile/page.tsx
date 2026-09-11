@@ -1,18 +1,15 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useRef, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { getLearnerStats, getPillarProgress, getAllBadges } from "@/lib/dev-tracker";
 import { PILLARS } from "@/lib/activity-catalog";
-import { useSound } from "@/hooks/use-sound";
+import { HoldExitButton } from "@/components/kids/hold-exit-button";
 
 function ProfileContent() {
   const router = useRouter();
   const params = useSearchParams();
   const learnerId = params.get("learner") ?? "tari";
-  const { unlock } = useSound();
-  const [exitProgress, setExitProgress] = useState(0);
-  const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const [stats, setStats] = useState<ReturnType<typeof getLearnerStats> | null>(null);
   const [badges, setBadges] = useState<ReturnType<typeof getAllBadges> | null>(null);
   const [pillarProgress, setPillarProgress] = useState<ReturnType<typeof getPillarProgress> | null>(null);
@@ -22,24 +19,6 @@ function ProfileContent() {
     setBadges(getAllBadges(learnerId));
     setPillarProgress(getPillarProgress(learnerId));
   }, [learnerId]);
-
-  function handleExitHoldStart() {
-    setExitProgress(0);
-    let elapsed = 0;
-    holdTimer.current = setInterval(() => {
-      elapsed += 100;
-      setExitProgress(elapsed / 2000);
-      if (elapsed >= 2000) {
-        if (holdTimer.current) clearInterval(holdTimer.current);
-        router.push("/kids/dashboard");
-      }
-    }, 100);
-  }
-
-  function handleExitHoldEnd() {
-    if (holdTimer.current) clearInterval(holdTimer.current);
-    setExitProgress(0);
-  }
 
   if (!stats || !badges || !pillarProgress) {
     return (
@@ -58,21 +37,10 @@ function ProfileContent() {
     >
       {/* Top bar */}
       <div className="flex items-center gap-4 px-6 py-4">
-        <button
-          className="relative flex h-14 w-14 items-center justify-center rounded-full text-2xl text-white shadow-lg transition-all hover:scale-110 active:scale-95"
-          style={{ backgroundColor: "var(--color-brand-jacaranda)" }}
-          onPointerDown={() => { unlock(); handleExitHoldStart(); }}
-          onPointerUp={handleExitHoldEnd}
-          onPointerLeave={handleExitHoldEnd}
-          aria-label="Hold to go back"
-        >
-          ←
-          {exitProgress > 0 && (
-            <svg className="absolute inset-0 -rotate-90" viewBox="0 0 48 48">
-              <circle cx="24" cy="24" r="22" fill="none" stroke="var(--color-brand-sun)" strokeWidth="3" strokeDasharray={`${exitProgress * 138.2} 138.2`} />
-            </svg>
-          )}
-        </button>
+        <HoldExitButton
+          onExit={() => router.push(`/kids/dashboard?learner=${learnerId}`)}
+          label="Hold to go back"
+        />
         <div
           className="flex items-center gap-3 rounded-2xl px-5 py-3 shadow-lg anim-bounce-in"
           style={{ background: "linear-gradient(135deg, #9B59D0, #6C5CE7)" }}

@@ -84,7 +84,7 @@ export default function PlayPage() {
           Activity complete!
         </p>
         <button
-          onClick={() => router.push("/dashboard")}
+          onClick={() => router.push("/kids")}
           className="rounded-xl bg-[var(--color-brand-sun)] px-8 py-3 font-bold text-white active:scale-95"
           style={{ fontFamily: "var(--font-kids)" }}
         >
@@ -98,7 +98,7 @@ export default function PlayPage() {
     <div className="min-h-screen bg-[var(--color-surface-1)]">
       <ActivityRunner
         activity={SAMPLE_ACTIVITY}
-        onExit={() => router.push("/dashboard")}
+        onExit={() => router.push("/kids")}
         onComplete={() => setCompleted(true)}
       />
     </div>

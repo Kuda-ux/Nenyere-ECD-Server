@@ -12,6 +12,7 @@ import type { AnyActivity } from "../schema";
 import type { ItemResponse, ItemResult } from "../schema/common";
 import { useSound } from "@/hooks/use-sound";
 import { Mascot } from "@/components/kids/mascot";
+import { HoldExitButton } from "@/components/kids/hold-exit-button";
 
 type Props = {
   activity: AnyActivity;
@@ -219,7 +220,14 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
     const progressPercent = itemCount > 0 ? (state.results.length / itemCount) * 100 : 0;
 
     return (
-      <div className="flex flex-col items-center gap-4 py-8">
+      <div className="relative flex flex-col items-center gap-4 py-8">
+        {/* Exit — hold to leave mid-activity */}
+        <HoldExitButton
+          className="absolute left-4 top-2 z-20"
+          onExit={handleExit}
+          label="Hold to go back"
+        />
+
         {/* Progress bar — themed */}
         <div className="flex w-full max-w-md items-center gap-2">
           <span className="text-2xl" aria-hidden="true">⭐</span>
@@ -259,7 +267,7 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
         {/* Mute toggle */}
         <button
           onClick={() => { toggleSoundMute(); audio.toggleMute(); }}
-          className="absolute right-4 top-4 text-2xl"
+          className="absolute right-4 top-2 z-20 text-2xl"
           aria-label={audio.muted || soundMuted ? "Unmute" : "Mute"}
         >
           {audio.muted || soundMuted ? "🔇" : "🔊"}
@@ -281,13 +289,20 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
 }
 
 // ── Helper: get item count per engine ───────────────────────────────────────
+/**
+ * Number of item results an activity produces — i.e. how many times the
+ * engine will call onResult. Per-item engines (counting, trace, join-dots,
+ * sequence) emit one result per item; every other engine emits a single
+ * aggregate result when the whole activity is finished.
+ */
 function getItemCount(activity: AnyActivity): number {
-  if ("items" in activity) return activity.items.length;
-  if ("pairs" in activity) return activity.pairs.length;
-  if ("cards" in activity) return activity.cards.length / 2;
-  if ("pieces" in activity) return activity.pieces.length;
-  if ("differences" in activity) return activity.differences.length;
-  if ("pages" in activity) return activity.pages.filter((p) => p.interaction).length || 1;
-  if ("regions" in activity) return activity.regions.length;
-  return 1;
+  switch (activity.engine) {
+    case "counting":
+    case "trace":
+    case "join-dots":
+    case "sequence":
+      return "items" in activity ? Math.max(activity.items.length, 1) : 1;
+    default:
+      return 1;
+  }
 }

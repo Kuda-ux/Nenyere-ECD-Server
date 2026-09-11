@@ -116,4 +116,52 @@ export const creativityActivities: AnyActivity[] = [
     prompt: { text: { en: "The music is playing! What should we do?", sn: "Rwiyo rwuri kuridzwa! Tinofanira kuita chii?", nd: "Umculo uyadlala! Kumele sizenze ntoni?" }, audio: { en: "audio/dance.mp3" } },
     layout: "row", show_correct_after_attempts: 3,
   } as unknown as AnyActivity,
+
+  // -- Colour the Garden --
+  {
+    ...base("00000000-0000-0000-0009-000000000006", "colouring", "colouring", "Colour the Garden", {
+      learning_area: "physical_education_and_arts", skills: [SKILL.colour_identify, SKILL.trace_line],
+      description: "Colour a garden picture however you like",
+      title_sn: "Kanda Ruvara mubindu", title_nd: "Faka Umbala Esitsheni",
+      instruction: "Tap a colour, then tap the picture!",
+      instruction_sn: "Bata ruvara, wobva wabata mufananidzo!", instruction_nd: "Thinta umbala, bese uthinte isithombe!",
+      tags: ["creativity"],
+      duration: 120,
+    }),
+    svg_template: "garden",
+    regions: [
+      { id: "sky", label: "Sky", path: "0,0 400,0 400,180 0,180", accept_any: true },
+      { id: "sun", label: "Sun", path: "circle:70,55,35", accept_any: true },
+      { id: "grass", label: "Grass", path: "0,180 400,180 400,300 0,300", accept_any: true },
+      { id: "stem", label: "Stem", path: "196,215 204,215 204,275 196,275", accept_any: true },
+      { id: "flower", label: "Flower", path: "circle:200,195,28", accept_any: true },
+      { id: "leaf", label: "Leaf", path: "204,240 235,225 235,250 204,255", accept_any: true },
+    ],
+    palette: ["#F2A93B", "#3B7DD8", "#5BA85B", "#E85D5D", "#FF6B9D", "#9C27B0"],
+    show_guide: false,
+  } as unknown as AnyActivity,
+
+  // -- Colour the House (ECD_B, guided) --
+  {
+    ...base("00000000-0000-0000-0009-000000000007", "colouring", "colouring", "Colour the House", {
+      ecd_level: "ECD_B", difficulty: "standard",
+      learning_area: "physical_education_and_arts", skills: [SKILL.colour_identify],
+      description: "Colour the house with the right colours",
+      title_sn: "Kanda Ruvara pamba", title_nd: "Faka Umbala Endlini",
+      instruction: "Colour each part with the right colour!",
+      tags: ["creativity"],
+      duration: 120,
+    }),
+    svg_template: "house",
+    regions: [
+      { id: "sky", label: "Sky", path: "0,0 400,0 400,190 0,190", correct_colour: "#3B7DD8" },
+      { id: "sun", label: "Sun", path: "circle:330,55,30", correct_colour: "#F2A93B" },
+      { id: "grass", label: "Grass", path: "0,190 400,190 400,300 0,300", correct_colour: "#5BA85B" },
+      { id: "house", label: "House", path: "140,155 240,155 240,240 140,240", correct_colour: "#E85D5D" },
+      { id: "roof", label: "Roof", path: "128,155 190,100 252,155", correct_colour: "#8D6E63" },
+      { id: "door", label: "Door", path: "176,195 204,195 204,240 176,240", correct_colour: "#9C27B0" },
+    ],
+    palette: ["#F2A93B", "#3B7DD8", "#5BA85B", "#E85D5D", "#8D6E63", "#9C27B0"],
+    show_guide: true,
+  } as unknown as AnyActivity,
 ];

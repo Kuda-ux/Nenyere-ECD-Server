@@ -19,8 +19,10 @@ type Props = {
 export function StoryEngine({ activity, onResult, hintLevel }: Props) {
   const audio = useAudio();
   const [pageIndex, setPageIndex] = useState(0);
-  const [interactionResults, setInteractionResults] = useState<ItemResult[]>([]);
+  const [, setInteractionResults] = useState<ItemResult[]>([]);
+  const resultsRef = useRef<ItemResult[]>([]);
   const startTimeRef = useRef(Date.now());
+  const submittedRef = useRef(false);
 
   const page = activity.pages[pageIndex];
   const isLastPage = pageIndex >= activity.pages.length - 1;
@@ -32,29 +34,34 @@ export function StoryEngine({ activity, onResult, hintLevel }: Props) {
     }
   }, [pageIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const submitStory = useCallback((results: ItemResult[], pagesVisited: number) => {
+    if (submittedRef.current) return;
+    submittedRef.current = true;
+    const elapsed = Date.now() - startTimeRef.current;
+    const correctCount = results.filter((r) => r.is_correct).length;
+    const response: ItemResponse = {
+      item_id: "story",
+      client_response_id: crypto.randomUUID(),
+      value: { pages_visited: pagesVisited, interactions: results.length },
+      elapsed_ms: elapsed,
+      hint_level: Math.min(hintLevel, 2),
+    };
+    const result: ItemResult = {
+      item_id: "story",
+      is_correct: correctCount >= results.length / 2,
+      score: results.length > 0 ? correctCount / results.length : 1,
+      hint_level: Math.min(hintLevel, 2),
+    };
+    onResult(response, result);
+  }, [onResult, hintLevel]);
+
   const handleNext = useCallback(() => {
     if (isLastPage) {
-      // Submit final result
-      const elapsed = Date.now() - startTimeRef.current;
-      const correctCount = interactionResults.filter((r) => r.is_correct).length;
-      const response: ItemResponse = {
-        item_id: "story",
-        client_response_id: crypto.randomUUID(),
-        value: { pages_visited: pageIndex + 1, interactions: interactionResults.length },
-        elapsed_ms: elapsed,
-        hint_level: Math.min(hintLevel, 2),
-      };
-      const result: ItemResult = {
-        item_id: "story",
-        is_correct: correctCount >= interactionResults.length / 2,
-        score: interactionResults.length > 0 ? correctCount / interactionResults.length : 1,
-        hint_level: Math.min(hintLevel, 2),
-      };
-      onResult(response, result);
+      submitStory(resultsRef.current, activity.pages.length);
     } else {
       setPageIndex((i) => i + 1);
     }
-  }, [isLastPage, interactionResults, pageIndex, onResult, hintLevel]);
+  }, [isLastPage, activity.pages.length, submitStory]);
 
   const handleInteraction = useCallback(
     (pageId: string, isCorrect: boolean) => {
@@ -64,18 +71,20 @@ export function StoryEngine({ activity, onResult, hintLevel }: Props) {
         score: isCorrect ? 1 : 0,
         hint_level: Math.min(hintLevel, 2),
       };
-      setInteractionResults((prev) => [...prev, result]);
+      const next = [...resultsRef.current, result];
+      resultsRef.current = next;
+      setInteractionResults(next);
 
-      // Advance after a brief delay
+      // Advance after a brief delay — use `next` (not stale state) for scoring
       setTimeout(() => {
         if (isLastPage) {
-          handleNext();
+          submitStory(next, activity.pages.length);
         } else {
           setPageIndex((i) => i + 1);
         }
       }, 1200);
     },
-    [hintLevel, isLastPage, handleNext],
+    [hintLevel, isLastPage, activity.pages.length, submitStory],
   );
 
   return (

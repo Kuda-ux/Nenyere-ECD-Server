@@ -4,7 +4,7 @@ import { base, SKILL } from "./helpers";
 export const seedStories: AnyActivity[] = [
   // -- The Hungry Caterpillar --
   {
-    ...base("00000000-0000-0000-0006-000000000001", "story_interaction", "story", "The Hungry Caterpillar", {
+    ...base("00000000-0000-0000-000b-000000000001", "story_interaction", "story", "The Hungry Caterpillar", {
       learning_area: "english_language", skills: [SKILL.story],
       description: "A story about a caterpillar eating food", scoring_method: "completion", duration: 120,
       title_sn: "Gonye Rinenzara", title_nd: "Inyebele Enilambalanga",
@@ -21,7 +21,7 @@ export const seedStories: AnyActivity[] = [
 
   // -- Sharing is Caring --
   {
-    ...base("00000000-0000-0000-0006-000000000002", "story_interaction", "story", "Sharing is Caring", {
+    ...base("00000000-0000-0000-000b-000000000002", "story_interaction", "story", "Sharing is Caring", {
       learning_area: "social_sciences", skills: [SKILL.story, SKILL.sharing],
       description: "A story about sharing with friends", scoring_method: "completion", duration: 90,
       title_sn: "Kugoverana Kurudo", title_nd: "Ukwabelana Kuthanda",
@@ -37,7 +37,7 @@ export const seedStories: AnyActivity[] = [
 
   // -- The Clever Hare --
   {
-    ...base("00000000-0000-0000-0006-000000000003", "story_interaction", "story", "The Clever Hare", {
+    ...base("00000000-0000-0000-000b-000000000003", "story_interaction", "story", "The Clever Hare", {
       ecd_level: "ECD_B", learning_area: "social_sciences", skills: [SKILL.story, SKILL.zimbabwe_identity],
       description: "A traditional Zimbabwean tale", scoring_method: "completion", duration: 150,
       title_sn: "Tsuro Yakangwara", title_nd: "Insimbimbi Ekhokhle",
@@ -53,7 +53,7 @@ export const seedStories: AnyActivity[] = [
 
   // -- The River that Saved the Village --
   {
-    ...base("00000000-0000-0000-0006-000000000004", "story_interaction", "story", "The River that Saved the Village", {
+    ...base("00000000-0000-0000-000b-000000000004", "story_interaction", "story", "The River that Saved the Village", {
       ecd_level: "ECD_B", learning_area: "social_sciences", skills: [SKILL.story, SKILL.zimbabwe_identity],
       description: "A Zimbabwean story about community and water", scoring_method: "completion", duration: 150,
       title_sn: "Rwizi Rwaponesa Misha", title_nd: "Umlamula Osindise Isigodi",
@@ -69,7 +69,7 @@ export const seedStories: AnyActivity[] = [
 
   // -- The Kind Farmer --
   {
-    ...base("00000000-0000-0000-0006-000000000005", "story_interaction", "story", "The Kind Farmer", {
+    ...base("00000000-0000-0000-000b-000000000005", "story_interaction", "story", "The Kind Farmer", {
       learning_area: "social_sciences", skills: [SKILL.story, SKILL.sharing],
       description: "A story about kindness and farming in Zimbabwe", scoring_method: "completion", duration: 100,
       title_sn: "Mudzimu Mutsvene", title_nd: "Umlimi Onothando",

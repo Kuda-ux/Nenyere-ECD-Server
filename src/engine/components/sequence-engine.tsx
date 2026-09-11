@@ -1,65 +1,99 @@
+/**
+ * Sequence engine — tap the pictures in the right order.
+ * Tablet-friendly, big touch targets, shows progress + numbered slots.
+ */
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useMemo, useCallback } from "react";
 import type { EngineComponentProps } from "./registry";
+import { EmojiText } from "./emoji-text";
+import { useSound } from "@/hooks/use-sound";
 
-interface SeqStep { id: string; label: { en: string; sn?: string; nd?: string }; correct_order: number; emoji?: string; }
+interface SeqStep {
+  id: string;
+  label?: { en: string };
+  text?: { en: string };
+  emoji?: string;
+  correct_order?: number;
+}
 
-export function SequenceEngine({ activity, onResult }: EngineComponentProps) {
-  const a = activity as unknown as { items: Array<{ id: string; steps: SeqStep[] }> };
-  const item = a.items?.[0];
-  const steps = item?.steps ?? [
-    { id: "s1", label: { en: "Seed", sn: "Mbeu", nd: "Insimbi" }, correct_order: 1, emoji: "🌱" },
-    { id: "s2", label: { en: "Sprout", sn: "Mudzi", nd: "Khumula" }, correct_order: 2, emoji: "🌿" },
-    { id: "s3", label: { en: "Flower", sn: "Ruva", nd: "Inhlamvu" }, correct_order: 3, emoji: "🌸" },
-  ];
-  const [shuffled, setShuffled] = useState<SeqStep[]>([]);
+const FALLBACK_STEPS: SeqStep[] = [
+  { id: "s1", label: { en: "Seed" }, correct_order: 1, emoji: "🌱" },
+  { id: "s2", label: { en: "Sprout" }, correct_order: 2, emoji: "🌿" },
+  { id: "s3", label: { en: "Flower" }, correct_order: 3, emoji: "🌸" },
+];
+
+export function SequenceEngine({ activity, itemIndex = 0, onResult }: EngineComponentProps) {
+  const a = activity as unknown as { items?: Array<{ id: string; steps: SeqStep[] }> };
+  const { play: playSound } = useSound();
+  const item = a.items?.[itemIndex] ?? a.items?.[0];
+  const steps = useMemo<SeqStep[]>(() => item?.steps ?? FALLBACK_STEPS, [item]);
+
+  const [shuffled, setShuffled] = useState<SeqStep[]>(() => [...steps].sort(() => Math.random() - 0.5));
   const [placed, setPlaced] = useState<number>(0);
+  const [wrongId, setWrongId] = useState<string | null>(null);
+  const [wrongAttempts, setWrongAttempts] = useState(0);
 
-  useEffect(() => {
-    setShuffled([...steps].sort(() => Math.random() - 0.5));
-  }, [steps]);
+  const orderOf = useCallback(
+    (step: SeqStep) => step.correct_order ?? steps.indexOf(step) + 1,
+    [steps],
+  );
 
   const handleStepClick = (step: SeqStep) => {
-    if (step.correct_order === placed + 1) {
-      setPlaced((prev) => {
-        const next = prev + 1;
-        if (next === steps.length) {
-          const response = { item_id: item?.id ?? "sequence", client_response_id: crypto.randomUUID(), value: { completed: true }, elapsed_ms: Date.now(), hint_level: 0 };
-          const result = { item_id: item?.id ?? "sequence", is_correct: true, score: 1, hint_level: 0 };
-          onResult(response, result);
-        }
-        return next;
-      });
+    const stepOrder = orderOf(step);
+    if (stepOrder === placed + 1) {
+      playSound("correct");
+      const next = placed + 1;
+      setPlaced(next);
+      if (next === steps.length) {
+        const response = {
+          item_id: item?.id ?? "sequence",
+          client_response_id: crypto.randomUUID(),
+          value: { ordered_step_ids: steps.map((s) => s.id), wrong_attempts: wrongAttempts },
+          elapsed_ms: Date.now(),
+          hint_level: 0,
+        };
+        const result = { item_id: item?.id ?? "sequence", is_correct: true, score: 1, hint_level: 0 };
+        setTimeout(() => onResult(response, result), 800);
+      }
+    } else {
+      playSound("wrong");
+      setWrongAttempts((n) => n + 1);
+      setWrongId(step.id);
+      setTimeout(() => setWrongId(null), 600);
     }
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4">
-      <p className="text-lg font-semibold" style={{ fontFamily: "var(--font-kids)" }}>
+    <div className="flex flex-col items-center gap-6 p-4">
+      <p className="text-2xl font-bold" style={{ fontFamily: "var(--font-kids)" }}>
         Tap the pictures in the right order! ({placed} / {steps.length})
       </p>
-      <div className="flex gap-3 flex-wrap justify-center">
+      <div className="flex flex-wrap justify-center gap-4">
         {shuffled.map((step) => {
-          const isDone = step.correct_order <= placed;
-          const isNext = step.correct_order === placed + 1;
+          const stepOrder = orderOf(step);
+          const isDone = stepOrder <= placed;
+          const isWrong = wrongId === step.id;
+          const text = step.label?.en ?? step.text?.en ?? "";
           return (
             <button
               key={step.id}
               onClick={() => handleStepClick(step)}
               disabled={isDone}
-              className="flex flex-col items-center gap-2 rounded-3xl border-4 p-5 transition-all active:scale-95 shadow-md"
+              className={[
+                "flex flex-col items-center gap-2 rounded-3xl border-4 p-5 transition-all shadow-md",
+                isDone ? "" : "active:scale-95",
+                isWrong ? "anim-shake" : "",
+              ].join(" ")}
               style={{
-                borderColor: isDone ? "#5BA85B" : isNext ? "#F2A93B" : "#E0E0E0",
-                opacity: isDone ? 0.5 : 1,
-                cursor: isDone ? "default" : "pointer",
+                borderColor: isDone ? "#5BA85B" : isWrong ? "#E85D5D" : "#E0E0E0",
+                opacity: isDone ? 0.55 : 1,
                 backgroundColor: isDone ? "#E8F5E9" : "var(--color-surface-0)",
-                minWidth: "110px",
-                minHeight: "120px",
+                minWidth: "120px",
+                minHeight: "140px",
               }}
             >
-              <span className="text-6xl leading-none">{step.emoji ?? "❓"}</span>
-              <span className="text-base font-bold">{step.label.en}</span>
-              {isDone && <span className="text-sm text-green-600 font-bold">✓ #{step.correct_order}</span>}
+              <EmojiText text={text} emojiClassName="text-6xl" labelClassName="text-base font-bold text-[var(--color-ink-700)]" />
+              {isDone && <span className="text-lg font-bold text-green-600">✓ #{stepOrder}</span>}
             </button>
           );
         })}

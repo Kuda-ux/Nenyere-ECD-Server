@@ -55,4 +55,42 @@ export const physicalActivities: AnyActivity[] = [
     prompt: { text: { en: "Listen to the beat. What should we do?", sn: "Teerera nguva. Tinofanira kuita chii?", nd: "Lalele isiginci. Kumele sizenze ntoni?" }, audio: { en: "audio/clap_beat.mp3" } },
     layout: "row", show_correct_after_attempts: 3,
   } as unknown as AnyActivity,
+
+  // -- Tap the Dots (1, 2, 3 points) --
+  {
+    ...base("00000000-0000-0000-000a-000000000004", "pointing_target", "counting", "Tap the Dots!", {
+      learning_area: "physical_education_and_arts", skills: [SKILL.coordination, SKILL.counting_1_5],
+      description: "Tap each dot to count — 1 point, 2 points, 3 points!",
+      title_sn: "Bata Madoti!", title_nd: "Thinta Ama-Doti!",
+      instruction: "Tap every dot to count it!",
+      instruction_sn: "Bata doti rimwe nerimwe!", instruction_nd: "Thinta idoti lalinye!",
+      tags: ["physical"],
+    }),
+    items: [
+      { id: "item-1", objects: { shape: "ball", colour: "#E85D5D", count: 1, arrangement: "row" }, options: [1, 2, 3], correct_answer: 1 },
+      { id: "item-2", objects: { shape: "ball", colour: "#3B7DD8", count: 2, arrangement: "row" }, options: [1, 2, 3], correct_answer: 2 },
+      { id: "item-3", objects: { shape: "ball", colour: "#5BA85B", count: 3, arrangement: "row" }, options: [2, 3, 4], correct_answer: 3 },
+    ],
+    tap_to_count: true, show_number_line: false,
+  } as unknown as AnyActivity,
+
+  // -- Catch the Butterfly --
+  {
+    ...base("00000000-0000-0000-000a-000000000005", "pointing_target", "choice", "Catch the Butterfly!", {
+      learning_area: "physical_education_and_arts", skills: [SKILL.coordination],
+      description: "Tap the butterfly — fast hands!",
+      title_sn: "Wana Gonye!", title_nd: "Bamba Uvemvane!",
+      instruction: "Quick! Tap the butterfly!",
+      instruction_sn: "Kurumidza! Bata gonye!", instruction_nd: "Eshesha! Thinta uvemvane!",
+      tags: ["physical"],
+    }),
+    items: [
+      { id: "i1", stimulus: { text: { en: "🦋" } }, is_correct: true, alt: { en: "You caught it!" } },
+      { id: "i2", stimulus: { text: { en: "🌸" } }, is_correct: false, alt: { en: "That's a flower" } },
+      { id: "i3", stimulus: { text: { en: "🐝" } }, is_correct: false, alt: { en: "That's a bee" } },
+      { id: "i4", stimulus: { text: { en: "🍃" } }, is_correct: false, alt: { en: "That's a leaf" } },
+    ],
+    prompt: { text: { en: "Tap the butterfly! 🦋", sn: "Bata gonye! 🦋", nd: "Thinta uvemvane! 🦋" }, audio: { en: "audio/catch_butterfly.mp3" } },
+    layout: "grid", show_correct_after_attempts: 3,
+  } as unknown as AnyActivity,
 ];

@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { PILLARS, type PillarKey } from "@/lib/activity-catalog";
 import { getLearnerStats } from "@/lib/dev-tracker";
 import { getLearnerById, AVATAR_EMOJI, AVATAR_COLORS } from "@/lib/learner-store";
 import { useSound } from "@/hooks/use-sound";
+import { HoldExitButton } from "./hold-exit-button";
 
 const PILLAR_ROUTES: Record<PillarKey, string> = {
   cognitive: "/kids/explore/cognitive",
@@ -33,9 +34,7 @@ const FLOATING_DECORATIONS = [
 
 export function ChildDashboard({ learnerId }: { learnerId: string }) {
   const router = useRouter();
-  const { play, unlock } = useSound();
-  const [exitProgress, setExitProgress] = useState(0);
-  const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { play } = useSound();
   const [stats, setStats] = useState<{ totalStars: number; totalActivities: number } | null>(null);
   const [learnerName, setLearnerName] = useState<string>("");
   const [learnerAvatar, setLearnerAvatar] = useState<string>("star");
@@ -55,27 +54,10 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
     return null;
   }
 
-  function handleExitHoldStart() {
-    setExitProgress(0);
-    let elapsed = 0;
-    holdTimer.current = setInterval(() => {
-      elapsed += 100;
-      setExitProgress(elapsed / 2000);
-      if (elapsed >= 2000) {
-        if (holdTimer.current) clearInterval(holdTimer.current);
-        router.push("/kids");
-      }
-    }, 100);
-  }
-
-  function handleExitHoldEnd() {
-    if (holdTimer.current) clearInterval(holdTimer.current);
-    setExitProgress(0);
-  }
-
   function handlePillarClick(pillar: PillarKey) {
     play("pop");
-    setTimeout(() => router.push(PILLAR_ROUTES[pillar]), 150);
+    const route = PILLAR_ROUTES[pillar];
+    setTimeout(() => router.push(`${route}?learner=${learnerId}`), 150);
   }
 
   return (
@@ -95,22 +77,12 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
         </span>
       ))}
 
-      {/* Exit gate — hold 2s */}
-      <button
-        className="absolute left-4 top-4 z-10 flex h-14 w-14 items-center justify-center rounded-full text-2xl text-white shadow-lg transition-all hover:scale-110 active:scale-95"
-        style={{ backgroundColor: "var(--color-brand-jacaranda)" }}
-        onPointerDown={() => { unlock(); handleExitHoldStart(); }}
-        onPointerUp={handleExitHoldEnd}
-        onPointerLeave={handleExitHoldEnd}
-        aria-label="Hold to exit"
-      >
-        ←
-        {exitProgress > 0 && (
-          <svg className="absolute inset-0 -rotate-90" viewBox="0 0 48 48">
-            <circle cx="24" cy="24" r="22" fill="none" stroke="var(--color-brand-sun)" strokeWidth="3" strokeDasharray={`${exitProgress * 138.2} 138.2`} />
-          </svg>
-        )}
-      </button>
+      {/* Exit gate — hold to leave */}
+      <HoldExitButton
+        className="absolute left-4 top-4 z-10"
+        onExit={() => router.push("/kids")}
+        label="Hold to switch learner"
+      />
 
       {/* Greeting */}
       <div className="flex flex-col items-center gap-2 px-6 pt-14 pb-4 anim-bounce-in">
