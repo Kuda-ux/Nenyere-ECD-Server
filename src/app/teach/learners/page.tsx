@@ -14,6 +14,7 @@ import {
   type Learner,
   type ECDLevel,
 } from "@/lib/learner-store";
+import { getLearnerStats, getAllBadges } from "@/lib/dev-tracker";
 
 const TEACHER_NAV: NavItem[] = [
   { href: "/teach", label: "Dashboard", icon: "📊", description: "Class overview" },
@@ -206,6 +207,8 @@ export default function ManageLearnersPage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {learners.map((learner) => {
             const gradient = AVATAR_COLORS[learner.avatar_key] ?? AVATAR_COLORS.star;
+            const stats = getLearnerStats(learner.id);
+            const badges = getAllBadges(learner.id).filter((b) => b.earned);
             return (
               <div key={learner.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-md">
                 <div className="flex items-center gap-3">
@@ -225,6 +228,39 @@ export default function ManageLearnersPage() {
                     </span>
                   </div>
                 </div>
+
+                {/* Progress stats */}
+                <div className="mt-4 grid grid-cols-3 gap-2 rounded-xl bg-slate-50 p-3">
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-amber-600">⭐ {stats.totalStars}</p>
+                    <p className="text-[10px] font-medium text-slate-500">Stars</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-emerald-600">{stats.totalActivities}</p>
+                    <p className="text-[10px] font-medium text-slate-500">Activities</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-lg font-bold text-violet-600">{stats.avgScore}%</p>
+                    <p className="text-[10px] font-medium text-slate-500">Avg Score</p>
+                  </div>
+                </div>
+
+                {/* Badges */}
+                {badges.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-1">
+                    {badges.slice(0, 4).map((b) => (
+                      <span key={b.id} title={b.label} className="rounded-full bg-amber-50 px-2 py-0.5 text-xs">
+                        {b.emoji}
+                      </span>
+                    ))}
+                    {badges.length > 4 && (
+                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
+                        +{badges.length - 4}
+                      </span>
+                    )}
+                  </div>
+                )}
+
                 <div className="mt-4 flex gap-2">
                   <button
                     onClick={() => handleEdit(learner)}

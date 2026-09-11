@@ -3,6 +3,7 @@
 import { PortalLayout, type NavItem } from "@/components/portal/portal-layout";
 import { usePortalData } from "@/hooks/use-portal-data";
 import { PILLARS } from "@/lib/activity-catalog";
+import { AVATAR_EMOJI, AVATAR_COLORS } from "@/lib/learner-store";
 import Link from "next/link";
 import { SignOutButton } from "@/components/sign-out-button";
 
@@ -73,8 +74,11 @@ export default function ClassPage() {
               <tr key={learner.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
                 <td className="px-4 py-3">
                   <Link href={`/kids/profile?learner=${learner.id}`} className="flex items-center gap-2 font-medium text-slate-800 hover:text-[#FF9F43]">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full text-white text-sm" style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}>
-                      {learner.preferred_name.charAt(0)}
+                    <div
+                      className="flex h-8 w-8 items-center justify-center rounded-full text-sm shadow-sm"
+                      style={{ background: AVATAR_COLORS[learner.avatar_key] ?? AVATAR_COLORS.star }}
+                    >
+                      {AVATAR_EMOJI[learner.avatar_key] ?? "⭐"}
                     </div>
                     {learner.preferred_name}
                   </Link>
@@ -110,8 +114,11 @@ export default function ClassPage() {
         }).map(({ learner, stats, pillarProgress }) => (
           <div key={learner.id} className="rounded-2xl border border-amber-200 bg-amber-50/50 p-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full text-white" style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}>
-                {learner.preferred_name.charAt(0)}
+              <div
+                className="flex h-10 w-10 items-center justify-center rounded-full text-lg shadow-sm"
+                style={{ background: AVATAR_COLORS[learner.avatar_key] ?? AVATAR_COLORS.star }}
+              >
+                {AVATAR_EMOJI[learner.avatar_key] ?? "⭐"}
               </div>
               <div>
                 <p className="font-medium text-slate-800">{learner.preferred_name}</p>

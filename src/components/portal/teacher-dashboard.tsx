@@ -5,6 +5,7 @@ import { usePortalData } from "@/hooks/use-portal-data";
 import { SignOutButton } from "@/components/sign-out-button";
 import Link from "next/link";
 import { PILLARS } from "@/lib/activity-catalog";
+import { AVATAR_EMOJI, AVATAR_COLORS } from "@/lib/learner-store";
 
 const TEACHER_NAV: NavItem[] = [
   { href: "/teach", label: "Dashboard", icon: "📊", description: "Class overview" },
@@ -111,29 +112,55 @@ export function TeacherDashboard({ userName }: { userName: string }) {
             </Link>
           </div>
           <div className="space-y-3">
-            {data.learnerStats.map(({ learner, stats }) => (
-              <div key={learner.id} className="flex items-center gap-3 rounded-xl bg-slate-50 p-3 transition-all hover:bg-slate-100">
-                <div
-                  className="flex h-10 w-10 items-center justify-center rounded-full text-white"
-                  style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
-                >
-                  {learner.preferred_name.charAt(0)}
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-slate-800">{learner.preferred_name}</p>
-                  <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-200">
+            {data.learnerStats.map(({ learner, stats, pillarProgress }) => {
+              const avatarGradient = AVATAR_COLORS[learner.avatar_key] ?? AVATAR_COLORS.star;
+              const avatarEmoji = AVATAR_EMOJI[learner.avatar_key] ?? "⭐";
+              const topPillars = pillarProgress
+                .filter((p) => p.completedActivities > 0)
+                .sort((a, b) => b.percentage - a.percentage)
+                .slice(0, 3);
+              return (
+                <div key={learner.id} className="rounded-xl bg-slate-50 p-3 transition-all hover:bg-slate-100">
+                  <div className="flex items-center gap-3">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-400 transition-all"
-                      style={{ width: `${Math.min(stats.avgScore, 100)}%` }}
-                    />
+                      className="flex h-10 w-10 items-center justify-center rounded-full text-xl shadow-sm"
+                      style={{ background: avatarGradient }}
+                    >
+                      {avatarEmoji}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-slate-800">{learner.preferred_name}</p>
+                      <div className="mt-1 h-2 overflow-hidden rounded-full bg-slate-200">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-400 transition-all"
+                          style={{ width: `${Math.min(stats.avgScore, 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span className="text-sm font-bold text-slate-700">⭐ {stats.totalStars}</span>
+                      <span className="text-xs text-slate-500">{stats.totalActivities} done</span>
+                    </div>
                   </div>
+                  {/* Pillar breakdown */}
+                  {topPillars.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5 pl-13">
+                      {topPillars.map((p) => (
+                        <span
+                          key={p.pillar}
+                          className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-medium text-slate-600 shadow-sm"
+                        >
+                          {p.emoji} {p.label}: {p.completedActivities}/{p.totalActivities}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {stats.totalActivities === 0 && (
+                    <p className="mt-1 pl-13 text-[10px] text-slate-400">No activities completed yet</p>
+                  )}
                 </div>
-                <div className="flex flex-col items-end">
-                  <span className="text-sm font-bold text-slate-700">⭐ {stats.totalStars}</span>
-                  <span className="text-xs text-slate-500">{stats.totalActivities} done</span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -148,21 +175,31 @@ export function TeacherDashboard({ userName }: { userName: string }) {
               <p className="text-sm text-slate-500">All learners are progressing well! 🎉</p>
             ) : (
               <div className="space-y-2">
-                {needsSupport.map(({ learner, stats, pillarProgress }) => (
-                  <div key={learner.id} className="rounded-xl bg-white p-3 shadow-sm">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium text-slate-800">{learner.preferred_name}</span>
-                      <span className="text-xs text-amber-600">
-                        {stats.totalActivities === 0 ? "No activities yet" : `${stats.avgScore}% avg`}
-                      </span>
+                {needsSupport.map(({ learner, stats, pillarProgress }) => {
+                  const avatarGradient = AVATAR_COLORS[learner.avatar_key] ?? AVATAR_COLORS.star;
+                  const avatarEmoji = AVATAR_EMOJI[learner.avatar_key] ?? "⭐";
+                  return (
+                    <div key={learner.id} className="rounded-xl bg-white p-3 shadow-sm">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="flex h-8 w-8 items-center justify-center rounded-full text-sm shadow-sm"
+                          style={{ background: avatarGradient }}
+                        >
+                          {avatarEmoji}
+                        </div>
+                        <span className="flex-1 font-medium text-slate-800">{learner.preferred_name}</span>
+                        <span className="text-xs text-amber-600">
+                          {stats.totalActivities === 0 ? "No activities yet" : `${stats.avgScore}% avg`}
+                        </span>
+                      </div>
+                      {pillarProgress.filter((p) => p.percentage > 0 && p.percentage < 50).slice(0, 2).map((p) => (
+                        <p key={p.pillar} className="mt-1 pl-10 text-xs text-slate-500">
+                          {p.emoji} {p.label}: {p.completedActivities}/{p.totalActivities} done
+                        </p>
+                      ))}
                     </div>
-                    {pillarProgress.filter((p) => p.percentage > 0 && p.percentage < 50).slice(0, 2).map((p) => (
-                      <p key={p.pillar} className="mt-1 text-xs text-slate-500">
-                        {p.emoji} {p.label}: {p.completedActivities}/{p.totalActivities} done
-                      </p>
-                    ))}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

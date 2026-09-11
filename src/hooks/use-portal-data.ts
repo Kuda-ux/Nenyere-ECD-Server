@@ -25,11 +25,11 @@ export interface PortalData {
   classAvgScore: number;
 }
 
-export function usePortalData(): { data: PortalData | null; loading: boolean } {
+export function usePortalData(): { data: PortalData | null; loading: boolean; refresh: () => void } {
   const [data, setData] = useState<PortalData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchData = () => {
     const learners = getLearners();
     const allActivities = getAllActivities();
     const ecdAActivities = getActivitiesByEcdLevel("ECD_A").length;
@@ -63,7 +63,27 @@ export function usePortalData(): { data: PortalData | null; loading: boolean } {
       classAvgScore,
     });
     setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+
+    // Listen for localStorage changes from other tabs
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "nenyere_learners" || e.key === "nenyere_dev_tracker" || e.key === null) {
+        fetchData();
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+
+    // Poll every 3 seconds as fallback for same-tab updates
+    const interval = setInterval(fetchData, 3000);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
   }, []);
 
-  return { data, loading };
+  return { data, loading, refresh: fetchData };
 }
