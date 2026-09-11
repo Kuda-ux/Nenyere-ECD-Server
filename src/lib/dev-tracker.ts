@@ -203,7 +203,7 @@ interface BadgeDef {
   check: (profile: LearnerProfile) => boolean;
 }
 
-const BADGE_DEFS: BadgeDef[] = [
+export const BADGE_DEFS: BadgeDef[] = [
   {
     id: "first-star",
     emoji: "⭐",

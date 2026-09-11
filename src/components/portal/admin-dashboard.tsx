@@ -4,6 +4,7 @@ import { PortalLayout, type NavItem } from "@/components/portal/portal-layout";
 import { usePortalData } from "@/hooks/use-portal-data";
 import { SignOutButton } from "@/components/sign-out-button";
 import { getActivitiesByPillar, PILLARS } from "@/lib/activity-catalog";
+import { AVATAR_EMOJI, AVATAR_COLORS } from "@/lib/learner-store";
 import Link from "next/link";
 
 const ADMIN_NAV: NavItem[] = [
@@ -104,24 +105,46 @@ export function AdminDashboard({ userName }: { userName: string }) {
             </Link>
           </div>
           <div className="space-y-3">
-            {data.learnerStats.slice(0, 5).map(({ learner, stats }) => (
-              <div key={learner.id} className="flex items-center gap-3 rounded-xl bg-slate-50 p-3">
-                <div
-                  className="flex h-10 w-10 items-center justify-center rounded-full text-lg"
-                  style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
-                >
-                  {learner.preferred_name.charAt(0)}
+            {data.learnerStats.slice(0, 5).map(({ learner, stats, pillarProgress }) => {
+              const avatarGradient = AVATAR_COLORS[learner.avatar_key] ?? AVATAR_COLORS.star;
+              const avatarEmoji = AVATAR_EMOJI[learner.avatar_key] ?? "⭐";
+              const topPillars = pillarProgress
+                .filter((p) => p.completedActivities > 0)
+                .sort((a, b) => b.percentage - a.percentage)
+                .slice(0, 2);
+              return (
+                <div key={learner.id} className="rounded-xl bg-slate-50 p-3 transition-all hover:bg-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-full text-xl shadow-sm"
+                      style={{ background: avatarGradient }}
+                    >
+                      {avatarEmoji}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-slate-800">{learner.preferred_name}</p>
+                      <p className="text-xs text-slate-500">{learner.ecd_level} · {stats.totalActivities} activities</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-lg">⭐</span>
+                      <span className="font-bold text-slate-700">{stats.totalStars}</span>
+                    </div>
+                  </div>
+                  {topPillars.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5 pl-13">
+                      {topPillars.map((p) => (
+                        <span
+                          key={p.pillar}
+                          className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-medium text-slate-600 shadow-sm"
+                        >
+                          {p.emoji} {p.label}: {p.completedActivities}/{p.totalActivities}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <div className="flex-1">
-                  <p className="font-medium text-slate-800">{learner.preferred_name}</p>
-                  <p className="text-xs text-slate-500">{learner.ecd_level} · {stats.totalActivities} activities</p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <span className="text-lg">⭐</span>
-                  <span className="font-bold text-slate-700">{stats.totalStars}</span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -151,6 +174,34 @@ export function AdminDashboard({ userName }: { userName: string }) {
               );
             })}
           </div>
+        </div>
+      </div>
+
+      {/* Class progress by pillar */}
+      <div className="mb-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-md">
+        <h2 className="mb-4 text-lg font-bold text-slate-800">Class Progress by Pillar</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {PILLARS.filter((p) => p.key !== "themes").map((pillar) => {
+            const totalCompleted = data.learnerStats.reduce((sum, s) => {
+              const pp = s.pillarProgress.find((p) => p.pillar === pillar.key);
+              return sum + (pp?.completedActivities ?? 0);
+            }, 0);
+            const totalAvailable = data.learnerStats.length > 0
+              ? data.learnerStats[0].pillarProgress.find((p) => p.pillar === pillar.key)?.totalActivities ?? 0
+              : 0;
+            const pct = totalAvailable > 0 ? Math.round((totalCompleted / (totalAvailable * data.learnerStats.length)) * 100) : 0;
+
+            return (
+              <div key={pillar.key} className="flex flex-col items-center rounded-xl bg-slate-50 p-4">
+                <span className="text-2xl">{pillar.emoji}</span>
+                <span className="mt-1 text-xs font-medium text-slate-700">{pillar.label}</span>
+                <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200">
+                  <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: pillar.gradient }} />
+                </div>
+                <span className="mt-1 text-xs text-slate-500">{pct}%</span>
+              </div>
+            );
+          })}
         </div>
       </div>
 

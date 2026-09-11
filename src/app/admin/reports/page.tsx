@@ -3,6 +3,8 @@
 import { PortalLayout, type NavItem } from "@/components/portal/portal-layout";
 import { usePortalData } from "@/hooks/use-portal-data";
 import { SignOutButton } from "@/components/sign-out-button";
+import { AVATAR_EMOJI, AVATAR_COLORS } from "@/lib/learner-store";
+import { PILLARS } from "@/lib/activity-catalog";
 
 const ADMIN_NAV: NavItem[] = [
   { href: "/admin", label: "Dashboard", icon: "📊", description: "Overview & stats" },
@@ -90,9 +92,19 @@ export default function ReportsPage() {
               </tr>
             </thead>
             <tbody>
-              {data.learnerStats.map(({ learner, stats }) => (
+              {data.learnerStats.map(({ learner, stats }) => {
+                const avatarGradient = AVATAR_COLORS[learner.avatar_key] ?? AVATAR_COLORS.star;
+                const avatarEmoji = AVATAR_EMOJI[learner.avatar_key] ?? "⭐";
+                return (
                 <tr key={learner.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
-                  <td className="px-4 py-2 font-medium text-slate-800">{learner.preferred_name}</td>
+                  <td className="px-4 py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full text-sm shadow-sm" style={{ background: avatarGradient }}>
+                        {avatarEmoji}
+                      </div>
+                      <span className="font-medium text-slate-800">{learner.preferred_name}</span>
+                    </div>
+                  </td>
                   <td className="px-4 py-2 text-center">
                     <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{learner.ecd_level}</span>
                   </td>
@@ -101,7 +113,59 @@ export default function ReportsPage() {
                   <td className="px-4 py-2 text-center text-slate-700">{stats.avgScore}%</td>
                   <td className="px-4 py-2 text-center text-slate-700">{stats.totalSkills}</td>
                 </tr>
-              ))}
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Pillar breakdown per learner */}
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-md">
+        <h2 className="mb-4 text-lg font-bold text-slate-800">Pillar Breakdown by Learner</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 bg-slate-50">
+                <th className="px-4 py-2 text-left font-semibold text-slate-700">Learner</th>
+                {PILLARS.filter((p) => p.key !== "themes").map((pillar) => (
+                  <th key={pillar.key} className="px-3 py-2 text-center font-semibold text-slate-700" title={pillar.label}>
+                    {pillar.emoji}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {data.learnerStats.map(({ learner, pillarProgress }) => {
+                const avatarGradient = AVATAR_COLORS[learner.avatar_key] ?? AVATAR_COLORS.star;
+                const avatarEmoji = AVATAR_EMOJI[learner.avatar_key] ?? "⭐";
+                return (
+                  <tr key={learner.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
+                    <td className="px-4 py-2">
+                      <div className="flex items-center gap-2">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full text-xs shadow-sm" style={{ background: avatarGradient }}>
+                          {avatarEmoji}
+                        </div>
+                        <span className="font-medium text-slate-800">{learner.preferred_name}</span>
+                      </div>
+                    </td>
+                    {PILLARS.filter((p) => p.key !== "themes").map((pillar) => {
+                      const pp = pillarProgress.find((p) => p.pillar === pillar.key);
+                      const pct = pp?.percentage ?? 0;
+                      return (
+                        <td key={pillar.key} className="px-3 py-2 text-center">
+                          <div className="flex flex-col items-center gap-1">
+                            <div className="h-2 w-12 overflow-hidden rounded-full bg-slate-200">
+                              <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: pillar.gradient }} />
+                            </div>
+                            <span className="text-[10px] text-slate-500">{pp?.completedActivities ?? 0}/{pp?.totalActivities ?? 0}</span>
+                          </div>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

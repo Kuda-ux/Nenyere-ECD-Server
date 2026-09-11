@@ -3,6 +3,10 @@
 import { PortalLayout, type NavItem } from "@/components/portal/portal-layout";
 import { usePortalData } from "@/hooks/use-portal-data";
 import { SignOutButton } from "@/components/sign-out-button";
+import { AVATAR_EMOJI, AVATAR_COLORS } from "@/lib/learner-store";
+import { BADGE_DEFS } from "@/lib/dev-tracker";
+
+const BADGE_MAP = Object.fromEntries(BADGE_DEFS.map((b) => [b.id, b]));
 
 const ADMIN_NAV: NavItem[] = [
   { href: "/admin", label: "Dashboard", icon: "📊", description: "Overview & stats" },
@@ -52,18 +56,23 @@ export default function LearnersPage() {
               <th className="px-4 py-3 text-left font-semibold text-slate-700">ECD Level</th>
               <th className="px-4 py-3 text-center font-semibold text-slate-700">⭐ Stars</th>
               <th className="px-4 py-3 text-center font-semibold text-slate-700">Activities</th>
+              <th className="px-4 py-3 text-center font-semibold text-slate-700">Avg Score</th>
+              <th className="px-4 py-3 text-left font-semibold text-slate-700">Badges</th>
               <th className="px-4 py-3 text-left font-semibold text-slate-700">Consent</th>
               <th className="px-4 py-3 text-left font-semibold text-slate-700">Status</th>
               <th className="px-4 py-3 text-right font-semibold text-slate-700">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {data.learnerStats.map(({ learner, stats }) => (
+            {data.learnerStats.map(({ learner, stats }) => {
+              const avatarGradient = AVATAR_COLORS[learner.avatar_key] ?? AVATAR_COLORS.star;
+              const avatarEmoji = AVATAR_EMOJI[learner.avatar_key] ?? "⭐";
+              return (
               <tr key={learner.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full text-white text-sm" style={{ background: "linear-gradient(135deg, #6C5CE7, #4FC3F7)" }}>
-                      {learner.preferred_name.charAt(0)}
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full text-sm shadow-sm" style={{ background: avatarGradient }}>
+                      {avatarEmoji}
                     </div>
                     <span className="font-medium text-slate-800">{learner.preferred_name}</span>
                   </div>
@@ -73,6 +82,21 @@ export default function LearnersPage() {
                 </td>
                 <td className="px-4 py-3 text-center font-bold text-slate-700">{stats.totalStars}</td>
                 <td className="px-4 py-3 text-center text-slate-600">{stats.totalActivities}</td>
+                <td className="px-4 py-3 text-center text-slate-600">{stats.avgScore}%</td>
+                <td className="px-4 py-3">
+                  <div className="flex flex-wrap gap-1">
+                    {stats.badges.length > 0 ? (
+                      stats.badges.map((badgeId) => {
+                        const badge = BADGE_MAP[badgeId];
+                        return badge ? (
+                          <span key={badgeId} className="text-lg" title={badge.label}>{badge.emoji}</span>
+                        ) : null;
+                      })
+                    ) : (
+                      <span className="text-xs text-slate-400">—</span>
+                    )}
+                  </div>
+                </td>
                 <td className="px-4 py-3">
                   <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${consentColors["Granted"]}`}>
                     Granted
@@ -87,7 +111,8 @@ export default function LearnersPage() {
                   <button className="text-sm font-medium text-red-600 hover:underline">Delete</button>
                 </td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>
