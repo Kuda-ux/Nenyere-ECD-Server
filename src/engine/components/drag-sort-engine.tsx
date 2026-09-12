@@ -87,7 +87,7 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
       {/* Items tray — themed */}
       {unplacedItems.length > 0 && (
         <div
-          className="flex flex-wrap gap-3 rounded-3xl p-5 shadow-md"
+          className="flex max-w-full flex-wrap justify-center gap-3 rounded-3xl p-4 shadow-md sm:p-5"
           style={{ background: "linear-gradient(135deg, #F8F9FF, #E3F2FD)" }}
         >
           <p className="w-full text-center text-sm font-bold text-[var(--color-ink-500)]" style={{ fontFamily: "var(--font-kids)" }}>
@@ -107,8 +107,8 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
                   : "hover:scale-105 hover:shadow-lg",
               ].join(" ")}
               style={{
-                minHeight: "85px",
-                minWidth: "85px",
+                minHeight: "clamp(64px, 18vw, 85px)",
+                minWidth: "clamp(64px, 18vw, 85px)",
                 background: "white",
               }}
             >
@@ -119,7 +119,7 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
       )}
 
       {/* Slots — themed with gradients */}
-      <div className={activity.layout === "sequence" ? "flex gap-3" : "grid grid-cols-2 gap-4 sm:grid-cols-3"}>
+      <div className={activity.layout === "sequence" ? "flex flex-wrap justify-center gap-3" : "grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4"}>
         {activity.slots.map((slot, idx) => {
           const placedItems = activity.items.filter((item) => placements[item.id] === slot.id);
           const gradient = SLOT_GRADIENTS[idx % SLOT_GRADIENTS.length];
@@ -132,7 +132,7 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
               onDrop={() => handleDrop(slot.id)}
               onClick={() => handleSlotTap(slot.id)}
               className={[
-                "flex min-h-[130px] min-w-[130px] flex-col items-center justify-center gap-2 rounded-2xl border-4 p-4 transition-all",
+                "flex min-h-[96px] min-w-[96px] flex-col items-center justify-center gap-2 rounded-2xl border-4 p-3 transition-all sm:min-h-[130px] sm:min-w-[130px] sm:p-4",
                 hasItemToPlace
                   ? "border-[var(--color-brand-sun)] border-dashed anim-pulse-glow cursor-pointer"
                   : placedItems.length > 0
@@ -148,7 +148,7 @@ export function DragSortEngine({ activity, onResult, hintLevel }: Props) {
               )}
               {slot.image && <ContentImage src={slot.image.en} alt="" containerClassName="h-10 w-10" />}
               {placedItems.map((item) => (
-                <div key={item.id} className="rounded-xl ring-2 ring-[var(--color-success)] p-2 bg-white/80 anim-bounce-in">
+                <div key={item.id} className="relative rounded-xl bg-white/80 p-2 ring-2 ring-[var(--color-success)] anim-bounce-in">
                   <ItemContent item={item} />
                   <span className="absolute -right-1 -top-1 text-lg">✅</span>
                 </div>

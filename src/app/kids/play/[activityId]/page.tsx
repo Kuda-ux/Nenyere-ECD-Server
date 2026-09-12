@@ -17,6 +17,7 @@ function PlayActivityContent({ params }: { params: Promise<{ activityId: string 
   const [completed, setCompleted] = useState(false);
   const [activityId, setActivityId] = useState<string | null>(null);
   const [completionResult, setCompletionResult] = useState<{ stars: number; accuracy: number } | null>(null);
+  const [runId, setRunId] = useState(0);
 
   params.then((p) => setActivityId(p.activityId));
 
@@ -71,27 +72,27 @@ function PlayActivityContent({ params }: { params: Promise<{ activityId: string 
   if (completed) {
     const earnedStars = completionResult?.stars ?? 1;
     return (
-      <div className="kids-bg-rainbow relative flex min-h-screen flex-col items-center justify-center gap-6 overflow-hidden">
+      <div className="kids-bg-rainbow relative flex min-h-screen flex-col items-center justify-center gap-6 overflow-hidden px-4">
         {/* Confetti celebration */}
         <Confetti count={50} />
 
         {/* Mascot celebrating */}
-        <Mascot mood="celebrating" size={130} />
+        <Mascot mood="celebrating" size={110} />
 
         {/* Completion message */}
-        <p className="text-4xl font-bold text-[var(--color-ink-900)] anim-bounce-in anim-delay-1" style={{ fontFamily: "var(--font-kids)" }}>
+        <p className="text-center text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-in anim-delay-1 sm:text-4xl" style={{ fontFamily: "var(--font-kids)" }}>
           Activity complete!
         </p>
-        <p className="text-xl text-[var(--color-ink-700)] anim-slide-up anim-delay-2" style={{ fontFamily: "var(--font-kids)" }}>
+        <p className="text-center text-lg text-[var(--color-ink-700)] anim-slide-up anim-delay-2 sm:text-xl" style={{ fontFamily: "var(--font-kids)" }}>
           You did it! So clever! 🌟
         </p>
 
         {/* Stars earned */}
-        <div className="flex gap-4 anim-delay-3">
+        <div className="flex gap-3 anim-delay-3 sm:gap-4">
           {[1, 2, 3].map((s) => (
             <span
               key={s}
-              className={`text-8xl ${s <= earnedStars ? "anim-star-burst-big" : ""}`}
+              className={`text-6xl sm:text-8xl ${s <= earnedStars ? "anim-star-burst-big" : ""}`}
               style={{
                 color: s <= earnedStars ? "var(--color-brand-sun)" : "var(--color-surface-2)",
                 animationDelay: `${s * 0.2}s`,
@@ -104,9 +105,9 @@ function PlayActivityContent({ params }: { params: Promise<{ activityId: string 
         </div>
 
         {/* Action buttons */}
-        <div className="flex flex-col gap-3 sm:flex-row anim-slide-up anim-delay-4">
+        <div className="flex w-full max-w-xs flex-col gap-3 anim-slide-up anim-delay-4 sm:max-w-none sm:flex-row">
           <button
-            onClick={() => { play("pop"); setCompleted(false); }}
+            onClick={() => { play("pop"); setCompleted(false); setRunId((r) => r + 1); }}
             className="kids-btn px-6 py-3 text-base text-white shadow-lg transition-all hover:scale-105"
             style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
           >
@@ -134,6 +135,7 @@ function PlayActivityContent({ params }: { params: Promise<{ activityId: string 
   return (
     <div className="kids-bg-playful min-h-screen">
       <ActivityRunner
+        key={runId}
         activity={activity}
         onExit={() => router.push(`/kids/dashboard?learner=${learnerId}`)}
         onComplete={(result) => {

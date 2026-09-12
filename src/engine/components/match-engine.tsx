@@ -112,7 +112,7 @@ export function MatchEngine({ activity, onResult, hintLevel }: Props) {
         </span>
       </div>
 
-      <div className="flex w-full max-w-2xl justify-between gap-8">
+      <div className="flex w-full max-w-2xl justify-between gap-4 px-2 sm:gap-8">
         {/* Left column */}
         <div className="flex flex-col gap-3">
           {activity.pairs.map((pair, idx) => {
@@ -127,7 +127,7 @@ export function MatchEngine({ activity, onResult, hintLevel }: Props) {
                 onClick={() => handleLeftSelect(pair.id)}
                 disabled={isMatched}
                 className={[
-                  "flex items-center justify-center rounded-2xl p-4 transition-all active:scale-95 shadow-md",
+                  "relative flex items-center justify-center rounded-2xl p-3 transition-all active:scale-95 shadow-md sm:p-4",
                   "anim-pop-scale",
                   isMatched
                     ? "opacity-50 ring-4 ring-[var(--color-success)]"
@@ -138,8 +138,8 @@ export function MatchEngine({ activity, onResult, hintLevel }: Props) {
                         : "hover:scale-105 hover:shadow-lg",
                 ].join(" ")}
                 style={{
-                  minHeight: "110px",
-                  minWidth: "130px",
+                  minHeight: "clamp(88px, 22vw, 110px)",
+                  minWidth: "clamp(110px, 38vw, 150px)",
                   background: isMatched ? "linear-gradient(135deg, #E8F5E9, #C8E6C9)" : isWrong ? "linear-gradient(135deg, #FFEBEE, #FFCDD2)" : gradient,
                   animationDelay: `${idx * 0.1}s`,
                 }}
@@ -167,7 +167,7 @@ export function MatchEngine({ activity, onResult, hintLevel }: Props) {
                 onClick={() => handleRightSelect(pair.id)}
                 disabled={isMatched}
                 className={[
-                  "flex items-center justify-center rounded-2xl p-4 transition-all active:scale-95 shadow-md",
+                  "relative flex items-center justify-center rounded-2xl p-3 transition-all active:scale-95 shadow-md sm:p-4",
                   "anim-pop-scale",
                   isMatched
                     ? "opacity-50 ring-4 ring-[var(--color-success)]"
@@ -178,8 +178,8 @@ export function MatchEngine({ activity, onResult, hintLevel }: Props) {
                         : "hover:scale-105 hover:shadow-lg",
                 ].join(" ")}
                 style={{
-                  minHeight: "110px",
-                  minWidth: "130px",
+                  minHeight: "clamp(88px, 22vw, 110px)",
+                  minWidth: "clamp(110px, 38vw, 150px)",
                   background: isMatched ? "linear-gradient(135deg, #E8F5E9, #C8E6C9)" : isWrong ? "linear-gradient(135deg, #FFEBEE, #FFCDD2)" : gradient,
                   animationDelay: `${idx * 0.1}s`,
                 }}
@@ -205,7 +205,7 @@ function PairContent({ side, pair }: { side: "left" | "right"; pair: MatchPair }
     return <ContentImage src={content.image.en} alt="" containerClassName="h-16 w-16" />;
   }
   if (content.text) {
-    return <EmojiText text={content.text.en} emojiClassName="text-5xl" labelClassName="text-lg font-bold text-white drop-shadow-md" />;
+    return <EmojiText text={content.text.en} emojiClassName="text-4xl sm:text-5xl" labelClassName="text-base font-bold text-white drop-shadow-md sm:text-lg" />;
   }
   if (content.shape) {
     return <Shape shape={content.shape} colour={content.colour} />;

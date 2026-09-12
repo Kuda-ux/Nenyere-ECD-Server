@@ -88,7 +88,7 @@ export function StoryEngine({ activity, onResult, hintLevel }: Props) {
   );
 
   return (
-    <div className="flex max-w-3xl flex-col items-center gap-5">
+    <div className="flex w-full max-w-3xl flex-col items-center gap-5 px-3">
       {/* Story image */}
       <div className="relative w-full overflow-hidden rounded-3xl border-4 border-[var(--color-brand-sun)] shadow-xl">
         <ContentImage
@@ -103,12 +103,11 @@ export function StoryEngine({ activity, onResult, hintLevel }: Props) {
             onClick={() => {
               if (spot.response_audio) audio.play(spot.response_audio.en);
             }}
-            className="absolute rounded-full border-4 border-[var(--color-brand-sun)] bg-[var(--color-brand-sun)]/20 transition-all hover:bg-[var(--color-brand-sun)]/40"
+            className="absolute aspect-square rounded-full border-4 border-[var(--color-brand-sun)] bg-[var(--color-brand-sun)]/20 transition-all hover:bg-[var(--color-brand-sun)]/40"
             style={{
               left: `${spot.cx * 100}%`,
               top: `${spot.cy * 100}%`,
-              width: `${spot.radius * 240}px`,
-              height: `${spot.radius * 240}px`,
+              width: `${Math.max(spot.radius * 40, 12)}%`,
               transform: "translate(-50%, -50%)",
             }}
             aria-label={spot.response_text?.en ?? "Hotspot"}
@@ -134,12 +133,12 @@ export function StoryEngine({ activity, onResult, hintLevel }: Props) {
               {page.interaction.prompt.en}
             </p>
           )}
-          <div className="flex gap-4">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             {page.interaction.choices.map((choice) => (
               <button
                 key={choice.id}
                 onClick={() => handleInteraction(page.id, choice.is_correct)}
-                className="rounded-2xl border-4 border-[var(--color-surface-2)] bg-white px-8 py-4 text-lg font-bold transition-all hover:border-[var(--color-brand-sun)] hover:scale-105 active:scale-95 shadow-md"
+                className="rounded-2xl border-4 border-[var(--color-surface-2)] bg-white px-6 py-3 text-base font-bold transition-all hover:border-[var(--color-brand-sun)] hover:scale-105 active:scale-95 shadow-md sm:px-8 sm:py-4 sm:text-lg"
                 style={{ fontFamily: "var(--font-kids)" }}
               >
                 {choice.text.en}

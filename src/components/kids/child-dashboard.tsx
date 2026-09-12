@@ -85,7 +85,7 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
       />
 
       {/* Greeting */}
-      <div className="flex flex-col items-center gap-2 px-6 pt-14 pb-4 anim-bounce-in">
+      <div className="flex flex-col items-center gap-2 px-4 pt-16 pb-4 anim-bounce-in sm:px-6 sm:pt-14">
         <div
           className="anim-float flex h-20 w-20 items-center justify-center rounded-full text-5xl shadow-lg"
           style={{ background: AVATAR_COLORS[learnerAvatar] ?? "linear-gradient(135deg, #FFB627, #FF9F43)" }}
@@ -94,18 +94,18 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
           {AVATAR_EMOJI[learnerAvatar] ?? "🌟"}
         </div>
         <h1
-          className="text-4xl font-bold text-[var(--color-ink-900)]"
+          className="text-center text-3xl font-bold text-[var(--color-ink-900)] sm:text-4xl"
           style={{ fontFamily: "var(--font-kids)" }}
         >
           Hi, {learnerName || "friend"}! 👋
         </h1>
-        <p className="text-lg text-[var(--color-ink-500)]">
+        <p className="text-center text-lg text-[var(--color-ink-500)]">
           What shall we play today? 😊
         </p>
 
         {/* Stats badges */}
         {stats && (
-          <div className="mt-3 flex gap-3">
+          <div className="mt-3 flex flex-wrap justify-center gap-3">
             <button
               onClick={() => { play("star"); router.push(`/kids/profile?learner=${learnerId}`); }}
               className="kids-btn flex items-center gap-2 px-5 py-2.5 text-base shadow-md transition-all hover:scale-105"
@@ -132,31 +132,30 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
       </div>
 
       {/* Pillar tiles */}
-      <div className="flex flex-1 items-start justify-center overflow-y-auto kids-scroll px-4 pb-8">
-        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3">
+      <div className="flex flex-1 items-start justify-center overflow-y-auto kids-scroll px-4 pb-8 sm:px-6">
+        <div className="grid w-full max-w-3xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5">
           {PILLARS.map((pillar, i) => (
             <button
               key={pillar.key}
               onClick={() => handlePillarClick(pillar.key)}
-              className={`kids-card flex flex-col items-center gap-3 border-4 p-5 anim-pop-in`}
+              className={`kids-card flex flex-col items-center gap-2 border-4 p-3 anim-pop-in sm:gap-3 sm:p-5`}
               style={{
                 borderColor: "transparent",
                 background: pillar.gradient,
-                minHeight: "170px",
-                minWidth: "160px",
+                minHeight: "140px",
                 animationDelay: `${i * 0.06}s`,
               }}
             >
-              <span className="text-6xl drop-shadow-lg anim-float" style={{ animationDelay: `${i * 0.2}s` }} aria-hidden="true">
+              <span className="text-5xl drop-shadow-lg anim-float sm:text-6xl" style={{ animationDelay: `${i * 0.2}s` }} aria-hidden="true">
                 {pillar.emoji}
               </span>
               <span
-                className="text-xl font-bold text-white drop-shadow-md"
+                className="text-lg font-bold text-white drop-shadow-md sm:text-xl"
                 style={{ fontFamily: "var(--font-kids)" }}
               >
                 {pillar.label}
               </span>
-              <span className="text-center text-sm text-white/80">
+              <span className="hidden text-center text-sm text-white/80 sm:block">
                 {pillar.description}
               </span>
             </button>

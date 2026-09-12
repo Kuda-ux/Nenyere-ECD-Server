@@ -111,11 +111,11 @@ export function CountingEngine({ activity, item, onResult, hintLevel }: Props) {
       {/* Operation display for add/subtract */}
       {item.operation !== "count" && item.operands && (
         <div
-          className="flex items-center gap-4 rounded-3xl px-8 py-4 shadow-lg anim-slide-in-up"
+          className="flex items-center gap-4 rounded-3xl px-6 py-4 shadow-lg anim-slide-in-up sm:px-8"
           style={{ background: "linear-gradient(135deg, #FFF9E6, #FFE082)" }}
         >
-          <span className="text-5xl">{item.objects.shape ? (SHAPE_EMOJI[item.objects.shape] ?? "⭐") : "⭐"}</span>
-          <span className="text-4xl font-bold text-[var(--color-ink-900)]" style={{ fontFamily: "var(--font-kids)" }}>
+          <span className="text-4xl sm:text-5xl">{item.objects.shape ? (SHAPE_EMOJI[item.objects.shape] ?? "⭐") : "⭐"}</span>
+          <span className="text-3xl font-bold text-[var(--color-ink-900)] sm:text-4xl" style={{ fontFamily: "var(--font-kids)" }}>
             {item.operands[0]} {item.operation === "add" ? "+" : "−"} {item.operands[1]} = ?
           </span>
         </div>
@@ -123,7 +123,7 @@ export function CountingEngine({ activity, item, onResult, hintLevel }: Props) {
 
       {/* Objects to count — themed container */}
       <div
-        className="flex flex-wrap items-center justify-center gap-4 rounded-3xl p-8 shadow-inner"
+        className="flex flex-wrap items-center justify-center gap-2 rounded-3xl p-4 shadow-inner sm:gap-4 sm:p-8"
         style={{ background: "linear-gradient(135deg, #F8F9FF, #E3F2FD)" }}
       >
         {objects.map((i) => {
@@ -138,16 +138,16 @@ export function CountingEngine({ activity, item, onResult, hintLevel }: Props) {
                 isTapped ? "scale-110 anim-pop-scale" : "hover:scale-110 active:scale-95",
               ].join(" ")}
               style={{
-                width: 80,
-                height: 80,
+                width: "clamp(56px, 15vw, 80px)",
+                height: "clamp(56px, 15vw, 80px)",
                 background: isTapped ? "rgba(76, 175, 80, 0.15)" : "rgba(255, 255, 255, 0.7)",
                 border: isTapped ? "4px solid var(--color-success)" : "3px solid transparent",
               }}
             >
               {item.objects.image ? (
-                <ContentImage src={item.objects.image!.en} alt="" containerClassName="h-14 w-14" />
+                <ContentImage src={item.objects.image!.en} alt="" containerClassName="h-10 w-10 sm:h-14 sm:w-14" />
               ) : shapeEmoji ? (
-                <span className="text-5xl" style={{ filter: isTapped ? "saturate(1.5)" : "none" }}>
+                <span className="text-4xl sm:text-5xl" style={{ filter: isTapped ? "saturate(1.5)" : "none" }}>
                   {shapeEmoji}
                 </span>
               ) : item.objects.shape ? (
@@ -184,7 +184,7 @@ export function CountingEngine({ activity, item, onResult, hintLevel }: Props) {
             <span
               key={n}
               className={[
-                "flex h-11 w-11 items-center justify-center rounded-xl text-lg font-bold transition-all",
+                "flex h-9 w-9 items-center justify-center rounded-xl text-base font-bold transition-all sm:h-11 sm:w-11 sm:text-lg",
                 tappedCount === n ? "scale-125 bg-[var(--color-brand-sun)] text-white shadow-md" : "text-[var(--color-ink-600)]",
               ].join(" ")}
               style={{ fontFamily: "var(--font-kids)" }}
@@ -196,7 +196,7 @@ export function CountingEngine({ activity, item, onResult, hintLevel }: Props) {
       )}
 
       {/* Answer choices — gradient buttons */}
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
         {item.options.map((num, idx) => {
           const isCorrectAnswer = num === item.correct_answer;
           const showAsCorrect = showCorrect && isCorrectAnswer;
@@ -209,7 +209,7 @@ export function CountingEngine({ activity, item, onResult, hintLevel }: Props) {
               onClick={() => handleAnswer(num)}
               disabled={selectedAnswer !== null}
               className={[
-                "flex h-24 w-24 items-center justify-center rounded-3xl text-4xl font-bold transition-all active:scale-90 shadow-lg",
+                "flex h-18 w-18 items-center justify-center rounded-3xl text-3xl font-bold transition-all active:scale-90 shadow-lg sm:h-24 sm:w-24 sm:text-4xl",
                 "anim-pop-scale",
                 showAsCorrect
                   ? "ring-4 ring-[var(--color-success)] anim-wobble"

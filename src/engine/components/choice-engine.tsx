@@ -96,18 +96,18 @@ export function ChoiceEngine({ activity, item, onResult, hintLevel }: Props) {
     <div className="flex flex-col items-center gap-6">
       {/* Prompt — themed card */}
       <div
-        className="flex flex-col items-center gap-3 rounded-3xl px-8 py-5 shadow-lg anim-slide-in-up"
+        className="flex max-w-full flex-col items-center gap-3 rounded-3xl px-5 py-4 shadow-lg anim-slide-in-up sm:px-8 sm:py-5"
         style={{ background: "linear-gradient(135deg, #FFF9E6, #FFF3CD)" }}
       >
         {activity.prompt.image && (
           <ContentImage
             src={activity.prompt.image.en}
             alt={activity.prompt.text.en}
-            containerClassName="h-32 w-32 rounded-xl"
+            containerClassName="h-24 w-24 rounded-xl sm:h-32 sm:w-32"
           />
         )}
         <p
-          className="text-center text-2xl font-bold text-[var(--color-ink-900)]"
+          className="text-center text-xl font-bold text-[var(--color-ink-900)] sm:text-2xl"
           style={{ fontFamily: "var(--font-kids)" }}
         >
           {activity.prompt.text.en}
@@ -118,10 +118,10 @@ export function ChoiceEngine({ activity, item, onResult, hintLevel }: Props) {
       <div
         className={
           activity.layout === "grid"
-            ? "grid grid-cols-2 gap-4 sm:grid-cols-3"
+            ? "grid w-full max-w-xl grid-cols-2 justify-items-center gap-3 sm:grid-cols-3 sm:gap-4"
             : activity.layout === "row"
-              ? "flex gap-4"
-              : "flex flex-wrap gap-4"
+              ? "flex flex-wrap justify-center gap-3 sm:gap-4"
+              : "flex flex-wrap justify-center gap-3 sm:gap-4"
         }
       >
         {activity.items.map((choice, idx) => {
@@ -150,8 +150,8 @@ export function ChoiceEngine({ activity, item, onResult, hintLevel }: Props) {
                       : "hover:scale-105 hover:shadow-xl",
               ].join(" ")}
               style={{
-                minHeight: "160px",
-                minWidth: "140px",
+                minHeight: "clamp(120px, 32vw, 160px)",
+                minWidth: "clamp(110px, 30vw, 140px)",
                 background: showAsWrong ? "linear-gradient(135deg, #FFEBEE, #FFCDD2)" : showAsCorrect ? "linear-gradient(135deg, #E8F5E9, #C8E6C9)" : gradient,
                 animationDelay: `${idx * 0.08}s`,
               }}
@@ -167,12 +167,12 @@ export function ChoiceEngine({ activity, item, onResult, hintLevel }: Props) {
               {choice.stimulus.text && (
                 <EmojiText
                   text={choice.stimulus.text.en}
-                  emojiClassName="text-7xl"
-                  labelClassName="text-lg font-bold text-white drop-shadow-md"
+                  emojiClassName="text-5xl sm:text-7xl"
+                  labelClassName="text-base font-bold text-white drop-shadow-md sm:text-lg"
                 />
               )}
               {choice.stimulus.shape && (
-                <Shape shape={choice.stimulus.shape} colour={choice.stimulus.colour} size={72} />
+                <Shape shape={choice.stimulus.shape} colour={choice.stimulus.colour} size={56} />
               )}
               {showAsCorrect && (
                 <span className="text-4xl anim-bounce-in" aria-hidden="true">✅</span>

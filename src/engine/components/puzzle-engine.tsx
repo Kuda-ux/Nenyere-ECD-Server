@@ -66,7 +66,7 @@ export function PuzzleEngine({ activity, onResult }: EngineComponentProps) {
         {selectedPiece ? "Tap where it goes! 👆" : "Tap a piece, then tap its home! 🧩"}
       </p>
       <div
-        className="grid gap-2 rounded-3xl border-4 p-3 shadow-inner"
+        className="grid w-full max-w-sm gap-2 rounded-3xl border-4 p-3 shadow-inner"
         style={{
           gridTemplateColumns: `repeat(${cols}, 1fr)`,
           borderColor: "var(--color-brand-jacaranda)",
@@ -84,7 +84,7 @@ export function PuzzleEngine({ activity, onResult }: EngineComponentProps) {
               key={idx}
               onClick={() => handleSlotClick(row, col)}
               className={[
-                "flex h-28 w-28 items-center justify-center rounded-2xl border-4 text-6xl transition-all sm:h-32 sm:w-32",
+                "flex aspect-square items-center justify-center rounded-2xl border-4 text-5xl transition-all sm:text-6xl",
                 isWrong ? "anim-shake" : "",
                 selectedPiece && !placedPiece ? "hover:scale-105" : "",
               ].join(" ")}
@@ -109,7 +109,7 @@ export function PuzzleEngine({ activity, onResult }: EngineComponentProps) {
             key={piece.id}
             onClick={() => { playSound("tap"); setSelectedPiece(piece.id); }}
             className={[
-              "flex h-24 w-24 items-center justify-center rounded-2xl border-4 text-6xl shadow-md transition-all",
+              "flex h-20 w-20 items-center justify-center rounded-2xl border-4 text-5xl shadow-md transition-all sm:h-24 sm:w-24 sm:text-6xl",
               selectedPiece === piece.id ? "anim-pulse-glow scale-110" : "hover:scale-105 active:scale-95",
             ].join(" ")}
             style={{

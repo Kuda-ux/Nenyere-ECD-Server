@@ -41,27 +41,27 @@ function RewardsContent() {
       {earnedCount > 0 && <Confetti count={20} />}
 
       {/* Top bar */}
-      <div className="flex items-center gap-4 px-6 py-4">
+      <div className="flex items-center gap-3 px-4 py-4 sm:gap-4 sm:px-6">
         <HoldExitButton
           onExit={() => router.push(`/kids/dashboard?learner=${learnerId}`)}
           label="Hold to go back"
         />
         <div
-          className="flex items-center gap-3 rounded-2xl px-5 py-3 shadow-lg anim-bounce-in"
+          className="flex min-w-0 items-center gap-3 rounded-2xl px-4 py-3 shadow-lg anim-bounce-in sm:px-5"
           style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
         >
-          <span className="text-4xl" aria-hidden="true">🏆</span>
-          <h1 className="text-2xl font-bold text-white drop-shadow-md">My Stars</h1>
+          <span className="text-3xl sm:text-4xl" aria-hidden="true">🏆</span>
+          <h1 className="truncate text-xl font-bold text-white drop-shadow-md sm:text-2xl">My Stars</h1>
         </div>
       </div>
 
       {/* Stars summary */}
-      <div className="flex flex-col items-center gap-3 px-6 py-6 anim-bounce-in">
+      <div className="flex flex-col items-center gap-3 px-4 py-6 anim-bounce-in sm:px-6">
         <div className="flex gap-2">
           {[1, 2, 3, 4, 5].map((s) => (
             <span
               key={s}
-              className={`text-6xl ${s <= (stats?.totalStars ?? 0) ? "anim-star-burst" : ""}`}
+              className={`text-5xl sm:text-6xl ${s <= (stats?.totalStars ?? 0) ? "anim-star-burst" : ""}`}
               style={{
                 color: stats && stats.totalStars >= s ? "var(--color-brand-sun)" : "var(--color-surface-2)",
                 animationDelay: `${s * 0.1}s`,
@@ -90,38 +90,37 @@ function RewardsContent() {
       </div>
 
       {/* Badges grid */}
-      <div className="flex flex-1 items-start justify-center overflow-y-auto kids-scroll px-6 pb-8">
-        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3">
+      <div className="flex flex-1 items-start justify-center overflow-y-auto kids-scroll px-4 pb-8 sm:px-6">
+        <div className="grid w-full max-w-2xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5">
           {(badges ?? []).map((badge, i) => (
             <div
               key={badge.id}
-              className={`flex flex-col items-center gap-3 rounded-3xl p-6 shadow-lg anim-pop-in ${badge.earned ? "anim-pulse-glow" : ""}`}
+              className={`flex flex-col items-center gap-2 rounded-3xl p-4 shadow-lg anim-pop-in sm:gap-3 sm:p-6 ${badge.earned ? "anim-pulse-glow" : ""}`}
               style={{
                 background: badge.earned
                   ? "linear-gradient(135deg, #FFB627, #FF9F43)"
                   : "white",
                 border: `4px solid ${badge.earned ? "var(--color-brand-sun)" : "var(--color-surface-2)"}`,
-                minHeight: "180px",
-                minWidth: "150px",
+                minHeight: "150px",
                 opacity: badge.earned ? 1 : 0.5,
                 animationDelay: `${i * 0.06}s`,
               }}
             >
               <span
-                className={`text-6xl ${badge.earned ? "anim-wiggle" : ""}`}
+                className={`text-5xl sm:text-6xl ${badge.earned ? "anim-wiggle" : ""}`}
                 style={{ animationDelay: `${i * 0.1}s` }}
                 aria-hidden="true"
               >
                 {badge.emoji}
               </span>
               <span
-                className="text-center text-lg font-bold"
+                className="text-center text-base font-bold sm:text-lg"
                 style={{ color: badge.earned ? "white" : "var(--color-ink-900)" }}
               >
                 {badge.label}
               </span>
               <span
-                className="text-center text-sm"
+                className="text-center text-xs sm:text-sm"
                 style={{ color: badge.earned ? "rgba(255,255,255,0.85)" : "var(--color-ink-500)" }}
               >
                 {badge.description}

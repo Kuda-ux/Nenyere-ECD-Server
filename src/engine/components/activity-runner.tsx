@@ -5,7 +5,7 @@
  */
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useActivityRunner } from "../runner/use-activity-runner";
 import { getEngineComponent } from "./registry";
 import type { AnyActivity } from "../schema";
@@ -62,20 +62,27 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
     onExit();
   }, [exit, onExit, stopMusic]);
 
-  // ── COMPLETED ─────────────────────────────────────────────────────────────
-  if (state.phase === "completed") {
-    if (onComplete) {
-      onComplete({
+  // Notify the parent once when the runner reaches the completed phase
+  // (calling it during render would trigger "setState during render" warnings)
+  const completedRef = useRef(false);
+  useEffect(() => {
+    if (state.phase === "completed" && !completedRef.current) {
+      completedRef.current = true;
+      onComplete?.({
         accuracy: state.accuracy,
         stars: state.stars,
         itemsTotal: state.itemsTotal,
         itemsCorrect: state.itemsCorrect,
       });
     }
+  }, [state, onComplete]);
+
+  // ── COMPLETED ─────────────────────────────────────────────────────────────
+  if (state.phase === "completed") {
     return (
-      <div className="flex flex-col items-center gap-8 py-20">
-        <Mascot mood="celebrating" size={120} />
-        <p className="text-4xl font-bold text-[var(--color-ink-900)] anim-bounce-in" style={{ fontFamily: "var(--font-kids)" }}>
+      <div className="flex flex-col items-center gap-6 px-4 py-10 sm:gap-8 sm:py-20">
+        <Mascot mood="celebrating" size={110} />
+        <p className="text-center text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-in sm:text-4xl" style={{ fontFamily: "var(--font-kids)" }}>
           All done! You&apos;re a star! 🌟
         </p>
         <button
@@ -93,13 +100,13 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
   if (state.phase === "summary") {
     const mascotMood = state.stars === 3 ? "celebrating" : state.stars === 2 ? "happy" : "encouraging";
     return (
-      <div className="flex flex-col items-center gap-8 py-20">
-        <Mascot mood={mascotMood} size={120} />
+      <div className="flex flex-col items-center gap-6 px-4 py-10 sm:gap-8 sm:py-20">
+        <Mascot mood={mascotMood} size={110} />
         <div className="flex gap-3" aria-hidden="true">
           {[1, 2, 3].map((s) => (
             <span
               key={s}
-              className={`text-8xl ${s <= state.stars ? "anim-star-burst-big" : ""}`}
+              className={`text-6xl sm:text-8xl ${s <= state.stars ? "anim-star-burst-big" : ""}`}
               style={{
                 color: s <= state.stars ? "var(--color-brand-sun)" : "var(--color-surface-2)",
                 animationDelay: `${s * 0.2}s`,
@@ -109,13 +116,13 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
             </span>
           ))}
         </div>
-        <p className="text-4xl font-bold text-[var(--color-ink-900)] anim-bounce-in anim-delay-1" style={{ fontFamily: "var(--font-kids)" }}>
+        <p className="text-center text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-in anim-delay-1 sm:text-4xl" style={{ fontFamily: "var(--font-kids)" }}>
           {state.stars === 3 ? "Amazing! You&apos;re brilliant! 🌟" : state.stars === 2 ? "Great job! Well done! 👏" : "Good try! Keep going! 💪"}
         </p>
-        <p className="text-xl text-[var(--color-ink-500)]" style={{ fontFamily: "var(--font-kids)" }}>
+        <p className="text-lg text-[var(--color-ink-500)] sm:text-xl" style={{ fontFamily: "var(--font-kids)" }}>
           You got {state.itemsCorrect} out of {state.itemsTotal} right!
         </p>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap justify-center gap-4">
           <button
             onClick={() => { playSound("celebrate"); finish(); }}
             className="kids-btn px-10 py-4 text-lg text-white shadow-xl transition-all hover:scale-105"
@@ -138,19 +145,19 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
   // ── INTRO ─────────────────────────────────────────────────────────────────
   if (state.phase === "intro") {
     return (
-      <div className="flex flex-col items-center gap-8 py-20">
-        <Mascot mood="happy" size={120} />
-        <h1 className="text-4xl font-bold text-[var(--color-ink-900)] anim-bounce-in" style={{ fontFamily: "var(--font-kids)" }}>
+      <div className="flex flex-col items-center gap-6 px-4 py-10 sm:gap-8 sm:py-20">
+        <Mascot mood="happy" size={110} />
+        <h1 className="text-center text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-in sm:text-4xl" style={{ fontFamily: "var(--font-kids)" }}>
           {activity.title.en}
         </h1>
         {activity.description && (
-          <p className="max-w-lg text-center text-xl text-[var(--color-ink-500)] anim-slide-up anim-delay-1" style={{ fontFamily: "var(--font-kids)" }}>
+          <p className="max-w-lg text-center text-lg text-[var(--color-ink-500)] anim-slide-up anim-delay-1 sm:text-xl" style={{ fontFamily: "var(--font-kids)" }}>
             {activity.description.en}
           </p>
         )}
         <button
           onClick={() => { unlockSound(); playSound("whoosh"); start(); }}
-          className="kids-btn anim-pop-in anim-delay-2 px-14 py-5 text-2xl text-white shadow-xl transition-all hover:scale-105"
+          className="kids-btn anim-pop-in anim-delay-2 px-10 py-4 text-xl text-white shadow-xl transition-all hover:scale-105 sm:px-14 sm:py-5 sm:text-2xl"
           style={{ background: "linear-gradient(135deg, #4CAF50, #00B894)" }}
         >
           Let&apos;s Play! ▶
@@ -169,9 +176,9 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
   // ── INSTRUCTION ───────────────────────────────────────────────────────────
   if (state.phase === "instruction") {
     return (
-      <div className="flex flex-col items-center gap-8 py-20">
+      <div className="flex flex-col items-center gap-6 px-4 py-10 sm:gap-8 sm:py-20">
         <Mascot mood="thinking" size={100} />
-        <p className="max-w-lg text-center text-3xl font-bold text-[var(--color-ink-900)] anim-slide-in-up" style={{ fontFamily: "var(--font-kids)" }}>
+        <p className="max-w-lg text-center text-2xl font-bold text-[var(--color-ink-900)] anim-slide-in-up sm:text-3xl" style={{ fontFamily: "var(--font-kids)" }}>
           {activity.instructions.text.en}
         </p>
         {activity.instructions.demo !== "none" && (
@@ -197,9 +204,9 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
     const pick = feedbackPool[Math.floor(Math.random() * feedbackPool.length)];
 
     return (
-      <div className="flex flex-col items-center gap-8 py-20">
+      <div className="flex flex-col items-center gap-6 px-4 py-10 sm:gap-8 sm:py-20">
         <Mascot mood={isCorrect ? "celebrating" : "encouraging"} size={110} />
-        <p className="text-4xl font-bold text-[var(--color-ink-900)] anim-bounce-feedback" style={{ fontFamily: "var(--font-kids)" }}>
+        <p className="text-center text-3xl font-bold text-[var(--color-ink-900)] anim-bounce-feedback sm:text-4xl" style={{ fontFamily: "var(--font-kids)" }}>
           {pick.text.en}
         </p>
         <button
@@ -220,29 +227,39 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
     const progressPercent = itemCount > 0 ? (state.results.length / itemCount) * 100 : 0;
 
     return (
-      <div className="relative flex flex-col items-center gap-4 py-8">
-        {/* Exit — hold to leave mid-activity */}
-        <HoldExitButton
-          className="absolute left-4 top-2 z-20"
-          onExit={handleExit}
-          label="Hold to go back"
-        />
+      <div className="relative flex flex-col items-center gap-4 px-3 py-4 sm:px-6 sm:py-8">
+        {/* Top bar — exit left, progress centre, mute right. In-flow so nothing overlaps on phones. */}
+        <div className="flex w-full max-w-2xl items-center gap-3">
+          <HoldExitButton
+            onExit={handleExit}
+            label="Hold to go back"
+          />
 
-        {/* Progress bar — themed */}
-        <div className="flex w-full max-w-md items-center gap-2">
-          <span className="text-2xl" aria-hidden="true">⭐</span>
-          <div className="relative h-4 flex-1 overflow-hidden rounded-full bg-[var(--color-surface-2)]">
-            <div
-              className="anim-progress-fill absolute inset-y-0 left-0 rounded-full"
-              style={{
-                width: `${progressPercent}%`,
-                background: "linear-gradient(90deg, #FFB627, #FF9F43, #FF6B6B)",
-              }}
-            />
+          {/* Progress bar — themed */}
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            <span className="text-2xl" aria-hidden="true">⭐</span>
+            <div className="relative h-4 flex-1 overflow-hidden rounded-full bg-[var(--color-surface-2)]">
+              <div
+                className="anim-progress-fill absolute inset-y-0 left-0 rounded-full"
+                style={{
+                  width: `${progressPercent}%`,
+                  background: "linear-gradient(90deg, #FFB627, #FF9F43, #FF6B6B)",
+                }}
+              />
+            </div>
+            <span className="shrink-0 text-sm font-bold text-[var(--color-ink-700)]" style={{ fontFamily: "var(--font-kids)" }}>
+              {state.results.length}/{itemCount}
+            </span>
           </div>
-          <span className="text-sm font-bold text-[var(--color-ink-700)]" style={{ fontFamily: "var(--font-kids)" }}>
-            {state.results.length}/{itemCount}
-          </span>
+
+          {/* Mute toggle */}
+          <button
+            onClick={() => { toggleSoundMute(); audio.toggleMute(); }}
+            className="shrink-0 text-2xl"
+            aria-label={audio.muted || soundMuted ? "Unmute" : "Mute"}
+          >
+            {audio.muted || soundMuted ? "🔇" : "🔊"}
+          </button>
         </div>
 
         {/* Item dots */}
@@ -263,15 +280,6 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
             />
           ))}
         </div>
-
-        {/* Mute toggle */}
-        <button
-          onClick={() => { toggleSoundMute(); audio.toggleMute(); }}
-          className="absolute right-4 top-2 z-20 text-2xl"
-          aria-label={audio.muted || soundMuted ? "Unmute" : "Mute"}
-        >
-          {audio.muted || soundMuted ? "🔇" : "🔊"}
-        </button>
 
         {/* Engine component — keyed by itemIndex to reset state on new item */}
         <EngineComponent

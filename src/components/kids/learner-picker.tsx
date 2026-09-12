@@ -80,7 +80,7 @@ export function LearnerPicker({ deviceLearnerIds }: { deviceLearnerIds?: string[
   }
 
   return (
-    <div className="kids-bg-playful relative flex w-full max-w-4xl flex-col items-center gap-8 overflow-hidden rounded-3xl p-8">
+    <div className="kids-bg-playful relative flex w-full max-w-4xl flex-col items-center gap-6 overflow-hidden rounded-3xl p-4 sm:gap-8 sm:p-8">
       {/* Floating decorations */}
       {FLOATING_DECORATIONS.map((dec, i) => (
         <span
@@ -96,20 +96,20 @@ export function LearnerPicker({ deviceLearnerIds }: { deviceLearnerIds?: string[
       {/* Mascot + greeting */}
       <div className="flex flex-col items-center gap-3 text-center anim-bounce-in">
         <div
-          className="anim-float flex h-24 w-24 items-center justify-center rounded-full text-6xl shadow-lg"
+          className="anim-float flex h-20 w-20 items-center justify-center rounded-full text-5xl shadow-lg sm:h-24 sm:w-24 sm:text-6xl"
           style={{ background: "linear-gradient(135deg, #FFB627, #FF9F43)" }}
           aria-hidden="true"
         >
           🌟
         </div>
         <h1
-          className="text-4xl font-bold text-[var(--color-ink-900)]"
+          className="text-3xl font-bold text-[var(--color-ink-900)] sm:text-4xl"
           style={{ fontFamily: "var(--font-kids)" }}
         >
           Who are you?
         </h1>
         <p
-          className="text-xl text-[var(--color-ink-500)]"
+          className="text-lg text-[var(--color-ink-500)] sm:text-xl"
           style={{ fontFamily: "var(--font-kids)" }}
         >
           Tap your picture to start playing! 🎉
@@ -117,31 +117,31 @@ export function LearnerPicker({ deviceLearnerIds }: { deviceLearnerIds?: string[
       </div>
 
       {/* Avatar grid */}
-      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
+      <div className="grid w-full grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-6 md:grid-cols-4">
         {learners.map((learner, i) => {
           const gradient = AVATAR_COLORS[learner.avatar_key] ?? AVATAR_COLORS.star;
           return (
             <button
               key={learner.id}
               onClick={() => handleSelect(learner)}
-              className={`kids-card flex flex-col items-center gap-3 border-4 border-transparent p-6 anim-pop-in ${[`anim-delay-1`, `anim-delay-2`, `anim-delay-3`, `anim-delay-4`][i % 4]}`}
-              style={{ minHeight: "200px", minWidth: "170px" }}
+              className={`kids-card flex flex-col items-center gap-2 border-4 border-transparent p-3 anim-pop-in sm:gap-3 sm:p-6 ${[`anim-delay-1`, `anim-delay-2`, `anim-delay-3`, `anim-delay-4`][i % 4]}`}
+              style={{ minHeight: "150px" }}
             >
               <div
-                className="anim-float flex h-24 w-24 items-center justify-center rounded-full text-6xl shadow-md transition-transform hover:scale-110"
+                className="anim-float flex h-16 w-16 items-center justify-center rounded-full text-4xl shadow-md transition-transform hover:scale-110 sm:h-24 sm:w-24 sm:text-6xl"
                 style={{ background: gradient, animationDelay: `${i * 0.15}s` }}
                 aria-hidden="true"
               >
                 {AVATAR_EMOJI[learner.avatar_key] ?? "⭐"}
               </div>
               <span
-                className="text-2xl font-bold text-[var(--color-ink-900)]"
+                className="text-xl font-bold text-[var(--color-ink-900)] sm:text-2xl"
                 style={{ fontFamily: "var(--font-kids)" }}
               >
                 {learner.preferred_name}
               </span>
               <span
-                className="rounded-full px-3 py-1 text-sm font-bold text-white"
+                className="rounded-full px-3 py-1 text-xs font-bold text-white sm:text-sm"
                 style={{ backgroundColor: "var(--color-brand-jacaranda)" }}
               >
                 {learner.ecd_level.replace("_", " ")}

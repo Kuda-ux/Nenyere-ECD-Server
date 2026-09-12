@@ -80,7 +80,7 @@ export function SequenceEngine({ activity, itemIndex = 0, onResult }: EngineComp
               onClick={() => handleStepClick(step)}
               disabled={isDone}
               className={[
-                "flex flex-col items-center gap-2 rounded-3xl border-4 p-5 transition-all shadow-md",
+                "flex flex-col items-center gap-2 rounded-3xl border-4 p-3 transition-all shadow-md sm:p-5",
                 isDone ? "" : "active:scale-95",
                 isWrong ? "anim-shake" : "",
               ].join(" ")}
@@ -88,11 +88,11 @@ export function SequenceEngine({ activity, itemIndex = 0, onResult }: EngineComp
                 borderColor: isDone ? "#5BA85B" : isWrong ? "#E85D5D" : "#E0E0E0",
                 opacity: isDone ? 0.55 : 1,
                 backgroundColor: isDone ? "#E8F5E9" : "var(--color-surface-0)",
-                minWidth: "120px",
-                minHeight: "140px",
+                minWidth: "clamp(90px, 26vw, 120px)",
+                minHeight: "clamp(110px, 30vw, 140px)",
               }}
             >
-              <EmojiText text={text} emojiClassName="text-6xl" labelClassName="text-base font-bold text-[var(--color-ink-700)]" />
+              <EmojiText text={text} emojiClassName="text-5xl sm:text-6xl" labelClassName="text-sm font-bold text-[var(--color-ink-700)] sm:text-base" />
               {isDone && <span className="text-lg font-bold text-green-600">✓ #{stepOrder}</span>}
             </button>
           );

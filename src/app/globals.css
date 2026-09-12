@@ -26,7 +26,9 @@
   /* --- Ink (text) --- */
   --color-ink-900: #1a1a2e;
   --color-ink-700: #4a4a6a;
+  --color-ink-600: #5f5f7a;
   --color-ink-500: #7a7a8e;
+  --color-ink-400: #9a9aad;
 
   /* --- Surfaces (warm, bright) --- */
   --color-surface-0: #FFFBF0;
@@ -37,6 +39,7 @@
   --color-feedback-correct: var(--color-brand-msasa);
   --color-feedback-encourage: var(--color-brand-sun);
   --color-danger: #E74C3C;
+  --color-success: var(--color-brand-msasa);
 
   /* --- Activity colour set (colour-learning stimuli) --- */
   --color-activity-red: #FF5252;
@@ -99,6 +102,14 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Use dynamic viewport height where supported — 100vh is taller than the
+   visible area on mobile browsers while the URL bar is showing */
+@supports (min-height: 100dvh) {
+  .min-h-screen {
+    min-height: 100dvh;
+  }
 }
 
 body {

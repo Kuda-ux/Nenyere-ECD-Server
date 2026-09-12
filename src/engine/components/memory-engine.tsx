@@ -139,7 +139,7 @@ export function MemoryEngine({ activity, onResult, hintLevel }: Props) {
 
       {/* Card grid with 3D flip */}
       <div
-        className="grid gap-4"
+        className="grid w-full max-w-md gap-2 px-2 sm:max-w-lg sm:gap-4"
         style={{ gridTemplateColumns: `repeat(${activity.columns}, 1fr)` }}
       >
         {activity.cards.map((card, i) => {
@@ -157,7 +157,7 @@ export function MemoryEngine({ activity, onResult, hintLevel }: Props) {
                 state === "matched" ? "opacity-60" : "",
                 isFlipped ? "flipped" : "",
               ].join(" ")}
-              style={{ minHeight: "110px", minWidth: "110px" }}
+              style={{ minHeight: "unset", minWidth: "unset" }}
               aria-label={isFlipped ? card.text?.en ?? "Card" : "Hidden card"}
             >
               <div className="flip-card-inner relative h-full w-full">
@@ -166,7 +166,7 @@ export function MemoryEngine({ activity, onResult, hintLevel }: Props) {
                   className="flip-card-front absolute inset-0 flex items-center justify-center rounded-2xl shadow-lg"
                   style={{ background: gradient }}
                 >
-                  <span className="text-5xl drop-shadow-md" aria-hidden="true">❓</span>
+                  <span className="text-4xl drop-shadow-md sm:text-5xl" aria-hidden="true">❓</span>
                 </div>
 
                 {/* Card front (revealed state) */}
@@ -198,7 +198,7 @@ function CardContent({ card }: { card: MemoryCard }) {
   }
   if (card.text) {
     return (
-      <EmojiText text={card.text.en} emojiClassName="text-6xl" labelClassName="text-sm font-bold" />
+      <EmojiText text={card.text.en} emojiClassName="text-4xl sm:text-6xl" labelClassName="text-sm font-bold" />
     );
   }
   return null;

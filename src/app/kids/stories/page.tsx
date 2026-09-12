@@ -49,49 +49,48 @@ function StoriesContent() {
       ))}
 
       {/* Top bar */}
-      <div className="flex items-center gap-4 px-6 py-4">
+      <div className="flex items-center gap-3 px-4 py-4 sm:gap-4 sm:px-6">
         <HoldExitButton
           onExit={() => router.push(`/kids/dashboard?learner=${learnerId}`)}
           label="Hold to go back"
         />
         <div
-          className="flex items-center gap-3 rounded-2xl px-5 py-3 shadow-lg anim-bounce-in"
+          className="flex min-w-0 items-center gap-3 rounded-2xl px-4 py-3 shadow-lg anim-bounce-in sm:px-5"
           style={{ background: "linear-gradient(135deg, #9B59D0, #B388FF)" }}
         >
-          <span className="text-4xl" aria-hidden="true">📖</span>
-          <h1 className="text-2xl font-bold text-white drop-shadow-md">Stories</h1>
+          <span className="text-3xl sm:text-4xl" aria-hidden="true">📖</span>
+          <h1 className="truncate text-xl font-bold text-white drop-shadow-md sm:text-2xl">Stories</h1>
         </div>
       </div>
 
       {/* Story shelf */}
-      <div className="flex flex-1 items-start justify-center overflow-y-auto kids-scroll px-6 pb-8 pt-4">
+      <div className="flex flex-1 items-start justify-center overflow-y-auto kids-scroll px-4 pb-8 pt-4 sm:px-6">
         {stories.length === 0 ? (
           <div className="flex flex-col items-center gap-4 pt-20 anim-bounce-in">
             <span className="text-7xl anim-float" aria-hidden="true">📚</span>
             <p className="text-xl text-[var(--color-ink-500)]">No stories yet. Coming soon! 🌟</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid w-full max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 md:grid-cols-3">
             {stories.map((story, i) => (
               <button
                 key={story.id}
                 onClick={() => { play("magic"); router.push(`/kids/play/${story.id}?learner=${learnerId}`); }}
-                className={`kids-card flex flex-col items-center gap-4 p-8 anim-pop-in`}
+                className={`kids-card flex flex-col items-center gap-3 p-5 anim-pop-in sm:gap-4 sm:p-8`}
                 style={{
                   background: STORY_GRADIENTS[i % STORY_GRADIENTS.length],
-                  minHeight: "240px",
-                  minWidth: "220px",
+                  minHeight: "200px",
                   animationDelay: `${i * 0.08}s`,
                 }}
               >
-                <span className="text-8xl drop-shadow-lg anim-float" style={{ animationDelay: `${i * 0.3}s` }} aria-hidden="true">
+                <span className="text-7xl drop-shadow-lg anim-float sm:text-8xl" style={{ animationDelay: `${i * 0.3}s` }} aria-hidden="true">
                   {STORY_EMOJIS[i % STORY_EMOJIS.length]}
                 </span>
-                <span className="text-center text-2xl font-bold text-white drop-shadow-md">
+                <span className="text-center text-xl font-bold text-white drop-shadow-md sm:text-2xl">
                   {story.title.en}
                 </span>
                 {story.description && (
-                  <span className="text-center text-base text-white/80">
+                  <span className="text-center text-sm text-white/80 sm:text-base">
                     {story.description.en}
                   </span>
                 )}

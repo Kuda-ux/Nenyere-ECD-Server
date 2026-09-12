@@ -49,51 +49,50 @@ function ExploreContent({ params }: { params: Promise<{ domain: string }> }) {
       style={{ fontFamily: "var(--font-kids)" }}
     >
       {/* Top bar with back button */}
-      <div className="flex items-center gap-4 px-6 py-4">
+      <div className="flex items-center gap-3 px-4 py-4 sm:gap-4 sm:px-6">
         <HoldExitButton
           onExit={() => router.push(`/kids/dashboard?learner=${learnerId}`)}
           color={pillarInfo.color}
           label="Hold to go back"
         />
         <div
-          className="flex items-center gap-3 rounded-2xl px-5 py-3 shadow-lg anim-bounce-in"
+          className="flex min-w-0 items-center gap-3 rounded-2xl px-4 py-3 shadow-lg anim-bounce-in sm:px-5"
           style={{ background: pillarInfo.gradient }}
         >
-          <span className="text-4xl" aria-hidden="true">{pillarInfo.emoji}</span>
-          <div className="flex flex-col">
-            <h1 className="text-2xl font-bold text-white drop-shadow-md">{pillarInfo.label}</h1>
-            <p className="text-xs text-white/80">{pillarInfo.description}</p>
+          <span className="text-3xl sm:text-4xl" aria-hidden="true">{pillarInfo.emoji}</span>
+          <div className="flex min-w-0 flex-col">
+            <h1 className="truncate text-xl font-bold text-white drop-shadow-md sm:text-2xl">{pillarInfo.label}</h1>
+            <p className="hidden text-xs text-white/80 sm:block">{pillarInfo.description}</p>
           </div>
         </div>
       </div>
 
       {/* Activity tiles */}
-      <div className="flex flex-1 items-start justify-center overflow-y-auto kids-scroll px-6 pb-8 pt-4">
+      <div className="flex flex-1 items-start justify-center overflow-y-auto kids-scroll px-4 pb-8 pt-4 sm:px-6">
         {activities.length === 0 ? (
           <div className="flex flex-col items-center gap-4 pt-20 anim-bounce-in">
             <span className="text-7xl anim-float" aria-hidden="true">🎯</span>
             <p className="text-xl text-[var(--color-ink-500)]">No activities yet. Coming soon! 🌟</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-5 sm:grid-cols-3">
+          <div className="grid w-full max-w-3xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5">
             {activities.map((activity, i) => (
               <button
                 key={activity.id}
                 onClick={() => { play("pop"); router.push(`/kids/play/${activity.id}?learner=${learnerId}`); }}
-                className={`kids-card flex flex-col items-center gap-3 p-6 anim-pop-in`}
+                className={`kids-card flex flex-col items-center gap-2 p-3 anim-pop-in sm:gap-3 sm:p-6`}
                 style={{
                   background: ACTIVITY_CARD_COLORS[i % ACTIVITY_CARD_COLORS.length],
-                  minHeight: "200px",
-                  minWidth: "170px",
+                  minHeight: "160px",
                   animationDelay: `${i * 0.05}s`,
                 }}
               >
-                <span className="text-6xl drop-shadow-lg" aria-hidden="true">{activity.emoji}</span>
-                <span className="text-center text-lg font-bold text-white drop-shadow-md">
+                <span className="text-5xl drop-shadow-lg sm:text-6xl" aria-hidden="true">{activity.emoji}</span>
+                <span className="text-center text-base font-bold text-white drop-shadow-md sm:text-lg">
                   {activity.title}
                 </span>
                 {/* Level badge */}
-                <span className="rounded-full bg-white/30 px-3 py-1 text-sm font-bold text-white">
+                <span className="rounded-full bg-white/30 px-3 py-1 text-xs font-bold text-white sm:text-sm">
                   {activity.ecd_level.replace("_", " ")}
                 </span>
                 {/* Star indicator */}
@@ -101,7 +100,7 @@ function ExploreContent({ params }: { params: Promise<{ domain: string }> }) {
                   {[1, 2, 3].map((s) => (
                     <span
                       key={s}
-                      className={`text-xl ${s <= activity.stars ? "text-white" : "text-white/30"}`}
+                      className={`text-lg sm:text-xl ${s <= activity.stars ? "text-white" : "text-white/30"}`}
                       aria-hidden="true"
                     >
                       ★
