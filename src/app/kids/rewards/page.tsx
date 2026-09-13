@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { getAllBadges, getLearnerStats } from "@/lib/dev-tracker";
 import { Confetti } from "@/components/kids/confetti";
 import { useSound } from "@/hooks/use-sound";
 import { HoldExitButton } from "@/components/kids/hold-exit-button";
+import { useSyncRefresh } from "@/hooks/use-sync-refresh";
 
 function RewardsContent() {
   const router = useRouter();
@@ -15,10 +16,16 @@ function RewardsContent() {
   const [badges, setBadges] = useState<ReturnType<typeof getAllBadges> | null>(null);
   const [stats, setStats] = useState<ReturnType<typeof getLearnerStats> | null>(null);
 
-  useEffect(() => {
+  const loadStats = useCallback(() => {
     setBadges(getAllBadges(learnerId));
     setStats(getLearnerStats(learnerId));
   }, [learnerId]);
+
+  useEffect(() => {
+    loadStats();
+  }, [loadStats]);
+
+  useSyncRefresh(loadStats);
 
   // Play celebration sound on mount if badges earned
   useEffect(() => {

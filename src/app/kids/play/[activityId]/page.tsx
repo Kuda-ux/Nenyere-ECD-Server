@@ -140,7 +140,21 @@ function PlayActivityContent({ params }: { params: Promise<{ activityId: string 
         onExit={() => router.push(`/kids/dashboard?learner=${learnerId}`)}
         onComplete={(result) => {
           unlock();
-          recordActivityCompletion(learnerId, activityId, result.accuracy, activity.skills);
+          recordActivityCompletion(learnerId, activityId, result.accuracy, activity.skills, {
+            startedAt: result.startedAt,
+            completedAt: result.completedAt,
+            itemsTotal: result.itemsTotal,
+            itemsCorrect: result.itemsCorrect,
+            responses: result.responses.map((r) => ({
+              item_id: r.item_id,
+              client_response_id: r.client_response_id,
+              value: r.value,
+              is_correct:
+                result.results.find((res) => res.item_id === r.item_id)?.is_correct ?? false,
+              elapsed_ms: r.elapsed_ms,
+              hint_level: r.hint_level,
+            })),
+          });
           setCompletionResult({ stars: result.stars, accuracy: result.accuracy });
           setCompleted(true);
         }}

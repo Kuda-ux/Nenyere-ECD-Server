@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getLearners, type Learner } from "@/lib/learner-store";
 import { getLearnerStats, getLearnerProfile, getPillarProgress, type LearnerProfile, type PillarProgress } from "@/lib/dev-tracker";
 import { getAllActivities, getActivitiesByEcdLevel, PILLARS } from "@/lib/activity-catalog";
+import { startSyncLoop, SYNC_EVENT } from "@/lib/sync/engine";
 
 export interface PortalData {
   learners: Learner[];
@@ -68,6 +69,12 @@ export function usePortalData(): { data: PortalData | null; loading: boolean; re
   useEffect(() => {
     fetchData();
 
+    // Sync with Supabase when a session exists; emits SYNC_EVENT when a
+    // pull merges fresh remote data into the local cache.
+    const stopSync = startSyncLoop();
+    const handleSync = () => fetchData();
+    window.addEventListener(SYNC_EVENT, handleSync);
+
     // Listen for localStorage changes from other tabs
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === "nenyere_learners" || e.key === "nenyere_dev_tracker" || e.key === null) {
@@ -80,6 +87,8 @@ export function usePortalData(): { data: PortalData | null; loading: boolean; re
     const interval = setInterval(fetchData, 3000);
 
     return () => {
+      stopSync();
+      window.removeEventListener(SYNC_EVENT, handleSync);
       window.removeEventListener("storage", handleStorageChange);
       clearInterval(interval);
     };

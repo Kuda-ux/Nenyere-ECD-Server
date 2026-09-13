@@ -5,6 +5,7 @@
  */
 
 import { PILLARS, type PillarKey, getActivitiesByPillar } from "./activity-catalog";
+import { enqueueAttemptSync } from "@/lib/sync/engine";
 
 const STORAGE_KEY = "nenyere_dev_tracker";
 
@@ -80,7 +81,21 @@ export function recordActivityCompletion(
   learnerId: string,
   activityId: string,
   score: number,
-  skillIds: string[]
+  skillIds: string[],
+  detail?: {
+    startedAt: number;
+    completedAt: number;
+    itemsTotal: number;
+    itemsCorrect: number;
+    responses?: Array<{
+      item_id: string;
+      client_response_id: string;
+      value: unknown;
+      is_correct: boolean;
+      elapsed_ms: number;
+      hint_level: number;
+    }>;
+  }
 ): LearnerProfile {
   const profiles = loadAllProfiles();
   const profile = profiles[learnerId] ?? {
@@ -133,6 +148,20 @@ export function recordActivityCompletion(
 
   profiles[learnerId] = profile;
   saveAllProfiles(profiles);
+
+  // Queue the attempt for upload to Supabase when a session is available
+  enqueueAttemptSync({
+    learnerId,
+    activityId,
+    accuracy: score,
+    stars,
+    itemsTotal: detail?.itemsTotal ?? 1,
+    itemsCorrect: detail?.itemsCorrect ?? (score >= 0.6 ? 1 : 0),
+    startedAt: detail?.startedAt ?? Date.now(),
+    completedAt: detail?.completedAt ?? Date.now(),
+    responses: detail?.responses,
+  });
+
   return profile;
 }
 

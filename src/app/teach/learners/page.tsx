@@ -15,6 +15,7 @@ import {
   type ECDLevel,
 } from "@/lib/learner-store";
 import { getLearnerStats, getAllBadges } from "@/lib/dev-tracker";
+import { useSyncRefresh } from "@/hooks/use-sync-refresh";
 
 const TEACHER_NAV: NavItem[] = [
   { href: "/teach", label: "Dashboard", icon: "📊", description: "Class overview" },
@@ -40,6 +41,8 @@ export default function ManageLearnersPage() {
     setLearners(getLearners());
     setLoaded(true);
   }, []);
+
+  useSyncRefresh(() => setLearners(getLearners()));
 
   function resetForm() {
     setNewName("");

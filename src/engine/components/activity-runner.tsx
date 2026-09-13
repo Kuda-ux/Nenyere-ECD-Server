@@ -22,6 +22,10 @@ type Props = {
     stars: number;
     itemsTotal: number;
     itemsCorrect: number;
+    startedAt: number;
+    completedAt: number;
+    responses: ItemResponse[];
+    results: ItemResult[];
   }) => void;
 };
 
@@ -62,6 +66,14 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
     onExit();
   }, [exit, onExit, stopMusic]);
 
+  // Track when the child actually starts interacting for attempt duration
+  const startedAtRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (state.phase === "activity" && startedAtRef.current === null) {
+      startedAtRef.current = Date.now();
+    }
+  }, [state.phase]);
+
   // Notify the parent once when the runner reaches the completed phase
   // (calling it during render would trigger "setState during render" warnings)
   const completedRef = useRef(false);
@@ -73,6 +85,10 @@ export function ActivityRunner({ activity, onExit, onComplete }: Props) {
         stars: state.stars,
         itemsTotal: state.itemsTotal,
         itemsCorrect: state.itemsCorrect,
+        startedAt: startedAtRef.current ?? Date.now(),
+        completedAt: Date.now(),
+        responses: state.responses,
+        results: state.results,
       });
     }
   }, [state, onComplete]);

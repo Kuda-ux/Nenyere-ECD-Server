@@ -1,7 +1,11 @@
 /**
  * Learner store — manages ECD pupils in localStorage for offline tablet use.
  * Teachers can add, edit, and remove learners. Data persists on-device.
+ * Writes are also queued to the sync outbox so they reach Supabase when a
+ * session and connectivity are available.
  */
+
+import { enqueueOp } from "@/lib/sync/outbox";
 
 const LEARNERS_KEY = "nenyere_learners";
 
@@ -84,6 +88,12 @@ export function addLearner(data: Omit<Learner, "id">): Learner {
   };
   learners.push(newLearner);
   saveLearners(learners);
+  enqueueOp({
+    kind: "learner-upsert",
+    id: `learner-${newLearner.id}-${Date.now()}`,
+    queuedAt: new Date().toISOString(),
+    learner: newLearner,
+  });
   return newLearner;
 }
 
@@ -93,6 +103,12 @@ export function updateLearner(id: string, updates: Partial<Omit<Learner, "id">>)
   if (idx === -1) return undefined;
   learners[idx] = { ...learners[idx], ...updates };
   saveLearners(learners);
+  enqueueOp({
+    kind: "learner-upsert",
+    id: `learner-${id}-${Date.now()}`,
+    queuedAt: new Date().toISOString(),
+    learner: learners[idx],
+  });
   return learners[idx];
 }
 
@@ -101,6 +117,12 @@ export function removeLearner(id: string): boolean {
   const filtered = learners.filter((l) => l.id !== id);
   if (filtered.length === learners.length) return false;
   saveLearners(filtered);
+  enqueueOp({
+    kind: "learner-remove",
+    id: `learner-del-${id}-${Date.now()}`,
+    queuedAt: new Date().toISOString(),
+    learnerId: id,
+  });
   return true;
 }
 

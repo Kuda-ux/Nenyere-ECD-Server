@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSound } from "@/hooks/use-sound";
 import {
   getLearners,
@@ -9,6 +9,7 @@ import {
   AVATAR_COLORS,
   type Learner,
 } from "@/lib/learner-store";
+import { startSyncLoop, SYNC_EVENT } from "@/lib/sync/engine";
 
 const FLOATING_DECORATIONS = [
   { emoji: "🌈", top: "8%", left: "5%", size: "3rem", anim: "anim-float-slow", delay: "anim-delay-2" },
@@ -27,7 +28,7 @@ export function LearnerPicker({ deviceLearnerIds }: { deviceLearnerIds?: string[
   const [learners, setLearners] = useState<Learner[]>([]);
   const [loaded, setLoaded] = useState(false);
 
-  if (!loaded) {
+  const loadLearners = useCallback(() => {
     const allLearners = getLearners();
     // Filter to only learners assigned to this device
     const filtered = deviceLearnerIds
@@ -35,7 +36,21 @@ export function LearnerPicker({ deviceLearnerIds }: { deviceLearnerIds?: string[
       : allLearners;
     setLearners(filtered);
     setLoaded(true);
-  }
+  }, [deviceLearnerIds]);
+
+  useEffect(() => {
+    loadLearners();
+    // Pull the roster from Supabase when a staff/device session exists;
+    // SYNC_EVENT fires when fresh remote data lands in localStorage.
+    const stopSync = startSyncLoop();
+    window.addEventListener(SYNC_EVENT, loadLearners);
+    window.addEventListener("storage", loadLearners);
+    return () => {
+      stopSync();
+      window.removeEventListener(SYNC_EVENT, loadLearners);
+      window.removeEventListener("storage", loadLearners);
+    };
+  }, [loadLearners]);
 
   // Empty state: no learners added yet
   if (loaded && learners.length === 0) {

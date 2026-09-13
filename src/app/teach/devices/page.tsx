@@ -3,6 +3,7 @@
 import { PortalLayout, type NavItem } from "@/components/portal/portal-layout";
 import { usePortalData } from "@/hooks/use-portal-data";
 import { SignOutButton } from "@/components/sign-out-button";
+import { useSyncRefresh } from "@/hooks/use-sync-refresh";
 import { useState, useEffect } from "react";
 import {
   getDevices,
@@ -47,6 +48,12 @@ export default function DevicesPage() {
     setLearners(getLearners());
     setLoaded(true);
   }, []);
+
+  // Refresh learner list when remote roster syncs in
+  useSyncRefresh(() => {
+    setDevices(getDevices());
+    setLearners(getLearners());
+  });
 
   function resetForm() {
     setNewDeviceName("");

@@ -1,11 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { PILLARS, type PillarKey } from "@/lib/activity-catalog";
 import { getLearnerStats } from "@/lib/dev-tracker";
 import { getLearnerById, AVATAR_EMOJI, AVATAR_COLORS } from "@/lib/learner-store";
 import { useSound } from "@/hooks/use-sound";
+import { useSyncRefresh } from "@/hooks/use-sync-refresh";
 import { HoldExitButton } from "./hold-exit-button";
 
 const PILLAR_ROUTES: Record<PillarKey, string> = {
@@ -39,7 +40,7 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
   const [learnerName, setLearnerName] = useState<string>("");
   const [learnerAvatar, setLearnerAvatar] = useState<string>("star");
 
-  useEffect(() => {
+  const loadStats = useCallback(() => {
     const s = getLearnerStats(learnerId);
     setStats({ totalStars: s.totalStars, totalActivities: s.totalActivities });
     const learner = getLearnerById(learnerId);
@@ -48,6 +49,12 @@ export function ChildDashboard({ learnerId }: { learnerId: string }) {
       setLearnerAvatar(learner.avatar_key);
     }
   }, [learnerId]);
+
+  useEffect(() => {
+    loadStats();
+  }, [loadStats]);
+
+  useSyncRefresh(loadStats);
 
   if (!learnerId) {
     router.push("/kids");

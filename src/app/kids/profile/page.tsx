@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { getLearnerStats, getPillarProgress, getAllBadges } from "@/lib/dev-tracker";
 import { PILLARS } from "@/lib/activity-catalog";
 import { HoldExitButton } from "@/components/kids/hold-exit-button";
+import { useSyncRefresh } from "@/hooks/use-sync-refresh";
 
 function ProfileContent() {
   const router = useRouter();
@@ -14,11 +15,17 @@ function ProfileContent() {
   const [badges, setBadges] = useState<ReturnType<typeof getAllBadges> | null>(null);
   const [pillarProgress, setPillarProgress] = useState<ReturnType<typeof getPillarProgress> | null>(null);
 
-  useEffect(() => {
+  const loadStats = useCallback(() => {
     setStats(getLearnerStats(learnerId));
     setBadges(getAllBadges(learnerId));
     setPillarProgress(getPillarProgress(learnerId));
   }, [learnerId]);
+
+  useEffect(() => {
+    loadStats();
+  }, [loadStats]);
+
+  useSyncRefresh(loadStats);
 
   if (!stats || !badges || !pillarProgress) {
     return (
