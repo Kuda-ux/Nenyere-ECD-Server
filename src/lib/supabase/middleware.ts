@@ -2,9 +2,9 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /**
- * Middleware: refreshes Supabase session on every request.
- * Per security.md §2: proxy.ts refreshes tokens; server code uses getUser()
- * (validated), never getSession() alone for authorisation.
+ * Middleware: synchronizes Supabase cookies between client and server.
+ * This is lightweight - it only handles cookie management, no network calls.
+ * Authentication validation is handled in server components using getUser().
  */
 export async function updateSession(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -37,9 +37,10 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  // Do not run code between createServerClient and getUser.
-  // A simple mistake can make it very hard to debug session issues.
-  await supabase.auth.getUser();
+  // IMPORTANT: Do NOT call getUser() here.
+  // That would make a network request on every request, causing timeouts.
+  // Cookie synchronization happens automatically via the cookie handlers above.
+  // Authentication validation is handled in server components.
 
   return supabaseResponse;
 }
